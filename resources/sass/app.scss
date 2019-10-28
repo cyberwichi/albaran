@@ -1,0 +1,77 @@
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Nunito");
+@import url("https://fonts.googleapis.com/css?family=Modak|Roboto+Mono&display=swap");
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
+body {
+    background: rgb(145, 90, 182);
+    background: -moz-linear-gradient(
+        90deg,
+        rgba(145, 90, 182, 0.7679446778711485) 0%,
+        rgba(128, 83, 101, 0.8575805322128851) 50%,
+        rgba(158, 168, 35, 0.8323704481792717) 100%
+    );
+    background: -webkit-linear-gradient(
+        90deg,
+        rgba(145, 90, 182, 0.7679446778711485) 0%,
+        rgba(128, 83, 101, 0.8575805322128851) 50%,
+        rgba(158, 168, 35, 0.8323704481792717) 100%
+    );
+    background: linear-gradient(
+        90deg,
+        rgba(145, 90, 182, 0.7679446778711485) 0%,
+        rgba(128, 83, 101, 0.8575805322128851) 50%,
+        rgba(158, 168, 35, 0.8323704481792717) 100%
+    );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#915ab6",endColorstr="#9ea823",GradientType=1);
+}
+button{
+    margin: 15px;;
+}
+.icon {
+    font-size: 90px;
+    color: #bbd67c;
+}
+
+.autocomplete {
+    position: relative;
+    display: inline-block;
+}
+.input {
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+    width: 90% !important;
+}
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid#d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    max-height: 350px;
+    width: 85%;
+    overflow: auto;
+}
+.autocomplete-items div {
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.autocomplete-items div:hover {
+    background-color: #a7a0a0;
+}
+.autocomplete-active {
+    background-color: dodgerblue !important;
+    color: #ffffff;
+}
+.sombra {
+    box-shadow: 2px 2px 2px 2px #777777;
+}
