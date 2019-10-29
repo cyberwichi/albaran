@@ -37,6 +37,8 @@ Vue.component('contactoprincipal-component', require('./components/contactos/Con
 Vue.component('pedidoprincipal-component', require('./components/pedidos/PedidoPrincipalComponent.vue').default);
 Vue.component('stock-component', require('./components/articulos/StockComponent.vue').default);
 Vue.component('responsestock-component', require('./components/articulos/ResponseStockComponent.vue').default);
+Vue.component('albaran-component', require('./components/pedidos/AlbaranComponent.vue').default);
+
 
 
 

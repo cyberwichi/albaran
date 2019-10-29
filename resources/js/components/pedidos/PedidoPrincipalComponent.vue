@@ -6,24 +6,33 @@
       </div>
       <div class="card-body row">
         <div class="col text-center">
-          <button class="btn btn-primary" :class="{disabled: campo=='listado'}" v-on:click="vermasmethod('listado')">
-            Listado Editar Borrar Pedidos
-            <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
-          </button>
+          <button
+            class="btn btn-primary"
+            :class="{disabled: campo=='listado'}"
+            v-on:click="vermasmethod('listado')"
+          >Listado Editar Borrar Pedidos</button>
         </div>
         <div class="col text-center">
-          <button class="btn btn-primary" :class="{disabled: campo=='nuevo'}" v-on:click="vermasmethod('nuevo')">
-            Nuevo Pedido
-            <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
-          </button>
+          <button
+            class="btn btn-primary"
+            :class="{disabled: campo=='nuevo'}"
+            v-on:click="vermasmethod('nuevo')"
+          >Nuevo Pedido</button>
         </div>
         <div class="col text-center">
-          <button class="btn btn-primary" :class="{disabled: campo=='seguimiento'}" v-on:click="vermasmethod('seguimiento')">
-            Seguimiento Pedido
-            <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
-          </button>
+          <button
+            class="btn btn-primary"
+            :class="{disabled: campo=='albaran'}"
+            v-on:click="vermasmethod('albaran')"
+          >Albaran</button>
         </div>
-       
+        <div class="col text-center">
+          <button
+            class="btn btn-primary"
+            :class="{disabled: campo=='seguimiento'}"
+            v-on:click="vermasmethod('seguimiento')"
+          >Seguimiento Pedido</button>
+        </div>
       </div>
     </header>
     <articulos-component v-if="campo=='listado'" class="mt-5"></articulos-component>
@@ -33,6 +42,7 @@
       class="mt-5 card bg-light mb-3"
       @new="guardarpedido"
     ></nuevopedido-component>
+    <albaran-component v-if="campo=='albaran'" class="mt-5 card bg-light mb-3"></albaran-component>
   </div>
 </template>
 

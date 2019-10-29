@@ -4,54 +4,56 @@
       <p>{{ contacto.Id}}</p>
     </td>
     <td>
-
       <p v-if="!flageditar">{{contacto.Nombre}}</p>
-      <input v-else type="text" class="form-control"  v-model="contacto.Nombre"/>
+      <input v-else type="text" class="form-control" v-model="contacto.Nombre" />
     </td>
-    <td class="">
+    <td class>
       <p v-if="!flageditar">{{ contacto.Direccion}}</p>
-       <input v-else type="text" class="form-control"  v-model="contacto.Direccion"/>
+      <input v-else type="text" class="form-control" v-model="contacto.Direccion" />
     </td>
-    
+
     <td>
-      <button type="button" class="btn btn-danger" v-on:click="borrarcontacto()">Borrar</button>
-      <button
-        v-if="!flageditar"
-        type="button"
-        class="btn btn-success"
-        v-on:click="editarcontacto()"
-      >editar</button>
-      <button
-        v-else
-        type="button"
-        class="btn btn-primary"
-        v-on:click="guardarcontacto() "
-      >Guardar</button>
+      <div class="botonesaccion">
+        <img src="/img/Delete.png" width="25px" height="25px" alt v-on:click="borrarcontacto()" />
+        <img
+          src="/img/Edit.png"
+          width="25px"
+          height="25px"
+          alt
+          v-if="!flageditar"
+          v-on:click="editarcontacto()"
+        />
+        <img
+          v-else
+          src="/img/Save.png"
+          width="20px"
+          height="20px"
+          alt
+          v-on:click="guardarcontacto() "
+        />
+      </div>
     </td>
   </tr>
 </template>
 
 <script>
 export default {
-  props:['contacto'],
+  props: ["contacto"],
   data() {
     return {
-      flageditar:false,
-    
+      flageditar: false
     };
   },
   mounted() {},
   methods: {
     borrarcontacto() {
-      this.$emit('delete' )
+      this.$emit("delete");
     },
-    editarcontacto(){
-      this.flageditar=true,
-      this.$emit('editar')
+    editarcontacto() {
+      (this.flageditar = true), this.$emit("editar");
     },
-   guardarcontacto(){
-      this.flageditar=false,
-      this.$emit('guardar', this.contacto)
+    guardarcontacto() {
+      (this.flageditar = false), this.$emit("guardar", this.contacto);
     }
   },
   computed: {},

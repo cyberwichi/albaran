@@ -18,19 +18,9 @@
     </td>
     <td>
       <div class="botonesaccion">
-        <button type="button" class="btn btn-danger" v-on:click="borrararticulo()">X</button>
-        <button
-          v-if="!flageditar"
-          type="button"
-          class="btn btn-success"
-          v-on:click="editararticulo()"
-        >+</button>
-        <button
-          v-if="flageditar"
-          type="button"
-          class="btn btn-primary"
-          v-on:click="guardararticulo() "
-        >Guardar</button>
+        <img src="/img/Delete.png" width="25px" height="25px" alt="" v-on:click="borrararticulo()">
+        <img src="/img/Edit.png" width="25px" height="25px" alt="" v-if="!flageditar" v-on:click="editararticulo()">
+        <img v-else src="/img/Save.png" width="20px" height="20px" alt="" v-on:click="guardararticulo() ">
       </div>
     </td>
   </tr>
@@ -67,7 +57,6 @@ export default {
 </script>
 <style>
 .botonesaccion {
-  display: flex;
-  justify-content: space-between;
+ display: inline;
 }
 </style>
