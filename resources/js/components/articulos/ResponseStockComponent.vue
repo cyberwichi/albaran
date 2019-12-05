@@ -1,10 +1,10 @@
 <template>
   <tr>
     <td>
-      <p>{{ articuloNombre.AutoId}}</p>
+      <p>{{ articulo.Articulo}}</p>
     </td>
     <td>
-      <p >{{articuloNombre.Nombre}}</p>
+      <p >{{articuloNombre}}</p>
      
     </td>
     <td class="text-right">
@@ -25,16 +25,35 @@
 
 <script>
 export default {
-  props: ["articulo", "articuloNombre"],
+  props: ["articulo"],
   data() {
     return {
+      articuloNombre: ''
       
       
     
     };
   },
+  mounted(){
+    this.articNombre()
+  },
   
   methods: {
+    articNombre(){
+      document.getElementById("app").style.cursor = "progress";
+      axios
+        .get("/api/articulos/"+this.articulo.Articulo)
+        .then(response => {
+          this.articuloNombre=response.data.Nombre;
+          document.getElementById("app").style.cursor = "auto";
+        })
+        .catch(e =>{
+           console.log(e);
+           this.articuloNombre="Sin Nombre";
+           document.getElementById("app").style.cursor = "auto";
+
+           });
+    },
        
    
   },

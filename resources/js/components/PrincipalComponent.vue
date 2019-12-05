@@ -1,58 +1,120 @@
 <template>
-  <div class>
-    <header class="card">
-      <div class="card-header text-center">
-        <i class="fas fa-frog icon"></i>
-        <h2>Menu Principal </h2>
-         
-      </div>
-      <div class="card-body row">
-        <div class="col text-center">
-          <button
-            class="btn btn-primary"
-            :class="{disabled: campo=='articulos'}"
-            v-on:click="vermasmethod('articulos')"
-          >
-            Articulos
-            <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
-          </button>
-        </div>
-        <div class="col text-center">
-          <button class="btn btn-primary" :class="{disabled: campo=='clientes'}" v-on:click="vermasmethod('clientes')">
-            Clientes
-            <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
-          </button>
-        </div>
-        <div class="col text-center">
-          <button class="btn btn-primary" :class="{disabled: campo=='pedidos'}" v-on:click="vermasmethod('pedidos')">
-            Pedidos
-            <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
-          </button>
-        </div>
-      </div>
-    </header>
-    <articuloprincipal-component v-if="campo=='articulos'" class="mt-5"></articuloprincipal-component>
-    <br />
-    <contactoprincipal-component v-if="campo=='clientes'" class="mt-5"></contactoprincipal-component>
-    <br />
-    <pedidoprincipal-component v-if="campo=='pedidos'" class="mt-5"></pedidoprincipal-component>
-  </div>
+    <div id="principal">
+        <header class="card">
+                     
+            <div class="card-footer row d-flex align-items-center">
+                 <a class=""  href="/">                    
+                    <img  src="/img/logo.jpeg"  width="150px" height="150px" alt="">
+                </a>  
+                <div class="col text-center">
+                    <button
+                        class="btn btn-primary"
+                        :class="{ disabled: campo == 'pedidos' }"
+                        v-on:click="vermasmethod('pedidos')"
+                    >
+                        Avisos
+                    </button>
+                </div>
+                <div class="col text-center">
+                    <button
+                        class="btn btn-primary"
+                        :class="{ disabled: campo == 'albaranes' }"
+                        v-on:click="vermasmethod('albaranes')"
+                    >
+                        Albaran
+                    </button>
+                </div>
+                <div class="col text-center">
+                    <button
+                        class="btn btn-primary"
+                        :class="{ disabled: campo == 'articulos' }"
+                        v-on:click="vermasmethod('articulos')"
+                    >
+                        Articulos
+                    </button>
+                </div>
+                <div class="col text-center">
+                    <button
+                        class="btn btn-primary"
+                        :class="{ disabled: campo == 'clientes' }"
+                        v-on:click="vermasmethod('clientes')"
+                    >
+                        Clientes
+                    </button>
+                </div>
+
+                <div class="col text-center">
+                    <button
+                        class="btn btn-primary"
+                        :class="{ disabled: campo == 'empleados' }"
+                        v-on:click="vermasmethod('empleados')"
+                    >
+                        Empleados
+                    </button>
+                </div>
+                <div class="col text-center">
+                    <button
+                        class="btn btn-primary"
+                        :class="{ disabled: campo == 'maquinas' }"
+                        v-on:click="vermasmethod('maquinas')"
+                    >
+                        Maquinas
+                    </button>
+                </div>
+            </div>
+            <albaranprincipal-component
+            v-if="campo == 'albaranes'"
+            class=""
+        ></albaranprincipal-component>
+
+        <articuloprincipal-component
+            v-if="campo == 'articulos'"
+            class=""
+        ></articuloprincipal-component>
+
+        <contactoprincipal-component
+            v-if="campo == 'clientes'"
+            class=""
+        ></contactoprincipal-component>
+
+        <pedidoprincipal-component
+            v-if="campo == 'pedidos'"
+            class=""
+        ></pedidoprincipal-component>
+
+        <empleadoprincipal-component
+            v-if="campo == 'empleados'"
+            class=""
+        ></empleadoprincipal-component> 
+         <maquinasprincipal-component
+            v-if="campo == 'maquinas'"
+            class=""
+        ></maquinasprincipal-component> 
+        </header>
+        
+    </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      campo: ""
-    };
-  },
-  mounted() {},
-  methods: {
-    vermasmethod(campo) {
-      this.campo = campo;
+    data() {
+        return {
+            campo: ""
+        };
+    },
+    mounted() {},
+    methods: {
+        vermasmethod(campo) {
+            this.campo = campo;
+        }
     }
-  }
 };
 </script>
 <style scoped>
+.cabecera {
+    width: 100%;
+    height: 200px;
+    
+    margin-bottom:20px;
+}
 </style>

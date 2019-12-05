@@ -1,35 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="stylesheet" href="{{asset('css/app.css')}}">
-    <link rel="stylesheet" href="{{asset('css/all.css')}}">
-    <link href="https://fonts.googleapis.com/css?family=Modak|Roboto+Mono&display=swap" rel="stylesheet">
-    <link href="{{asset('/css/open-iconic-bootstrap.min.css')}}" rel="stylesheet">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-</head>
+@extends('layouts.app')
 
-<body>
-    <div id="app" class="container-fluid">
-       
-
-        {{--         <articulos-component class="mt-5"></articulos-component>
-        <br>
-        <contactos-component  class="mt-5"></contactos-component>
-        <br>
-        <pedidos-component  class="mt-5"></pedidos-component> --}}
-        <principal-component></principal-component>
-
-
+@section('content')
+<div >
+    @if (session('status'))
+    <div class="alert alert-success" role="alert">
+        {{ session('status') }}
     </div>
-    <script src="{{asset('js/app.js')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
-    
-</body>
-
-</html>
+    @endif
+<principal-component></principal-component>
+</div>
+@endsection

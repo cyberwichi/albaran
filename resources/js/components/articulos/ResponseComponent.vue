@@ -13,14 +13,30 @@
       <input v-else type="text" class="form-control" v-model="articulo.UPC" />
     </td>
     <td class="text-right">
-      <p v-if="!flageditar">{{ articulo.FechaAlta}}</p>
+      <p v-if="!flageditar">{{ articulo.tb_stock_art.Stock}}</p>
+      <input v-else type="text" class="form-control" v-model="articulo.tb_stock_art.Stock" />
+    </td>
+    <td class="text-right">
+      <p v-if="!flageditar">{{ articulo.FechaAlta | moment("DD/MM/YYYY, h:mm a")}}</p>
       <input v-else type="datetime-local" class="form-control" v-model="articulo.FechaAlta" />
     </td>
     <td>
-      <div class="botonesaccion">
-        <img src="/img/Delete.png" width="25px" height="25px" alt="" v-on:click="borrararticulo()">
+      <div class="botonesaccion d-flex justify-content-around">
+
+        <img src="/img/Delete.png" width="25px" height="25px" alt="" v-if="!flageditar" v-on:click="borrararticulo()">
         <img src="/img/Edit.png" width="25px" height="25px" alt="" v-if="!flageditar" v-on:click="editararticulo()">
-        <img v-else src="/img/Save.png" width="20px" height="20px" alt="" v-on:click="guardararticulo() ">
+        <p v-if="flageditar">
+          <img src="/img/Delete.png" width="25px" height="25px" alt=""  v-on:click="flageditar=false">
+          Cancelar
+
+        </p>
+        <p v-if="flageditar">
+<img src="/img/Save.png" width="20px" height="20px" alt="" v-on:click="guardararticulo() ">
+Guardar
+
+        </p>
+        
+        
       </div>
     </td>
   </tr>
@@ -43,10 +59,12 @@ export default {
       this.$emit("delete");
     },
     editararticulo() {
-      (this.flageditar = true), this.$emit("editar");
+      this.flageditar = true;
+      
     },
     guardararticulo() {
-      (this.flageditar = false), this.$emit("guardar", this.articulo);
+      this.flageditar = false;
+      this.$emit("guardar", this.articulo);
     }
   },
   computed: {},

@@ -8,35 +8,44 @@
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 body {
-    background: rgb(145, 90, 182);
-    background: -moz-linear-gradient(
-        90deg,
-        rgba(145, 90, 182, 0.7679446778711485) 0%,
-        rgba(128, 83, 101, 0.8575805322128851) 50%,
-        rgba(158, 168, 35, 0.8323704481792717) 100%
+    box-sizing: border-box;
+    margin: 0;
+    padding: 1px;
+    background-image: linear-gradient(
+        to right,
+        rgba(180, 180, 250, 0.1),
+        rgba(80, 80, 250, 0.2),
+        rgba(80, 80, 250, 0.3),
+        rgba(80, 80, 250, 0.3),
+        rgba(80, 80, 250, 0.3)
     );
-    background: -webkit-linear-gradient(
-        90deg,
-        rgba(145, 90, 182, 0.7679446778711485) 0%,
-        rgba(128, 83, 101, 0.8575805322128851) 50%,
-        rgba(158, 168, 35, 0.8323704481792717) 100%
-    );
-    background: linear-gradient(
-        90deg,
-        rgba(145, 90, 182, 0.7679446778711485) 0%,
-        rgba(128, 83, 101, 0.8575805322128851) 50%,
-        rgba(158, 168, 35, 0.8323704481792717) 100%
-    );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#915ab6",endColorstr="#9ea823",GradientType=1);
+    box-sizing: border-box;
 }
-button{
-    margin: 15px;;
+button {
+    margin: 15px;
 }
 .icon {
     font-size: 90px;
-    color: #bbd67c;
+    color: #4e04fd;
+}
+.card {
+    border: 1px ridge black;
+    box-shadow: 2px 2px 2px 2px #777777;
 }
 
+.card-header {
+    background-image: linear-gradient(
+        to right,
+        rgba(180, 180, 250, 0.3),
+        rgba(80, 80, 250, 0.4),
+        rgba(80, 80, 250, 0.5),
+        rgba(80, 80, 250, 0.5),
+        rgba(80, 80, 250, 1)
+    );
+}
+.card-body {
+    background-color: #c7cdf9;
+}
 .autocomplete {
     position: relative;
     display: inline-block;
@@ -70,8 +79,16 @@ button{
 }
 .autocomplete-active {
     background-color: dodgerblue !important;
-    color: #ffffff;
+    color: #000000 !important;
+    
 }
-.sombra {
-    box-shadow: 2px 2px 2px 2px #777777;
+
+.table {
+    font-size: 15px!important;
+}
+.page-link {
+    height: 40px !important;
+    background-color: #a39df5 !important;
+    color: #000000 !important;
+
 }

@@ -37,7 +37,7 @@ font-family: 'Roboto Mono', monospace; */
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: "Roboto Mono", monospace;
+  --font-family-sans-serif: "Ubuntu", sans-serif;
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
@@ -69,13 +69,13 @@ section {
 
 body {
   margin: 0;
-  font-family: "Roboto Mono", monospace;
+  font-family: "Ubuntu", sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.6;
   color: #212529;
   text-align: left;
-  background-color: #362864;
+  background-color: #ddd;
 }
 
 [tabindex="-1"]:focus {
@@ -520,7 +520,7 @@ mark,
 
 .img-thumbnail {
   padding: 0.25rem;
-  background-color: #362864;
+  background-color: #ddd;
   border: 1px solid #dee2e6;
   border-radius: 0.25rem;
   max-width: 100%;
@@ -4100,15 +4100,15 @@ input[type=button].btn-block {
 }
 
 .custom-range:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 1px #362864, 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
+  box-shadow: 0 0 0 1px #ddd, 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
 }
 
 .custom-range:focus::-moz-range-thumb {
-  box-shadow: 0 0 0 1px #362864, 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
+  box-shadow: 0 0 0 1px #ddd, 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
 }
 
 .custom-range:focus::-ms-thumb {
-  box-shadow: 0 0 0 1px #362864, 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
+  box-shadow: 0 0 0 1px #ddd, 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
 }
 
 .custom-range::-moz-focus-outer {
@@ -4308,8 +4308,8 @@ input[type=button].btn-block {
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
   color: #495057;
-  background-color: #362864;
-  border-color: #dee2e6 #dee2e6 #362864;
+  background-color: #ddd;
+  border-color: #dee2e6 #dee2e6 #ddd;
 }
 
 .nav-tabs .dropdown-menu {
@@ -6142,7 +6142,7 @@ a.close.disabled {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: "Roboto Mono", monospace;
+  font-family: "Ubuntu", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.6;
@@ -6267,7 +6267,7 @@ a.close.disabled {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: "Roboto Mono", monospace;
+  font-family: "Ubuntu", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.6;
@@ -10648,9 +10648,11 @@ a.text-dark:focus {
 }
 
 body {
-  background: #915ab6;
-  background: linear-gradient(90deg, rgba(145, 90, 182, 0.7679446779) 0%, rgba(128, 83, 101, 0.8575805322) 50%, rgba(158, 168, 35, 0.8323704482) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#915ab6",endColorstr="#9ea823",GradientType=1);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 1px;
+  background-image: linear-gradient(to right, rgba(180, 180, 250, 0.1), rgba(80, 80, 250, 0.2), rgba(80, 80, 250, 0.3), rgba(80, 80, 250, 0.3), rgba(80, 80, 250, 0.3));
+  box-sizing: border-box;
 }
 
 button {
@@ -10659,7 +10661,20 @@ button {
 
 .icon {
   font-size: 90px;
-  color: #bbd67c;
+  color: #4e04fd;
+}
+
+.card {
+  border: 1px ridge black;
+  box-shadow: 2px 2px 2px 2px #777777;
+}
+
+.card-header {
+  background-image: linear-gradient(to right, rgba(180, 180, 250, 0.3), rgba(80, 80, 250, 0.4), rgba(80, 80, 250, 0.5), rgba(80, 80, 250, 0.5), #5050fa);
+}
+
+.card-body {
+  background-color: #c7cdf9;
 }
 
 .autocomplete {
@@ -10699,10 +10714,16 @@ button {
 
 .autocomplete-active {
   background-color: dodgerblue !important;
-  color: #ffffff;
+  color: #000000 !important;
 }
 
-.sombra {
-  box-shadow: 2px 2px 2px 2px #777777;
+.table {
+  font-size: 15px !important;
+}
+
+.page-link {
+  height: 40px !important;
+  background-color: #a39df5 !important;
+  color: #000000 !important;
 }
 

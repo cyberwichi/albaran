@@ -1,12 +1,21 @@
 <?php
 
+use App\Albaran;
+use App\Aviso;
+use App\DetalleAlbaran;
+use App\Albaranmaquina;
+use App\DetalleAviso;
+use App\Empleado;
+use App\Maquina;
 use App\tbArticulo;
 use App\tbContacto;
 use App\tbStockArt;
-use Illuminate\Http\Request;
+use Illuminate\Routing\Middleware;
 use PhpParser\Node\Stmt\Catch_;
 use PhpParser\Node\Stmt\TryCatch;
 use Symfony\Component\Console\Input\Input;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,136 +29,458 @@ use Symfony\Component\Console\Input\Input;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+	return $request->user();
 });
+
 
 //index contactos
 Route::get('contactos', function () {
-    try {
-        $contactos = tbContacto::orderBy('Id')->get();
-        return json_encode($contactos);
-    } catch (\Throwable $th) {
-        return $th;
-    }
+	try {
+		$contactos = tbContacto::orderBy('Id')->get();
+		return json_encode($contactos);
+	} catch (\Throwable $th) {
+		return $th;
+	}
+});
+//contacto por id
+Route::get('contactos/{id}', function ($id) {
+	$articulo = tbContacto::find($id);
+	return json_encode($articulo);
+});
+//nuevo contacto
+Route::post('contactos', function (Request $request) {
+
+	$contacto = new tbContacto();
+	$ultimoContacto = tbContacto::orderBy('Id', 'DESC')->limit(1)->first();
+	$contacto->Nombre = $request->Nombre;
+	$contacto->Direccion = $request->Direccion;
+	$contacto->Id = ($ultimoContacto->Id) + 1;
+	$contacto->AutoId = ($ultimoContacto->Id) + 1;
+	$contacto->Nif = $request->Nif;
+	$contacto->Telefono = $request->Telefono;
+	$contacto->Email = $request->Email;
+
+	$contacto->save();
+	return $contacto;
+});
+//bora un contacto
+Route::get('delcontactos/{id}', function ($id) {
+
+	DB::table('tbcontacto')->where('Id', '=', $id)->delete();
+	return;
+});
+// actualizar contacto
+Route::put('contactos/{id}', function (Request $request, $id) {
+
+	DB::table('tbcontacto')
+		->where('Id', $id)
+		->update(array('Nombre' => $request->Nombre, 'Direccion' => $request->Direccion, 'Nif' => $request->Nif, 'Telefono' => $request->Telefono, 'Email' => $request->Email));
+
+	return;
+});
+//buscar contacto por nombre
+Route::get('searchcontacto/{dd}', function ($dd) {
+
+	$contactos = tbContacto::where('Nombre', 'LIKE', '%' . $dd . '%')->get();
+	return response()->json($contactos);
 });
 
+
+//articulo por id
+Route::get('articulos/{id}', function ($id) {
+	$articulo = tbArticulo::with('tbStockArt')->find($id);
+
+	return json_encode($articulo);
+});
+//nuevo articulo
+Route::post('articulos', function (Request $request) {
+
+	$articulo = new tbArticulo();
+	$ultimoArticulo = tbArticulo::orderBy('AutoId', 'DESC')->limit(1)->first();
+	$articulo->Nombre = $request->Nombre;
+	$articulo->UPC = $request->Upc;
+	$articulo->Id = ($ultimoArticulo->AutoId) + 1;
+	$articulo->AutoId = ($ultimoArticulo->AutoId) + 1;
+	$articulo->FechaAlta = $request->fechaalta;
+	$articulo->save();
+	$stock = new tbStockArt();
+	$stock->Articulo = $articulo->Id;
+	$stock->Stock = $request->stock;
+	$stock->save();
+	return $articulo;
+});
+
+//bora un articulo y su stock
+Route::get('delarticulos/{id}', function ($id) {
+
+	DB::table('tbarticulo')->where('Id', '=', $id)->delete();
+	DB::table('tbstockart')->where('Articulo', '=', $id)->delete();
+
+	return;
+});
+
+// actualizar articulo y stock
+Route::put('articulos/{id}', function (Request $request, $id) {
+
+	DB::table('tbarticulo')
+		->where('Id', $id)
+		->update(array('Nombre' => $request->Nombre, 'UPC' => $request->UPC));
+
+	DB::table('tbstockart')
+		->where('Articulo', $id)
+		->update(array('Stock' => $request->tb_stock_art['Stock']));
+	return json_encode($request);
+});
+
+//buscar articulo por nombre y ordenado por stock
+Route::get('searcharticulo/{dd}', function ($dd) {
+
+	$articulos = tbArticulo::where('Nombre', 'LIKE', '%' . $dd . '%')->with('tbStockArt')->get();
+	$ordenados = $articulos;
+
+
+	$ordenados->sortBy('tbStockArt->Stock', SORT_REGULAR, true);
+
+	return ($ordenados);
+});
 //index articulos
 Route::get('articulos', function () {
- 
-    $articulos = tbArticulo::orderBy('Id')->get();
-    return json_encode($articulos);
+
+	$articulos = tbArticulo::orderBy('Id')->with('tbStockArt')->get();
+
+	return json_encode($articulos);
 });
+
+
 
 //index stock
 Route::get('stock', function () {
-    $stocks = tbStockArt::orderBy('AutoId')->get();
-    return json_encode($stocks);
+	$stocks = tbStockArt::orderBy('AutoId')->get();
+	return json_encode($stocks);
 });
 
 //stock por id
 Route::get('stock/{id}', function ($id) {
-    $stock = tbStockArt::get($id);
-    return json_encode($stock);
+	$stock = tbStockArt::where('Articulo', '=', $id)->get();
+	return json_encode($stock);
 });
+// suma stock entrada de articulos
+Route::put('articulossumastock/{id}', function (Request $request, $id) {
 
-//articulo por id
-Route::get('articulos/{id}', function ($id) {
-    $articulo = tbArticulo::find($id);
-    return json_encode($articulo);
-});
+	$articulo = tbStockArt::where('Articulo', $id)->get();
 
 
-//nuevo contacto
-Route::post('contactos', function (Request $request) {
+	$articulo[0]->update(array('Stock' => $request->articuloCantidad + $articulo[0]->Stock));
 
-    $contacto = new tbContacto();
-    $ultimoContacto = tbContacto::orderBy('AutoId', 'DESC')->limit(1)->first();
-    $contacto->Nombre = $request->Nombre;
-    $contacto->Direccion = $request->Direccion;
-    $contacto->Id = ($ultimoContacto->AutoId) + 1;
-    $contacto->save();
-    return $contacto;
-});
-
-//nuevo articulo
-Route::post('articulos', function (Request $request) {
-
-    $articulo = new tbArticulo();
-    $ultimoArticulo = tbArticulo::orderBy('AutoId', 'DESC')->limit(1)->first();
-    $articulo->Nombre = $request->Nombre;
-    $articulo->UPC = $request->Upc;
-    $articulo->Id = ($ultimoArticulo->AutoId) + 1;
-    $articulo->save();
-    return $articulo;
-});
-
-
-//bora un articulo
-Route::get('delarticulos/{id}', function ($id) {
-
-    DB::table('tbArticulo')->where('AutoId', '=', $id)->delete();
-    return;
-});
-
-//bora un contacto
-Route::get('delcontactos/{id}', function ($id) {
-
-    DB::table('tbContacto')->where('AutoId', '=', $id)->delete();
-    return;
+	return json_encode($articulo);
 });
 
 
 
+//bora un aviso
+Route::get('delaviso/{id}', function ($id) {
 
-// actualizar articulo
-Route::put('articulos/{id}', function (Request $request, $id) {
+	DB::table('avisos')->where('id', '=', $id)->delete();
+	DetalleAviso::where('aviso_id', '=', $id)->delete();
 
-    DB::table('tbArticulo')
-        ->where('AutoId', $id)
-        ->update(array('Nombre' => $request->Nombre, 'UPC' => $request->UPC));
 
-    return;
+	return;
 });
 
-// actualizar contacto
-Route::put('contactos/{id}', function (Request $request, $id) {
+// actualizar aviso
+Route::put('avisos/{id}', function (Request $request, $id) {
 
-    DB::table('tbContacto')
-        ->where('AutoId', $id)
-        ->update(array('Nombre' => $request->Nombre, 'Direccion' => $request->Direccion,));
+	$aviso = Aviso::find($id);
+	$aviso->contacto_id = $request->contacto_id;
+	$aviso->fechaPrevista = $request->fechaPrevista;
+	$aviso->comentario = $request->comentario;
+	$aviso->empleado_id = $request->empleado_id;
+	$aviso->update();
 
-    return;
+	return ($aviso);
+});
+
+//guardar aviso
+Route::post('aviso', function (Request $request) {
+	if ($request->id == 0) {
+
+		$aviso = new Aviso();
+		$aviso->contacto_id = $request->clientid;
+		$aviso->fechaPrevista = $request->fechaPrevista;
+		$aviso->comentario = $request->observaciones;
+		$aviso->save();
+
+		foreach ($request->listaarticulos as $key => $linea) {
+			$detalle = new DetalleAviso();
+			$detalle->aviso_id = $aviso->id;
+			$detalle->articulo_id = $linea['articuloId'];
+			$detalle->articulo_nombre = $linea['articuloNombre'];
+			$detalle->cantidad = $linea['articuloCantidad'];
+			$detalle->precio = $linea['articuloPrecio'];
+			$detalle->save();
+
+			$stock = tbStockArt::where('Articulo', '=', $linea['articuloId'])->first();
+			$stock->UdsPed = $stock->UdsPed + $linea['articuloCantidad'];
+			$stock->update();
+		};
+	} else {
+		$aviso = Aviso::find($request->id);
+		$aviso->contacto_id = $request->clientid;
+		$aviso->fechaPrevista = $request->fechaPrevista;
+		$aviso->comentario = $request->observaciones;
+		$aviso->empleado_id = $request->empleado;
+		$aviso->update();
+		if ($request->listaarticulos) {
+			$detalle = DetalleAviso::where('aviso_id', $request->id)->get();
+			foreach ($detalle as $key => $linea) {
+				$stock = tbStockArt::where('Articulo', '=', $linea['articulo_id'])->first();
+				$stock->UdsPed = $stock->UdsPed - $linea['cantidad'];
+				$stock->update();
+			}
+			$detalle = DetalleAviso::where('aviso_id', $request->id);
+			$detalle->delete();
+			foreach ($request->listaarticulos as $key => $linea) {
+				$detalle = new DetalleAviso();
+				$detalle->aviso_id = $aviso->id;
+				$detalle->articulo_id = $linea['articulo_id'];
+				$detalle->articulo_nombre = $linea['articulo_nombre'];
+				$detalle->cantidad = $linea['cantidad'];
+				$detalle->precio = $linea['precio'];
+				$detalle->save();
+
+				$stock = tbStockArt::where('Articulo', '=', $linea['articulo_id'])->first();
+				$stock->UdsPed = $stock->UdsPed + $linea['cantidad'];
+				$stock->update();
+			};
+		}
+	}
+
+
+	return $aviso->id;
+});
+//index aviso
+Route::get('avisos', function () {
+	$avisos = Aviso::orderBy('Id', 'desc')->with('tbContacto')->with('Empleado')->get();
+
+	return ($avisos);
+});
+
+//aviso por id
+Route::get('avisos/{id}', function ($id) {
+	$aviso = Aviso::where('id', $id)->with('tbContacto')->with('Empleado')->get();
+
+	return ($aviso);
+});
+//aviso por cliente
+Route::get('avisosporcliente/{id}', function ($id) {
+	$aviso = Aviso::where('contacto_id', $id)->orderBy('Id', 'desc')->with('tbContacto')->get();
+
+	return json_encode($aviso);
+});
+//señala como finalizado un aviso
+Route::get('finaliza/{id}', function ($id) {
+
+	Aviso::find($id)->update(['terminada' => "1"]);
+	return "ok";
+});
+
+//detalle de aviso por id
+Route::get('detalles/{id}', function ($id) {
+	$detalles = DetalleAviso::where('aviso_id', $id)->get();
+	return json_encode($detalles);
+});
+//avisos por empleado
+Route::get('avisos/empleado/{id}', function ($id) {
+	$avisos = Aviso::where('empleado_id', $id)->orderBy('Id', 'desc')->with('empleado')->with('tbContacto')->get();
+
+	return json_encode($avisos);
+});
+//avisos por no terminados
+Route::get('avisosnoterminados', function () {
+	$avisos = Aviso::where('terminada', null)->orderBy('Id', 'desc')->with('empleado')->with('tbContacto')->get();
+
+	return json_encode($avisos);
 });
 
 
 
 
-//buscar articulo por nombre
-Route::get('searcharticulo/{dd}', function ($dd) {
-
-    $articulos = tbArticulo::where('Nombre', 'LIKE', '%' . $dd . '%')->get();
-    return response()->json($articulos);
+//albaranes index
+Route::get('albaranes', function () {
+	$albaranes = Albaran::orderBy('Id', 'desc')->with('detallealbaran')->with('albaranmaquina')->get();
+	return json_encode($albaranes);
 });
 
-//buscar contacto por nombre
-Route::get('searchcontacto/{dd}', function ($dd) {
+//albaranes por cliente
 
-    $contactos = tbContacto::where('Nombre', 'LIKE', '%' . $dd . '%')->get();
-    return response()->json($contactos);
+Route::get('albaranesporcliente/{id}', function ($id) {
+	$avisos = Aviso::where('contacto_id', $id)->get();
+	$albaranes = [];
+	foreach ($avisos as $key => $aviso) {
+		$albaranes[$key] = Albaran::where('aviso_id', $aviso->id)->with('detallealbaran')->with('albaranmaquina')->get();
+	}
+
+	return json_encode($albaranes);
+});
+//albaranes por aviso
+
+Route::get('albaranesporaviso/{id}', function ($id) {
+	$albaranes = Albaran::where('aviso_id', $id)->with('albaranmaquina')->orderBy('aviso_id', 'desc')->get();
+	return json_encode($albaranes);
+});
+
+//guardamos albaran
+Route::post('albaran', function (Request $request) {
+
+	$albaran = new  Albaran();
+	$albaran->aviso_id = $request->aviso_id;
+	$albaran->observaciones = $request->observaciones;
+	$albaran->firma_cliente = $request->firma_cliente;
+	$albaran->firma_empleado = $request->firma_empleado;
+	$albaran->save();
+	foreach ($request->listaarticulos as $key => $linea) {
+		$detalle = new DetalleAlbaran();
+		$detalle->albaran_id = $albaran->id;
+		$detalle->articulo_id = $linea['articulo_id'];
+		$detalle->articulo_nombre = $linea['articulonombre'];
+		$detalle->cantidad = $linea['cantidad'];
+		$detalle->precio = $linea['precio'];
+		$detalle->save();
+
+		$stock = tbStockArt::where('Articulo', '=', $linea['articulo_id'])->first();
+		$stock->Stock = $stock->Stock - $linea['cantidad'];
+		$stock->UdsPed = $stock->UdsPed - $linea['cantidad'];
+		$stock->update();
+	}
+	foreach($request->listamaquinas as $key => $linea){
+		$maquina= new AlbaranMaquina();
+		$maquina->albaran_id= $albaran->id;
+		$maquina->maquina_id= $linea['id'];
+		$maquina->referencia= $linea['referencia'];
+		$maquina->save();
+
+	}
+
+	return $albaran->id;
+});
+
+//bora un albaran
+Route::get('delalbaranes/{id}', function ($id) {
+
+	Albaran::where('id', '=', $id)->delete();
+	DetalleAlbaran::where('albaran_id', '=', $id)->delete();
+
+	return;
+});
+//albaran por id
+Route::get('albaran/{id}', function ($id) {
+	$albaran = Albaran::where('id', $id)->with('detallealbaran')->get();
+
+	return ($albaran);
+});
+
+//detalle de albaran por id de albaran
+Route::get('detallesalbaran/{id}', function ($id) {
+	$detalles = DetalleAlbaran::where('albaran_id', '=', $id)->get();
+	return json_encode($detalles);
 });
 
 
-/* "PDOException: could not find driver in /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:70\n
-Stack trace:\n
-#0 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(70): PDO->__construct('dblib:host=den1...', 'satdemo1', 'Nr79_N284e5-', Array)
-\n#1 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(46): Illuminate\\Database\\Connectors\\Connector->createPdoConnection('dblib:host=den1...', 'satdemo1', 'Nr79_N284e5-', Array)
-\n#2 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connectors/SqlServerConnector.php(32): Illuminate\\Database\\Connectors\\Connector->createConnection('dblib:host=den1...', Array, Array)
-\n#3 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connectors/ConnectionFactory.php(182): Illuminate\\Database\\Connectors\\SqlServerConnector->connect(Array)
-\n#4 [internal function]: Illuminate\\Database\\Connectors\\ConnectionFactory->Illuminate\\Database\\Connectors\\{closure}()
-\n#5 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php(920): call_user_func(Object(Closure))
-\n#6 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php(945): Illuminate\\Database\\Connection->getPdo()
-\n#7 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php(400): Illuminate\\Database\\Connection->getReadPdo()
-\n#8 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php(326): Illuminate\\Database\\Connection->getPdoForSelect(true)
-\n#9 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php(658): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from [...', Array)
-\n#10 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php(625): Illuminate\\Database\\Connection->runQueryCallback('select * from [...', Array, Object(Closure))
-\n#11 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php(334): Illuminate\\Database\\Connection->run('select * from [...', Array, Object(Closure))\n#12 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2140): Illuminate\\Database\\Connection->select('select * from [...', Array, true)\n#13 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2128): Illuminate\\Database\\Query\\Builder->runSelect()\n#14 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2572): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()\n#15 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2129): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))\n#16 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(521): Illuminate\\Database\\Query\\Builder->get(Array)\n#17 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(505): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)\n#18 /var/app/current/routes/api.php(29): Illuminate\\Database\\Eloquent\\Builder->get()\n#19 /var/app/current/vendor/laravel/framework/src/Illuminate/Routing/Route.php(205): Illuminate\\Routing\\RouteFileRegistrar->{closure}()\n#20 /var/app/current/vendor/laravel/framework/src/Illuminate/Routing/Route.php(179): Illuminate\\Routing\\Route->runCallable()\n#21 /var/app/current/vendor/laravel/framework/src/Illuminate/Routing/Router.php(680): Illuminate\\Routing\\Route->run()\n#22 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(130): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))\n#23 /var/app/current/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(41): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))\n#24 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(171): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))\n#25 /var/app/current/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php(59): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))\n#26 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(171): Illuminate\\Routing\\Middleware\\ThrottleRequests->handle(Object(Illuminate\\Http\\Request), Object(Closure), 60, '1')\n#27 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(105): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))\n#28 /var/app/current/vendor/laravel/framework/src/Illuminate/Routing/Router.php(682): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))\n#29 /var/app/current/vendor/laravel/framework/src/Illuminate/Routing/Router.php(657): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))\n#30 /var/app/current/vendor/laravel/framework/src/Illuminate/Routing/Router.php(623): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))\n#31 /var/app/current/vendor/laravel/framework/src/Illuminate/Routing/Router.php(612): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))\n#32 /var/app/current/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(176): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))\n#33 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(130): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))\n#34 /var/app/current/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))\n#35 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(171): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))\n#36 /var/app/current/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))\n#37 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(171): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))\n#38 /var/app/current/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))\n#39 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(171): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))\n#40 /var/app/current/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/CheckForMaintenanceMode.php(62): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))\n#41 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(171): Illuminate\\Foundation\\Http\\Middleware\\CheckForMaintenanceMode->handle(Object(Illuminate\\Http\\Request), Object(Closure))\n#42 /var/app/current/vendor/fideloper/proxy/src/TrustProxies.php(57): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))\n#43 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(171): Fideloper\\Proxy\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))\n#44 /var/app/current/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(105): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))\n#45 /var/app/current/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(151): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))\n#46 /var/app/current/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(116): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))\n#47 /var/app/current/public/index.php(55): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))\n#48 {main}\n\nNext Illuminate\\Database\\QueryException: could not find driver (SQL: select * from [tbContacto] order by [Id] asc) in /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php:665\nStack trace:\n#0 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php(625): Illuminate\\Database\\Connection->runQueryCallback('select * from [...', Array, Object(Closure))\n#1 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Connection.php(334): Illuminate\\Database\\Connection->run('select * from [...', Array, Object(Closure))\n#2 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2140): Illuminate\\Database\\Connection->select('select * from [...', Array, true)\n#3 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2128): Illuminate\\Database\\Query\\Builder->runSelect()\n#4 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2572): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()\n#5 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2129): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))\n#6 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(521): Illuminate\\Database\\Query\\Builder->get(Array)\n#7 /var/app/current/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(505): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)\n#8 /var/app/current/routes/api.php(29): Illuminate\\Database\\Eloquent\\Builder->get()\n#9 /var/app/current/vendor/laravel/framework/src/Il... (15168 total length)" */
+
+
+
+//nuevo empleado
+Route::post('empleados', function (Request $request) {
+
+	$empleado = new Empleado();
+	$empleado->name = $request->name;
+	$empleado->telefono = $request->telefono;
+	$empleado->email=$request->email;
+	$empleado->activo = $request->activo;
+	$empleado->appcode=$request->appcode;
+
+	$empleado->save();
+	return $empleado;
+});
+
+//index empleados
+Route::get('empleados', function () {
+	try {
+		$empleados = Empleado::orderBy('Id')->get();
+		return json_encode($empleados);
+	} catch (\Throwable $th) {
+		return $th;
+	}
+});
+
+//empleado por id
+Route::get('empleados/{id}', function ($id) {
+	$empleado = Empleado::find($id);
+	return json_encode($empleado);
+});
+
+// actualizar empleado
+Route::put('empleados/{id}', function (Request $request, $id) {
+
+	DB::table('empleados')
+		->where('id', $id)
+		->update(array('name' => $request->name, 'telefono' => $request->telefono, 'activo' => $request->activo, 'email'=>$request->email));
+	return json_encode(Empleado::get());
+});
+
+//bora un empleado
+Route::get('/delempleados/{id}', function ($id) {
+	DB::table('empleados')->where('id', '=', $id)->delete();
+	return ('ok');
+});
+
+//empleados activos
+Route::get('activos', function () {
+	$empleados = Empleado::where('activo', '=', true)->get();
+	return json_encode($empleados);
+});
+
+
+
+
+
+//nuevo maquina
+Route::post('maquinas', function (Request $request) {
+	$maquina = new Maquina();
+	$maquina->nombre = $request->nombre;
+	$maquina->comentarios = $request->comentarios;
+	$maquina->save();	
+	return $maquina;
+});
+//index maquinas
+Route::get('maquinas', function () {
+
+	$maquinas = Maquina::orderBy('Id')->get();
+
+	return json_encode($maquinas);
+});
+// actualizar maquina
+Route::put('maquinas/{id}', function (Request $request, $id) {
+
+	DB::table('maquinas')
+		->where('id', $id)
+		->update(array('nombre' => $request->nombre, 'comentarios' => $request->comentarios));
+	return json_encode($request);
+});
+//bora una maquina
+Route::get('delmaquinas/{id}', function ($id) {
+
+	Maquina::where('id', '=', $id)->delete();
+	return;
+});
+//buscar maquina por nombre
+Route::get('searchmaquina/{dd}', function ($dd) {
+
+	$maquinas = Maquina::where('nombre', 'LIKE', '%' . $dd . '%')->get();
+	return response()->json($maquinas);
+});
+//maquina por id
+Route::get('maquinas/{id}', function ($id) {
+	$maquina = Maquina::find($id);
+	return json_encode($maquina);
+});
