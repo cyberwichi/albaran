@@ -4,7 +4,7 @@
       <div class="card-body">
         <nav aria-label="Page navigation example" class>
                     <ul class="pagination">
-                        <li class="page-item">
+                        <li class="page-item" :pages="pages">
                             <button
                                 type="button"
                                 class="page-link"
@@ -137,7 +137,7 @@ export default {
           }
           var found = this.contactos.findIndex(buscarregistro);
           this.contactos.splice(found, 1);
-          paginate(this.contactos);
+          this.paginate(this.contactos);
           document.getElementById("app").style.cursor = "auto";
         })
         .catch(e => {console.log(e);
@@ -158,11 +158,13 @@ export default {
     },
     setPages() {
       let numberOfPages = Math.ceil(this.contactos.length / this.perPage);
+      this.pages = [];
       for (let index = 1; index <= numberOfPages; index++) {
         this.pages.push(index);
       }
     },
     paginate(contactos) {
+      this.setPages();
       let page = this.page;
       let perPage = this.perPage;
       let from = page * perPage - perPage;

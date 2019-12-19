@@ -14,4 +14,8 @@ class Albaran extends Model
     {
         return $this->HasMany(Albaranmaquina::class);
     }
+    public function aviso()
+    {
+        return $this->belongsTo(Aviso::class);
+    }
 }

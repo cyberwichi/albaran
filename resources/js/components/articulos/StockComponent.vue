@@ -86,8 +86,7 @@
                             <th>Id</th>
                             <th>Nombre</th>
                             <th class="text-right">Unidades en Almacen</th>
-                            <th class="text-right">Unidades Pedidas</th>
-                            <th class="text-right">Unidades Compradas</th>
+                            <th class="text-right">Unidades Pedidas</th>                          
                         </thead>
                         <tbody class="card-footer table-body">
                             <responsestock-component

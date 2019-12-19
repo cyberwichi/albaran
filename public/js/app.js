@@ -3227,6 +3227,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["numeroaviso"],
   data: function data() {
@@ -3320,7 +3331,7 @@ __webpack_require__.r(__webpack_exports__);
           var detallealb = {
             avisoid: id,
             articulo_id: element.articulo_id,
-            articulonombre: element.articulo_nombre,
+            articulo_nombre: element.articulo_nombre,
             cantidad: element.cantidad,
             precio: element.precio
           };
@@ -3873,7 +3884,7 @@ __webpack_require__.r(__webpack_exports__);
         document.getElementById("app").style.cursor = "auto";
       });
       this.albaran.albaranmaquina.forEach(function (element, index) {
-        axios.get("/api/maquinas/" + element.id).then(function (response) {
+        axios.get("/api/maquinas/" + element.maquina_id).then(function (response) {
           var maquina = {
             nombre: response.data.nombre,
             referencia: element.referencia
@@ -4216,6 +4227,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     setPages: function setPages() {
       var numberOfPages = Math.ceil(this.articulos.length / this.perPage);
+      this.pages = [];
 
       for (var index = 1; index <= numberOfPages; index++) {
         this.pages.push(index);
@@ -4506,11 +4518,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["articulo"],
   data: function data() {
@@ -4552,7 +4559,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -4873,7 +4879,8 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.contactos.splice(found, 1);
 
-        paginate(_this.contactos);
+        _this.paginate(_this.contactos);
+
         document.getElementById("app").style.cursor = "auto";
       })["catch"](function (e) {
         console.log(e);
@@ -4895,12 +4902,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     setPages: function setPages() {
       var numberOfPages = Math.ceil(this.contactos.length / this.perPage);
+      this.pages = [];
 
       for (var index = 1; index <= numberOfPages; index++) {
         this.pages.push(index);
       }
     },
     paginate: function paginate(contactos) {
+      this.setPages();
       var page = this.page;
       var perPage = this.perPage;
       var from = page * perPage - perPage;
@@ -5995,6 +6004,269 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      referencia: "",
+      tiposdemaquina: [],
+      maquinas: [],
+      maquinas2: [],
+      page: 1,
+      perPage: 9,
+      pages: [],
+      maquina: {},
+      ver: null,
+      albaran: [],
+      albaranver: false
+    };
+  },
+  mounted: function mounted() {},
+  methods: {
+    veralbaran: function veralbaran(id) {
+      var _this = this;
+
+      axios.get("api/albaran/" + id).then(function (response) {
+        console.log(_this.albaran);
+        _this.albaran = response.data[0];
+        console.log(_this.albaran);
+        _this.albaranver = true;
+      });
+    },
+    buscarreferencia: function buscarreferencia() {
+      var _this2 = this;
+
+      this.tiposdemaquina = [];
+      this.ver = null;
+      this.albaranver = false;
+      document.getElementById("app").style.cursor = "progress";
+
+      if (this.referencia) {
+        axios.get("/api/maquinashistorial/" + this.referencia).then(function (response) {
+          _this2.maquinas = response.data;
+          var maquina_id = 0;
+
+          _this2.maquinas.forEach(function (element) {
+            if (element.maquina_id != maquina_id) {
+              maquina_id = element.maquina_id;
+              axios.get("/api/maquinas/" + element.maquina_id).then(function (response) {
+                _this2.tiposdemaquina.push(response.data);
+
+                document.getElementById("app").style.cursor = "auto";
+              });
+            }
+          });
+
+          document.getElementById("app").style.cursor = "auto";
+        });
+      } else {
+        document.getElementById("app").style.cursor = "auto";
+      }
+    },
+    listamaquina: function listamaquina(id) {
+      var _this3 = this;
+
+      this.maquinas2 = [];
+      this.maquinas.forEach(function (element) {
+        if (element.maquina_id == id) {
+          _this3.maquinas2.push(element);
+        }
+      });
+      this.ver = true;
+    },
+    setPages: function setPages() {
+      this.pages = [];
+      var numberOfPages = Math.ceil(this.maquinas2.length / this.perPage);
+
+      for (var index = 1; index <= numberOfPages; index++) {
+        this.pages.push(index);
+      }
+    },
+    paginate: function paginate(maquinas2) {
+      var page = this.page;
+      var perPage = this.perPage;
+      var from = page * perPage - perPage;
+      var to = page * perPage;
+      return maquinas2.slice(from, to);
+    }
+  },
+  computed: {
+    maquinasMostrados: function maquinasMostrados() {
+      return this.paginate(this.maquinas2);
+    }
+  },
+  watch: {
+    maquinas2: function maquinas2() {
+      this.setPages();
+    }
+  },
+  filters: {
+    trimWords: function trimWords(value) {
+      return value.split(" ").splice(0, 20).join(" ") + "...";
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasPrincipalComponent.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maquinas/MaquinasPrincipalComponent.vue?vue&type=script&lang=js& ***!
@@ -6004,6 +6276,21 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -13198,7 +13485,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.hidden {\r\n    display: none;\n}\n.cabecera {\r\n    width: 100%;\r\n    height: 200px;\r\n    margin-bottom: 20px;\n}\n.faldon {\r\n    width: 100%;\r\n    text-align: center;\n}\n.firmas {\r\n    display: flex;\r\n    justify-content: space-around;\r\n    flex-wrap: wrap;\n}\n.poner {\r\n    display: none;\n}\r\n", ""]);
+exports.push([module.i, "\n.hidden {\r\n    display: none;\n}\n.cabecera {\r\n    width: 100%;\r\n    height: 200px;\r\n    margin-bottom: 20px;\n}\n.faldon {\r\n    width: 100%;\r\n    text-align: center;\n}\n.firmas {\r\n    display: flex;\r\n    width: 90%;\r\n    justify-content: space-around;\r\n    flex-wrap: wrap;\r\n    margin: auto;\n}\n.poner {\r\n    display: none;\n}\n@media (max-width: 950px) {\n.peq {\r\n        width: 50px;\n}\n.med {\r\n        width: 100px;\n}\n.ocul {\r\n        display: none;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -13217,7 +13504,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.hidden {\r\n    display: none;\n}\n.cabecera {\r\n    width: 100%;\r\n    height: 200px;\n}\n.cabecera {\r\n    width: 100%;\r\n    height: 200px;\r\n    margin-bottom: 20px;\n}\n.faldon {\r\n    width: 100%;\r\n    text-align: center;\n}\n.firmas {\r\n    display: inline-flex;\r\n    justify-content: space-around;\r\n    flex-wrap: nowrap;\n}\n.poner {\r\n    display: none;\n}\n@media (max-width: 750px) {\n.firmas {\r\n        flex-wrap: wrap;\n}\n}\r\n", ""]);
+exports.push([module.i, "\n.hidden {\r\n    display: none;\n}\n.cabecera {\r\n    width: 100%;\r\n    height: 200px;\n}\n.cabecera {\r\n    width: 100%;\r\n    height: 200px;\r\n    margin-bottom: 20px;\n}\n.faldon {\r\n    width: 100%;\r\n    text-align: center;\n}\n.firmas {    \r\n    display: inline-flex;\r\n    justify-content: space-around;\r\n    flex-wrap: nowrap;\n}\n.firmas :first-child{\r\n    align-self:start;\n}\n.poner {\r\n    display: none;\n}\n@media (max-width: 750px) {\n.firmas {\r\n        flex-wrap: wrap;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -13332,6 +13619,25 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, "\nbutton.page-link[data-v-b49831ce] {\r\n    display: inline-block;\r\n    width: 60px;\r\n    height: 60px;\n}\nbutton.page-link[data-v-b49831ce] {\r\n    font-size: 11px;\r\n    font-weight: 300;\n}\n.offset[data-v-b49831ce] {\r\n    width: 500px !important;\r\n    margin: 20px auto;\n}\r\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\nbutton.page-link[data-v-179b3422] {\r\n    display: inline-block;\r\n    width: 60px;\r\n    height: 60px;\n}\nbutton.page-link[data-v-179b3422] {\r\n    font-size: 11px;\r\n    font-weight: 300;\n}\n.offset[data-v-179b3422] {\r\n    width: 500px !important;\r\n    margin: 20px auto;\n}\r\n", ""]);
 
 // exports
 
@@ -62252,6 +62558,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/ResponseComponent.vue?vue&type=style&index=0&lang=css&":
 /*!************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maquinas/ResponseComponent.vue?vue&type=style&index=0&lang=css& ***!
@@ -76029,11 +76365,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "card-header" }, [
+    _c("div", { staticClass: "card-header ocul" }, [
       _c(
         "form",
         {
-          staticClass: "sombra mb-3",
+          staticClass: "sombra mb-3 ",
           on: {
             submit: function($event) {
               $event.preventDefault()
@@ -76083,36 +76419,88 @@ var render = function() {
       _vm._v(" "),
       _c("h4", [_vm._v("Albaran de Cliente")]),
       _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("h5", { staticClass: "card col-12 display-5" }, [
-            _c("div", [_vm._v("Aviso: " + _vm._s(_vm.numeroaviso))]),
+      _c("h5", { staticClass: "card col-12 display-5" }, [
+        _c("div", [_vm._v("Aviso: " + _vm._s(_vm.numeroaviso))]),
+        _vm._v(" "),
+        _c("div", [_vm._v("Cliente: " + _vm._s(_vm.cliente.Nombre))]),
+        _vm._v(" "),
+        _c("div", [_vm._v("Direccion: " + _vm._s(_vm.cliente.Direccion))]),
+        _vm._v(" "),
+        _c("div", [_vm._v("Telefono: " + _vm._s(_vm.cliente.Telefono))]),
+        _vm._v(" "),
+        _c("div", [_vm._v("Nif: " + _vm._s(_vm.cliente.Nif))]),
+        _vm._v(" "),
+        _c("div", [_vm._v("Email: " + _vm._s(_vm.cliente.Email))])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card sombra mt-1" }, [
+        _vm._m(2),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "form-group p-3 quitar" },
+          [
+            _vm._m(3),
             _vm._v(" "),
-            _c("div", [_vm._v("Cliente: " + _vm._s(_vm.cliente.Nombre))]),
-            _vm._v(" "),
-            _c("div", [_vm._v("Direccion: " + _vm._s(_vm.cliente.Direccion))]),
-            _vm._v(" "),
-            _c("div", [_vm._v("Telefono: " + _vm._s(_vm.cliente.Telefono))]),
-            _vm._v(" "),
-            _c("div", [_vm._v("Nif: " + _vm._s(_vm.cliente.Nif))]),
-            _vm._v(" "),
-            _c("div", [_vm._v("Email: " + _vm._s(_vm.cliente.Email))])
-          ])
+            _c("autocompletarmaquina-component", {
+              on: {
+                newmaquina: function($event) {
+                  return _vm.anadirmaquina($event)
+                }
+              },
+              model: {
+                value: _vm.maquina,
+                callback: function($$v) {
+                  _vm.maquina = $$v
+                },
+                expression: "maquina"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("table", { staticClass: "table table-responsive" }, [
+          _vm._m(4),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.maquinas, function(maq, index) {
+              return _c("tr", { key: index }, [
+                _c("th", { attrs: { scope: "row" } }, [
+                  _vm._v(_vm._s(maq.nombre))
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(maq.referencia) +
+                      "\n                        "
+                  )
+                ])
+              ])
+            }),
+            0
+          )
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card sombra mt-4" }, [
-        _vm._m(2),
+      _c("div", { staticClass: "card sombra mt-1 quitar" }, [
+        _vm._m(5),
         _vm._v(" "),
         _c("table", { staticClass: "table table-responsive" }, [
-          _vm._m(3),
+          _vm._m(6),
           _vm._v(" "),
           _c(
             "tbody",
             _vm._l(_vm.detalles, function(linea, index) {
               return _c("tr", { key: index }, [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _vm._v(_vm._s(linea.articulo_id))
+                _c("th", { staticClass: "ocul", attrs: { scope: "row" } }, [
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(linea.articulo_id) +
+                      "\n                        "
+                  )
                 ]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(linea.articulo_nombre))]),
@@ -76133,11 +76521,11 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card sombra mt-4" }, [
-        _vm._m(4),
+      _c("div", { staticClass: "card sombra mt-1" }, [
+        _vm._m(7),
         _vm._v(" "),
         _c("table", { staticClass: "table table-responsive" }, [
-          _vm._m(5),
+          _vm._m(8),
           _vm._v(" "),
           _c(
             "tbody",
@@ -76146,11 +76534,15 @@ var render = function() {
                 "tr",
                 { key: index, on: { change: _vm.calcularTotal } },
                 [
-                  _c("th", { attrs: { scope: "row" } }, [
-                    _vm._v(_vm._s(linea2.articulo_id))
+                  _c("th", { staticClass: "ocul", attrs: { scope: "row" } }, [
+                    _vm._v(
+                      "\n                            " +
+                        _vm._s(linea2.articulo_id) +
+                        "\n                        "
+                    )
                   ]),
                   _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(linea2.articulonombre))]),
+                  _c("td", [_vm._v(_vm._s(linea2.articulo_nombre))]),
                   _vm._v(" "),
                   _c("td", [
                     _c("input", {
@@ -76162,7 +76554,8 @@ var render = function() {
                           expression: "linea2.cantidad"
                         }
                       ],
-                      attrs: { type: "text", name: "", id: "" },
+                      staticClass: "peq",
+                      attrs: { type: "text", placeholder: linea2.cantidad },
                       domProps: { value: linea2.cantidad },
                       on: {
                         input: function($event) {
@@ -76214,7 +76607,7 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card sombra mt-4" }, [
+      _c("div", { staticClass: "card sombra mt-1" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("h4", [_vm._v("Trabajo Finalizado")]),
           _vm._v(" "),
@@ -76227,11 +76620,12 @@ var render = function() {
                 expression: "terminado"
               }
             ],
-            staticClass: "form-control",
+            staticClass: "form-control quitar",
             attrs: {
               type: "checkbox",
               name: "terminado",
-              value: "Trabajo Finalizado"
+              value: "Trabajo Finalizado",
+              placeholder: "terminado"
             },
             domProps: {
               checked: Array.isArray(_vm.terminado)
@@ -76259,11 +76653,23 @@ var render = function() {
                 }
               }
             }
-          })
+          }),
+          _vm._v(" "),
+          _vm.terminado
+            ? _c(
+                "label",
+                { staticClass: "poner", attrs: { for: "terminado" } },
+                [_vm._v("SI")]
+              )
+            : _c(
+                "label",
+                { staticClass: "poner", attrs: { for: "terminado" } },
+                [_vm._v("NO")]
+              )
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "form-group p-3" }, [
-          _vm._m(6),
+          _vm._m(9),
           _vm._v(" "),
           _c("textarea", {
             directives: [
@@ -76275,7 +76681,12 @@ var render = function() {
               }
             ],
             staticClass: "form-control sombra",
-            attrs: { name: "observaciones", cols: "85", rows: "5" },
+            attrs: {
+              name: "observaciones",
+              cols: "85",
+              rows: "3",
+              placeholder: _vm.observaciones
+            },
             domProps: { value: _vm.observaciones },
             on: {
               input: function($event) {
@@ -76289,59 +76700,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card sombra mt-4" }, [
-        _vm._m(7),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "form-group p-3" },
-          [
-            _vm._m(8),
-            _vm._v(" "),
-            _c("autocompletarmaquina-component", {
-              on: {
-                newmaquina: function($event) {
-                  return _vm.anadirmaquina($event)
-                }
-              },
-              model: {
-                value: _vm.maquina,
-                callback: function($$v) {
-                  _vm.maquina = $$v
-                },
-                expression: "maquina"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c("table", { staticClass: "table table-responsive" }, [
-          _vm._m(9),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.maquinas, function(maq, index) {
-              return _c("tr", { key: index }, [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _vm._v(_vm._s(maq.nombre))
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm._v(
-                    "\n                            " +
-                      _vm._s(maq.referencia) +
-                      "\n                        "
-                  )
-                ])
-              ])
-            }),
-            0
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card mt-2" }, [
+      _c("div", { staticClass: "card mt-1" }, [
         _vm._m(10),
         _vm._v(" "),
         _c("div", { staticClass: "firmas" }, [
@@ -76459,12 +76818,12 @@ var render = function() {
           staticClass: "btn btn-flat",
           on: { click: _vm.guardaAlbaran }
         },
-        [_c("img", { attrs: { src: "img/Save.png", width: "40px", alt: "" } })]
+        [_c("img", { attrs: { src: "/img/Save.png", width: "40px", alt: "" } })]
       ),
       _vm._v(" "),
       _c("button", { staticClass: "btn btn-flat" }, [
         _c("img", {
-          attrs: { src: "img/print.png", width: "40px" },
+          attrs: { src: "/img/print.png", width: "40px" },
           on: { click: _vm.imprimirElemento }
         })
       ])
@@ -76493,65 +76852,9 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", [
       _c("img", {
-        staticClass: "cabecera",
+        staticClass: "cabecera image-responsive",
         attrs: { src: "/img/cabecera.jpeg", alt: "" }
       })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h5", {}, [_vm._v("Detalle de Pedido")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "text-center thead" }, [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Id Articulo")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Articulo")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Cantidad")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Precio")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h5", {}, [_vm._v("Articulos Entregados")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "text-center thead" }, [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Id Articulo")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Articulo")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Cantidad")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Precio")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("h5", [
-      _c("strong", [_vm._v("Observaciones / Material Pendiente")])
     ])
   },
   function() {
@@ -76578,6 +76881,66 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Referencia")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h5", {}, [_vm._v("Detalle de Pedido")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "text-center thead" }, [
+      _c("tr", [
+        _c("th", { staticClass: "ocul", attrs: { scope: "col" } }, [
+          _vm._v("Id")
+        ]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Articulo")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Cantidad")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Precio")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h5", {}, [_vm._v("Articulos Entregados")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "text-center thead" }, [
+      _c("tr", [
+        _c("th", { staticClass: "ocul", attrs: { scope: "col" } }, [
+          _vm._v("Id")
+        ]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Articulo")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Cantidad")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Precio")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h5", [
+      _c("strong", [_vm._v("Observaciones / Material Pendiente")])
     ])
   },
   function() {
@@ -76725,49 +77088,59 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
         _c("div", { staticClass: "card-body" }, [
-          _c("div", { staticClass: "form-group" }, [
-            _c("h5", { staticClass: "card col-12 display-5" }, [
-              _c("div", [
-                _vm._v("Numero de aviso : " + _vm._s(_vm.albaran.aviso_id))
+          _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "firmas h4" }, [
+              _c("div", {}, [
+                _c("div", [
+                  _vm._v(
+                    "\n                                Numero de aviso : " +
+                      _vm._s(_vm.albaran.aviso_id) +
+                      "\n                            "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", [
+                  _vm._v(
+                    "\n                                Fecha Aviso:\n                                " +
+                      _vm._s(
+                        _vm._f("moment")(
+                          _vm.aviso[0].created_at,
+                          "DD/MM/YYYY, h:mm a"
+                        )
+                      ) +
+                      "\n                            "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", [
+                  _vm._v(
+                    "\n                                Fecha Albaran:\n                                " +
+                      _vm._s(
+                        _vm._f("moment")(
+                          _vm.albaran.created_at,
+                          "DD/MM/YYYY, h:mm a"
+                        )
+                      ) +
+                      "\n                            "
+                  )
+                ])
               ]),
               _vm._v(" "),
-              _c("div", [
-                _vm._v(
-                  "\n                            Fecha Aviso:\n                            " +
-                    _vm._s(
-                      _vm._f("moment")(
-                        _vm.aviso[0].created_at,
-                        "DD/MM/YYYY, h:mm a"
-                      )
-                    ) +
-                    "\n                        "
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", [
-                _vm._v(
-                  "\n                            Fecha Albaran:\n                            " +
-                    _vm._s(
-                      _vm._f("moment")(
-                        _vm.albaran.created_at,
-                        "DD/MM/YYYY, h:mm a"
-                      )
-                    ) +
-                    "\n                        "
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", [_vm._v("Cliente: " + _vm._s(_vm.cliente.Nombre))]),
-              _vm._v(" "),
-              _c("div", [
-                _vm._v("Direccion: " + _vm._s(_vm.cliente.Direccion))
-              ]),
-              _vm._v(" "),
-              _c("div", [_vm._v("Telefono: " + _vm._s(_vm.cliente.Telefono))]),
-              _vm._v(" "),
-              _c("div", [_vm._v("Nif: " + _vm._s(_vm.cliente.Nif))]),
-              _vm._v(" "),
-              _c("div", [_vm._v("Email: " + _vm._s(_vm.cliente.Email))])
+              _c("div", {}, [
+                _c("div", [_vm._v("Cliente: " + _vm._s(_vm.cliente.Nombre))]),
+                _vm._v(" "),
+                _c("div", [
+                  _vm._v("Direccion: " + _vm._s(_vm.cliente.Direccion))
+                ]),
+                _vm._v(" "),
+                _c("div", [
+                  _vm._v("Telefono: " + _vm._s(_vm.cliente.Telefono))
+                ]),
+                _vm._v(" "),
+                _c("div", [_vm._v("Nif: " + _vm._s(_vm.cliente.Nif))]),
+                _vm._v(" "),
+                _c("div", [_vm._v("Email: " + _vm._s(_vm.cliente.Email))])
+              ])
             ])
           ]),
           _vm._v(" "),
@@ -76779,50 +77152,38 @@ var render = function() {
                     _vm._s(_vm.aviso[0].empleado.name) +
                     "\n                        "
                 )
-              ]),
-              _vm._v(" "),
-              _c("div", [
-                _vm._v(
-                  "\n                            Telefono Empleado:\n                            " +
-                    _vm._s(_vm.aviso[0].empleado.telefono) +
-                    "\n                        "
-                )
               ])
             ])
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card sombra" }, [
+        _c("div", { staticClass: "card sombra mt-2" }, [
           _vm._m(1),
           _vm._v(" "),
-          _c("div", { staticClass: "table-responsive" }, [
-            _c("table", { staticClass: "table " }, [
+          _c("div", { staticClass: "form-group p-3  table-responsive" }, [
+            _c("table", { staticClass: "table" }, [
               _vm._m(2),
               _vm._v(" "),
               _c(
                 "tbody",
-                _vm._l(_vm.detalles, function(linea, index) {
+                _vm._l(_vm.maquinas, function(maq, index) {
                   return _c("tr", { key: index }, [
                     _c("th", { attrs: { scope: "row" } }, [
-                      _vm._v(_vm._s(linea.articulo_id))
+                      _vm._v(_vm._s(maq.nombre))
                     ]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(linea.articulo_nombre))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(linea.cantidad))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(linea.precio))])
+                    _c("td", [
+                      _vm._v(
+                        "\n                                    " +
+                          _vm._s(maq.referencia) +
+                          "\n                                "
+                      )
+                    ])
                   ])
                 }),
                 0
               )
             ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card sombra m-2" }, [
-            _c("div", [_vm._v("Comentarios:")]),
-            _vm._v(" "),
-            _c("strong", [_vm._v(_vm._s(_vm.comenta))])
           ])
         ]),
         _vm._v(" "),
@@ -76915,55 +77276,51 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "card sombra mt-2" }, [
-          _vm._m(6),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group p-3  table-responsive" }, [
-            _c("table", { staticClass: "table" }, [
-              _vm._m(7),
-              _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(_vm.maquinas, function(maq, index) {
-                  return _c("tr", { key: index }, [
-                    _c("th", { attrs: { scope: "row" } }, [
-                      _vm._v(_vm._s(maq.nombre))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _vm._v(
-                        "\n                                    " +
-                          _vm._s(maq.referencia) +
-                          "\n                                "
-                      )
-                    ])
-                  ])
-                }),
-                0
-              )
-            ])
-          ])
-        ]),
-        _vm._v(" "),
         _c("div", { staticClass: "card mt-2" }, [
-          _vm._m(8),
+          _vm._m(6),
           _vm._v(" "),
           _c("div", { staticClass: " card.body firmas sombra p-2" }, [
             _c("h5", [_vm._v("Firma Cliente")]),
             _vm._v(" "),
             _c("img", {
-              attrs: { id: "firmacli", src: _vm.albaran.firma_cliente }
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.albaran.firma_cliente,
+                  expression: "albaran.firma_cliente"
+                }
+              ],
+              attrs: {
+                id: "firmacli",
+                width: "150",
+                height: "150",
+                src: _vm.albaran.firma_cliente
+              }
             }),
             _vm._v(" "),
             _c("h5", [_vm._v("Firma Empleado")]),
             _vm._v(" "),
             _c("img", {
-              attrs: { id: "firmaemp", src: _vm.albaran.firma_empleado }
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.albaran.firma_empleado,
+                  expression: "albaran.firma_empleado"
+                }
+              ],
+              attrs: {
+                id: "firmaemp",
+                width: "150",
+                height: "150",
+                src: _vm.albaran.firma_empleado
+              }
             })
           ])
         ]),
         _vm._v(" "),
-        _vm._m(9)
+        _vm._m(7)
       ])
     ]),
     _vm._v(" "),
@@ -76994,7 +77351,9 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
-      _c("h5", {}, [_vm._v("Detalle de Pedido")])
+      _c("h4", [
+        _vm._v("\n                        Maquinas:\n                    ")
+      ])
     ])
   },
   function() {
@@ -77003,13 +77362,9 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "text-center thead" }, [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Id Articulo")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Maquina")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Articulo")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Cantidad")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Precio")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Referencia")])
       ])
     ])
   },
@@ -77043,28 +77398,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("h5", [
       _c("strong", [_vm._v("Observaciones / Material Pendiente")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h4", [
-        _vm._v("\n                        Maquinas:\n                    ")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "text-center thead" }, [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Maquina")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Referencia")])
-      ])
     ])
   },
   function() {
@@ -77914,10 +78247,6 @@ var render = function() {
     _vm._v(" "),
     _c("td", { staticClass: "text-right" }, [
       _c("p", [_vm._v(_vm._s(_vm.articulo.UdsPed))])
-    ]),
-    _vm._v(" "),
-    _c("td", { staticClass: "text-right" }, [
-      _c("p", [_vm._v(_vm._s(_vm.articulo.UdsComp))])
     ])
   ])
 }
@@ -78122,9 +78451,7 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("th", { staticClass: "text-right" }, [_vm._v("Unidades en Almacen")]),
       _vm._v(" "),
-      _c("th", { staticClass: "text-right" }, [_vm._v("Unidades Pedidas")]),
-      _vm._v(" "),
-      _c("th", { staticClass: "text-right" }, [_vm._v("Unidades Compradas")])
+      _c("th", { staticClass: "text-right" }, [_vm._v("Unidades Pedidas")])
     ])
   }
 ]
@@ -78154,32 +78481,36 @@ var render = function() {
       _c("div", { staticClass: "card-body" }, [
         _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
           _c("ul", { staticClass: "pagination" }, [
-            _c("li", { staticClass: "page-item" }, [
-              _vm.page != 1
-                ? _c(
-                    "button",
-                    {
-                      staticClass: "page-link",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          _vm.page = 1
+            _c(
+              "li",
+              { staticClass: "page-item", attrs: { pages: _vm.pages } },
+              [
+                _vm.page != 1
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "page-link",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            _vm.page = 1
+                          }
                         }
-                      }
-                    },
-                    [
-                      _c("img", {
-                        staticClass: "mr-4",
-                        attrs: {
-                          src: "/img/inicio.ico",
-                          width: "25px",
-                          height: "25px"
-                        }
-                      })
-                    ]
-                  )
-                : _vm._e()
-            ]),
+                      },
+                      [
+                        _c("img", {
+                          staticClass: "mr-4",
+                          attrs: {
+                            src: "/img/inicio.ico",
+                            width: "25px",
+                            height: "25px"
+                          }
+                        })
+                      ]
+                    )
+                  : _vm._e()
+              ]
+            ),
             _vm._v(" "),
             _c("li", { staticClass: "page-item" }, [
               _vm.page != 1
@@ -79934,6 +80265,344 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=template&id=179b3422&scoped=true&":
+/*!**************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=template&id=179b3422&scoped=true& ***!
+  \**************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {},
+    [
+      _c("div", { staticClass: "card bg-light mb-3" }, [
+        _c("div", { staticClass: "card-body" }, [
+          _c("form", [
+            _c("label", { attrs: { for: "referencia" } }, [
+              _vm._v(
+                "\n                    Referencia a Buscar\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.referencia,
+                  expression: "referencia"
+                }
+              ],
+              attrs: { type: "text" },
+              domProps: { value: _vm.referencia },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.referencia = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.buscarreferencia($event)
+                  }
+                }
+              },
+              [_vm._v("\n                    Buscar\n                ")]
+            )
+          ]),
+          _vm._v(" "),
+          _vm.tiposdemaquina
+            ? _c(
+                "div",
+                [
+                  _vm._v(
+                    "\n                Encontradas " +
+                      _vm._s(_vm.tiposdemaquina.length) +
+                      " maquinas con esta\n                referencia\n                "
+                  ),
+                  _vm._l(_vm.tiposdemaquina, function(maq) {
+                    return _c("div", { key: maq.id }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "text-uppercase",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.listamaquina(maq.id)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(maq.nombre) +
+                              "\n                    "
+                          )
+                        ]
+                      )
+                    ])
+                  })
+                ],
+                2
+              )
+            : _c("div", [
+                _vm._v(
+                  "\n                Ninguna maquina con esta referencia\n            "
+                )
+              ]),
+          _vm._v(" "),
+          _vm.ver
+            ? _c("div", [
+                _c(
+                  "nav",
+                  { attrs: { "aria-label": "Page navigation example" } },
+                  [
+                    _c("ul", { key: _vm.page, staticClass: "pagination" }, [
+                      _c("li", { staticClass: "page-item" }, [
+                        _vm.page != 1
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "page-link",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.page = 1
+                                  }
+                                }
+                              },
+                              [
+                                _c("img", {
+                                  staticClass: "mr-4",
+                                  attrs: {
+                                    src: "/img/inicio.ico",
+                                    width: "25px",
+                                    height: "25px"
+                                  }
+                                })
+                              ]
+                            )
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "page-item" }, [
+                        _vm.page != 1
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "page-link",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.page--
+                                  }
+                                }
+                              },
+                              [
+                                _c("img", {
+                                  staticClass: "mr-4",
+                                  attrs: {
+                                    src: "/img/anterior.ico",
+                                    width: "25px",
+                                    height: "25px"
+                                  }
+                                })
+                              ]
+                            )
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "li",
+                        { staticClass: "page-item" },
+                        _vm._l(
+                          _vm.pages.slice(_vm.page - 1, _vm.page + 5),
+                          function(pageNumber, index) {
+                            return _c(
+                              "button",
+                              {
+                                key: index,
+                                staticClass: "page-link",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.page = pageNumber
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(pageNumber) +
+                                    "\n                            "
+                                )
+                              ]
+                            )
+                          }
+                        ),
+                        0
+                      ),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "page-item" }, [
+                        _vm.page < _vm.pages.length
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "page-link",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.page++
+                                  }
+                                }
+                              },
+                              [
+                                _c("img", {
+                                  staticClass: "mr-4",
+                                  attrs: {
+                                    src: "/img/siguiente.ico",
+                                    width: "25px",
+                                    height: "25px"
+                                  }
+                                })
+                              ]
+                            )
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "page-item " }, [
+                        _vm.page != _vm.pages.length
+                          ? _c(
+                              "button",
+                              {
+                                staticClass: "page-link",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.page = _vm.pages.length
+                                  }
+                                }
+                              },
+                              [
+                                _c("img", {
+                                  staticClass: "mr-4",
+                                  attrs: {
+                                    src: "/img/final.ico",
+                                    width: "25px",
+                                    height: "25px"
+                                  }
+                                })
+                              ]
+                            )
+                          : _vm._e()
+                      ])
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "card table-responsive" }, [
+                  _c("table", { staticClass: "table table-table-striped " }, [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      { staticClass: "table table-body card-body sombra" },
+                      _vm._l(_vm.maquinasMostrados, function(maquina) {
+                        return _c("tr", { key: maquina.albaran_id }, [
+                          _c("td", [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(maquina.albaran_id) +
+                                "\n                                "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(
+                                  _vm._f("moment")(
+                                    maquina.created_at,
+                                    "DD/MM/YYYY, h:mm a"
+                                  )
+                                ) +
+                                "\n                                "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("img", {
+                              staticClass: "m-3",
+                              attrs: {
+                                src: "/img/eye2.png",
+                                width: "40px",
+                                height: "40px"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.veralbaran(maquina.albaran_id)
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      }),
+                      0
+                    )
+                  ])
+                ])
+              ])
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.albaranver
+        ? _c("vistaalbaran-component", { attrs: { albaran: _vm.albaran } })
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "table table-header card-header" }, [
+      _c("th", [_vm._v("Numero Albaran")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Fecha")]),
+      _vm._v(" "),
+      _c("th", { staticClass: "d-flex justify-content-between" }, [
+        _c("div", { staticClass: "m-2" }, [_vm._v("Ver Albaran")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasPrincipalComponent.vue?vue&type=template&id=05f2abfa&scoped=true&":
 /*!**************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/maquinas/MaquinasPrincipalComponent.vue?vue&type=template&id=05f2abfa&scoped=true& ***!
@@ -79993,6 +80662,26 @@ var render = function() {
               )
             ]
           )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col text-center" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              class: { disabled: _vm.campo == "historial" },
+              on: {
+                click: function($event) {
+                  return _vm.vermasmethod("historial")
+                }
+              }
+            },
+            [
+              _vm._v(
+                "\n                Historial por Referencia\n                \n            "
+              )
+            ]
+          )
         ])
       ]),
       _vm._v(" "),
@@ -80004,6 +80693,10 @@ var render = function() {
         ? _c("nuevomaquina-component", {
             staticClass: "mt-5 card bg-light mb-3"
           })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.campo == "historial"
+        ? _c("maquinashistorial-component", { staticClass: "mt-5 mb-3" })
         : _vm._e()
     ],
     1
@@ -103490,6 +104183,7 @@ Vue.component('responsemaquinas-component', __webpack_require__(/*! ./components
 Vue.component('maquinas-component', __webpack_require__(/*! ./components/maquinas/MaquinasComponent.vue */ "./resources/js/components/maquinas/MaquinasComponent.vue")["default"]);
 Vue.component('nuevomaquina-component', __webpack_require__(/*! ./components/maquinas/NuevoMaquinaComponent.vue */ "./resources/js/components/maquinas/NuevoMaquinaComponent.vue")["default"]);
 Vue.component('maquinasprincipal-component', __webpack_require__(/*! ./components/maquinas/MaquinasPrincipalComponent.vue */ "./resources/js/components/maquinas/MaquinasPrincipalComponent.vue")["default"]);
+Vue.component('maquinashistorial-component', __webpack_require__(/*! ./components/maquinas/MaquinasHistorialComponent.vue */ "./resources/js/components/maquinas/MaquinasHistorialComponent.vue")["default"]);
 var app = new Vue({
   el: '#app'
 });
@@ -105528,6 +106222,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasComponent_vue_vue_type_template_id_b49831ce_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasComponent_vue_vue_type_template_id_b49831ce_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/maquinas/MaquinasHistorialComponent.vue":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/maquinas/MaquinasHistorialComponent.vue ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _MaquinasHistorialComponent_vue_vue_type_template_id_179b3422_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MaquinasHistorialComponent.vue?vue&type=template&id=179b3422&scoped=true& */ "./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=template&id=179b3422&scoped=true&");
+/* harmony import */ var _MaquinasHistorialComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MaquinasHistorialComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _MaquinasHistorialComponent_vue_vue_type_style_index_0_id_179b3422_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css& */ "./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _MaquinasHistorialComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _MaquinasHistorialComponent_vue_vue_type_template_id_179b3422_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _MaquinasHistorialComponent_vue_vue_type_template_id_179b3422_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "179b3422",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/maquinas/MaquinasHistorialComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./MaquinasHistorialComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css&":
+/*!**********************************************************************************************************************************!*\
+  !*** ./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css& ***!
+  \**********************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_style_index_0_id_179b3422_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=style&index=0&id=179b3422&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_style_index_0_id_179b3422_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_style_index_0_id_179b3422_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_style_index_0_id_179b3422_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_style_index_0_id_179b3422_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_style_index_0_id_179b3422_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=template&id=179b3422&scoped=true&":
+/*!********************************************************************************************************************!*\
+  !*** ./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=template&id=179b3422&scoped=true& ***!
+  \********************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_template_id_179b3422_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./MaquinasHistorialComponent.vue?vue&type=template&id=179b3422&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/maquinas/MaquinasHistorialComponent.vue?vue&type=template&id=179b3422&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_template_id_179b3422_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_MaquinasHistorialComponent_vue_vue_type_template_id_179b3422_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

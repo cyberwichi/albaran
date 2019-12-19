@@ -15,46 +15,77 @@
             <div class="card-body">
                 <!-- cliente -->
                 <div class="card-body">
-                    <div class="form-group">
-                        <h5 class="card col-12 display-5">
-                            <div>Numero de aviso : {{ albaran.aviso_id }}</div>
-                            <div>
-                                Fecha Aviso:
-                                {{
-                                    aviso[0].created_at
-                                        | moment("DD/MM/YYYY, h:mm a")
-                                }}
+                    <div class="card">
+                        <div class="firmas h4">
+                            <div class="">
+                                <div>
+                                    Numero de aviso : {{ albaran.aviso_id }}
+                                </div>
+                                <div>
+                                    Fecha Aviso:
+                                    {{
+                                        aviso[0].created_at
+                                            | moment("DD/MM/YYYY, h:mm a")
+                                    }}
+                                </div>
+                                <div>
+                                    Fecha Albaran:
+                                    {{
+                                        albaran.created_at
+                                            | moment("DD/MM/YYYY, h:mm a")
+                                    }}
+                                </div>
                             </div>
-                            <div>
-                                Fecha Albaran:
-                                {{
-                                    albaran.created_at
-                                        | moment("DD/MM/YYYY, h:mm a")
-                                }}
+                            <div class="">
+                                <div>Cliente: {{ cliente.Nombre }}</div>
+                                <div>Direccion: {{ cliente.Direccion }}</div>
+                                <div>Telefono: {{ cliente.Telefono }}</div>
+                                <div>Nif: {{ cliente.Nif }}</div>
+                                <div>Email: {{ cliente.Email }}</div>
                             </div>
-                            <div>Cliente: {{ cliente.Nombre }}</div>
-                            <div>Direccion: {{ cliente.Direccion }}</div>
-                            <div>Telefono: {{ cliente.Telefono }}</div>
-                            <div>Nif: {{ cliente.Nif }}</div>
-                            <div>Email: {{ cliente.Email }}</div>
-                        </h5>
+                        </div>
                     </div>
                     <div class="form-group">
                         <h5 class="card col-12 display-5">
                             <div>
                                 Empleado asignado: {{ aviso[0].empleado.name }}
                             </div>
-
-                            <div>
-                                Telefono Empleado:
-                                {{ aviso[0].empleado.telefono }}
-                            </div>
                         </h5>
+                    </div>
+                </div>
+                <!-- maquinas -->
+                <div class="card sombra mt-2">
+                    <div class="card-header">
+                        <h4>
+                            Maquinas:
+                        </h4>
+                    </div>
+
+                    <div class="form-group p-3  table-responsive">
+                        <table class="table">
+                            <thead class="text-center thead">
+                                <tr>
+                                    <th scope="col">Maquina</th>
+                                    <th scope="col">Referencia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(maq, index) in maquinas"
+                                    :key="index"
+                                >
+                                    <th scope="row">{{ maq.nombre }}</th>
+                                    <td>
+                                        {{ maq.referencia }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
                 <!-- detalle -->
-                <div class="card sombra">
+                <!--                 <div class="card sombra">
                     <div class="card-header">
                         <h5 class>Detalle de Pedido</h5>
                     </div>
@@ -86,7 +117,7 @@
                         <div>Comentarios:</div>
                         <strong>{{ comenta }}</strong>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- articulos entregados -->
                 <div class="card sombra mt-2">
@@ -157,37 +188,6 @@
                     </div>
                 </div>
 
-                <!-- maquinas -->
-                <div class="card sombra mt-2">
-                    <div class="card-header">
-                        <h4>
-                            Maquinas:
-                        </h4>
-                    </div>
-
-                    <div class="form-group p-3  table-responsive">
-                        <table class="table">
-                            <thead class="text-center thead">
-                                <tr>
-                                    <th scope="col">Maquina</th>
-                                    <th scope="col">Referencia</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="(maq, index) in maquinas"
-                                    :key="index"
-                                >
-                                    <th scope="row">{{ maq.nombre }}</th>
-                                    <td>
-                                        {{ maq.referencia }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
                 <!-- firmas -->
                 <div class="card mt-2">
                     <div class="card-header">
@@ -195,9 +195,9 @@
                     </div>
                     <div class=" card.body firmas sombra p-2">
                         <h5>Firma Cliente</h5>
-                        <img id="firmacli" :src="albaran.firma_cliente" />
+                        <img id="firmacli" width="150" height="150" v-show="albaran.firma_cliente" :src="albaran.firma_cliente" />
                         <h5>Firma Empleado</h5>
-                        <img id="firmaemp" :src="albaran.firma_empleado" />
+                        <img id="firmaemp"  width="150" height="150" v-show="albaran.firma_empleado"  :src="albaran.firma_empleado" />
                     </div>
                 </div>
                 <div class="faldon">
@@ -278,7 +278,7 @@ export default {
             this.comenta = "";
             this.terminado = false;
             this.numeroaviso = "";
-            this.maquinas=[];
+            this.maquinas = [];
         },
         buscaaviso(numeroaviso) {
             this.aviso = "";
@@ -321,15 +321,16 @@ export default {
                     document.getElementById("app").style.cursor = "auto";
                 });
             this.albaran.albaranmaquina.forEach((element, index) => {
-                axios.get("/api/maquinas/" + element.id).then(response => {
-
-                    let maquina = {
-                        nombre: response.data.nombre,
-                        referencia: element.referencia
-                    };
-                    this.maquinas.push(maquina);
-                });
-            });                
+                axios
+                    .get("/api/maquinas/" + element.maquina_id)
+                    .then(response => {
+                        let maquina = {
+                            nombre: response.data.nombre,
+                            referencia: element.referencia
+                        };
+                        this.maquinas.push(maquina);
+                    });
+            });
         },
         calcularTotal() {
             this.iva = 0;
@@ -410,20 +411,19 @@ export default {
 .cabecera {
     width: 100%;
     height: 200px;
-}
-.cabecera {
-    width: 100%;
-    height: 200px;
     margin-bottom: 20px;
 }
 .faldon {
     width: 100%;
     text-align: center;
 }
-.firmas {
+.firmas {    
     display: inline-flex;
     justify-content: space-around;
     flex-wrap: nowrap;
+}
+.firmas :first-child{
+    align-self:start;
 }
 .poner {
     display: none;

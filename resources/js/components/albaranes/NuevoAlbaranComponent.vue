@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="card-header">
+        <div class="card-header ocul">
             <form
-                class="sombra mb-3"
+                class="sombra mb-3 "
                 v-on:submit.prevent="buscaaviso(numeroaviso)"
             >
                 <div class="form-group p-3">
@@ -24,140 +24,32 @@
         </div>
         <div id="imprimible">
             <div>
-                <img class="cabecera" src="/img/cabecera.jpeg" alt="" />
+                <img
+                    class="cabecera image-responsive"
+                    src="/img/cabecera.jpeg"
+                    alt=""
+                />
             </div>
 
             <h4>Albaran de Cliente</h4>
             <!-- cliente -->
-            <div class="card-body">
-                <div class="form-group">
-                    <h5 class="card col-12 display-5">
-                        <div>Aviso: {{ numeroaviso }}</div>
-                        <div>Cliente: {{ cliente.Nombre }}</div>
-                        <div>Direccion: {{ cliente.Direccion }}</div>
-                        <div>Telefono: {{ cliente.Telefono }}</div>
-                        <div>Nif: {{ cliente.Nif }}</div>
-                        <div>Email: {{ cliente.Email }}</div>
-                    </h5>
-                </div>
-            </div>
 
-            <!-- detalle -->
-            <div class="card sombra mt-4">
-                <div class="card-header">
-                    <h5 class>Detalle de Pedido</h5>
-                </div>
-                <table class="table table-responsive">
-                    <thead class="text-center thead">
-                        <tr>
-                            <th scope="col">Id Articulo</th>
-                            <th scope="col">Articulo</th>
-                            <th scope="col">Cantidad</th>
-                            <th scope="col">Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(linea, index) in detalles" :key="index">
-                            <th scope="row">{{ linea.articulo_id }}</th>
-                            <td>{{ linea.articulo_nombre }}</td>
-                            <td>{{ linea.cantidad }}</td>
-                            <td>{{ linea.precio }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="card sombra m-4">
-                    <div>Comentarios:</div>
-                    <strong>{{ comenta }}</strong>
-                </div>
-            </div>
-
-            <!-- articulos entregados -->
-            <div class="card sombra mt-4">
-                <div class="card-header">
-                    <h5 class>Articulos Entregados</h5>
-                </div>
-                <table class="table table-responsive">
-                    <thead class="text-center thead">
-                        <tr>
-                            <th scope="col">Id Articulo</th>
-                            <th scope="col">Articulo</th>
-                            <th scope="col">Cantidad</th>
-                            <th scope="col">Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-on:change="calcularTotal"
-                            v-for="(linea2, index) in detallealbaran"
-                            :key="index"
-                        >
-                            <th scope="row">{{ linea2.articulo_id }}</th>
-                            <td>{{ linea2.articulonombre }}</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    name
-                                    id
-                                    v-model="linea2.cantidad"
-                                />
-                            </td>
-                            <td>{{ linea2.precio }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table class="table table-secondary table-responsive p-1">
-                    <tr class="d-flex justify-content-end bd-highlight">
-                        <td class="col-4 text-right sombra">
-                            <strong>Subtotal: {{ subtotal }}€</strong>
-                        </td>
-
-                        <td td class="col-4 text-right sombra">
-                            <strong>21%Iva: {{ iva }}€</strong>
-                        </td>
-
-                        <td td class="col-4 sombra text-right">
-                            <strong>Total: {{ total }}€</strong>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- observaciones -->
-            <div class="card sombra mt-4">
-                <div class="card-header">
-                    <h4>Trabajo Finalizado</h4>
-                    <input
-                        class="form-control"
-                        type="checkbox"
-                        name="terminado"
-                        value="Trabajo Finalizado"
-                        v-model="terminado"
-                    />
-                </div>
-
-                <div class="form-group p-3">
-                    <h5>
-                        <strong>Observaciones / Material Pendiente</strong>
-                    </h5>
-                    <textarea
-                        v-model="observaciones"
-                        class="form-control sombra"
-                        name="observaciones"
-                        cols="85"
-                        rows="5"
-                    ></textarea>
-                </div>
-            </div>
+            <h5 class="card col-12 display-5">
+                <div>Aviso: {{ numeroaviso }}</div>
+                <div>Cliente: {{ cliente.Nombre }}</div>
+                <div>Direccion: {{ cliente.Direccion }}</div>
+                <div>Telefono: {{ cliente.Telefono }}</div>
+                <div>Nif: {{ cliente.Nif }}</div>
+                <div>Email: {{ cliente.Email }}</div>
+            </h5>
 
             <!-- maquinas -->
-            <div class="card sombra mt-4">
+            <div class="card sombra mt-1">
                 <div class="card-header">
                     <h4>Maquina</h4>
                 </div>
 
-                <div class="form-group p-3">
+                <div class="form-group p-3 quitar">
                     <h5>
                         <strong>Tipo de Maquina</strong>
                     </h5>
@@ -184,8 +76,127 @@
                 </table>
             </div>
 
+            <!-- detalle -->
+            <div class="card sombra mt-1 quitar">
+                <div class="card-header">
+                    <h5 class>Detalle de Pedido</h5>
+                </div>
+                <table class="table table-responsive">
+                    <thead class="text-center thead">
+                        <tr>
+                            <th scope="col" class="ocul">Id</th>
+                            <th scope="col">Articulo</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(linea, index) in detalles" :key="index">
+                            <th scope="row" class="ocul">
+                                {{ linea.articulo_id }}
+                            </th>
+                            <td>{{ linea.articulo_nombre }}</td>
+                            <td>{{ linea.cantidad }}</td>
+                            <td>{{ linea.precio }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="card sombra m-4">
+                    <div>Comentarios:</div>
+                    <strong>{{ comenta }}</strong>
+                </div>
+            </div>
+
+            <!-- articulos entregados -->
+            <div class="card sombra mt-1">
+                <div class="card-header">
+                    <h5 class>Articulos Entregados</h5>
+                </div>
+                <table class="table table-responsive">
+                    <thead class="text-center thead">
+                        <tr>
+                            <th scope="col" class="ocul">Id</th>
+                            <th scope="col">Articulo</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-on:change="calcularTotal"
+                            v-for="(linea2, index) in detallealbaran"
+                            :key="index"
+                        >
+                            <th scope="row" class="ocul">
+                                {{ linea2.articulo_id }}
+                            </th>
+                            <td>{{ linea2.articulo_nombre }}</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    :placeholder="linea2.cantidad"
+                                    v-model="linea2.cantidad"
+                                    class="peq"
+                                />
+                            </td>
+                            <td>{{ linea2.precio }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-secondary table-responsive p-1">
+                    <tr class="d-flex justify-content-end bd-highlight">
+                        <td class="col-4 text-right sombra">
+                            <strong>Subtotal: {{ subtotal }}€</strong>
+                        </td>
+
+                        <td td class="col-4 text-right sombra">
+                            <strong>21%Iva: {{ iva }}€</strong>
+                        </td>
+
+                        <td td class="col-4 sombra text-right">
+                            <strong>Total: {{ total }}€</strong>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- observaciones -->
+            <div class="card sombra mt-1">
+                <div class="card-header">
+                    <h4>Trabajo Finalizado</h4>
+                    <input
+                        class="form-control quitar"
+                        type="checkbox"
+                        name="terminado"
+                        value="Trabajo Finalizado"
+                        v-model="terminado"
+                        placeholder="terminado"
+                    />
+                    <label class="poner" v-if="terminado" for="terminado"
+                        >SI</label
+                    >
+                    <label class="poner" v-else for="terminado">NO</label>
+                </div>
+
+                <div class="form-group p-3">
+                    <h5>
+                        <strong>Observaciones / Material Pendiente</strong>
+                    </h5>
+                    <textarea
+                        v-model="observaciones"
+                        class="form-control sombra"
+                        name="observaciones"
+                        cols="85"
+                        rows="3"
+                        :placeholder="observaciones"
+                    ></textarea>
+                </div>
+            </div>
+
             <!-- firmas -->
-            <div class="card mt-2">
+            <div class="card mt-1">
                 <div class="card-header">
                     <h4>Firmas</h4>
                 </div>
@@ -263,11 +274,11 @@
                 v-on:click="guardaAlbaran"
                 v-scroll-to="'#listado'"
             >
-                <img src="img/Save.png" width="40px" alt />
+                <img src="/img/Save.png" width="40px" alt />
             </button>
             <button class="btn btn-flat">
                 <img
-                    src="img/print.png"
+                    src="/img/print.png"
                     v-on:click="imprimirElemento"
                     width="40px"
                 />
@@ -298,7 +309,7 @@ export default {
             signaturePad: "",
             terminado: false,
             maquinas: [],
-            maquina:{}
+            maquina: {}
         };
     },
     mounted() {
@@ -308,11 +319,11 @@ export default {
 
     methods: {
         anadirmaquina(maq) {
-            let maquina={
+            let maquina = {
                 id: maq.id,
                 referencia: maq.referencia,
                 nombre: maq.nombre
-            };           
+            };
             this.maquinas.push(maquina);
         },
         poneraCero() {
@@ -333,8 +344,8 @@ export default {
             this.quitarImagen(1);
             this.quitarImagen(0);
             this.numeroaviso = "";
-            this.maquinas=[];
-            this.maquina={};
+            this.maquinas = [];
+            this.maquina = {};
             this.$emit("salir");
         },
         buscaaviso(numeroaviso) {
@@ -366,7 +377,7 @@ export default {
                     var detallealb = {
                         avisoid: id,
                         articulo_id: element.articulo_id,
-                        articulonombre: element.articulo_nombre,
+                        articulo_nombre: element.articulo_nombre,
                         cantidad: element.cantidad,
                         precio: element.precio
                     };
@@ -517,10 +528,23 @@ export default {
 }
 .firmas {
     display: flex;
+    width: 90%;
     justify-content: space-around;
     flex-wrap: wrap;
+    margin: auto;
 }
 .poner {
     display: none;
+}
+@media (max-width: 950px) {
+    .peq {
+        width: 50px;
+    }
+    .med {
+        width: 100px;
+    }
+    .ocul {
+        display: none;
+    }
 }
 </style>

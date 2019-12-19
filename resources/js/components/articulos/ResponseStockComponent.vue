@@ -15,11 +15,6 @@
       <p >{{ articulo.UdsPed}}</p>
      
     </td>
-     <td class="text-right">
-      <p >{{ articulo.UdsComp}}</p>
-     
-    </td>
-    
   </tr>
 </template>
 

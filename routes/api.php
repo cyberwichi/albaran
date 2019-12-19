@@ -16,6 +16,10 @@ use PhpParser\Node\Stmt\TryCatch;
 use Symfony\Component\Console\Input\Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Barryvdh\DomPDF\Facade as PDF;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,17 +35,21 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
 	return $request->user();
 });
+//para el movil
+
+//nuevo albaran
+//index contactos
+Route::get('movil/albaran/{id}', function ($id) {
+	return view("movil/albaran", compact('id'));
+});
 
 
 //index contactos
 Route::get('contactos', function () {
-	try {
-		$contactos = tbContacto::orderBy('Id')->get();
-		return json_encode($contactos);
-	} catch (\Throwable $th) {
-		return $th;
-	}
+	$contactos = tbContacto::get();
+	return json_encode($contactos);
 });
+
 //contacto por id
 Route::get('contactos/{id}', function ($id) {
 	$articulo = tbContacto::find($id);
@@ -301,6 +309,12 @@ Route::get('avisosnoterminados', function () {
 
 	return json_encode($avisos);
 });
+//avisos no terminados por empleado
+Route::get('avisos/noterminados/empleado/{id}', function ($id) {
+	$avisos = Aviso::where('empleado_id', $id)->where('terminada', null)->orderBy('Id', 'desc')->with('empleado')->with('tbContacto')->get();
+
+	return json_encode($avisos);
+});
 
 
 
@@ -331,7 +345,9 @@ Route::get('albaranesporaviso/{id}', function ($id) {
 
 //guardamos albaran
 Route::post('albaran', function (Request $request) {
-
+	if ($request->terminada == true) {
+		Aviso::find($request->aviso_id)->update(['terminada' => "1"]);
+	}
 	$albaran = new  Albaran();
 	$albaran->aviso_id = $request->aviso_id;
 	$albaran->observaciones = $request->observaciones;
@@ -342,7 +358,7 @@ Route::post('albaran', function (Request $request) {
 		$detalle = new DetalleAlbaran();
 		$detalle->albaran_id = $albaran->id;
 		$detalle->articulo_id = $linea['articulo_id'];
-		$detalle->articulo_nombre = $linea['articulonombre'];
+		$detalle->articulo_nombre = $linea['articulo_nombre'];
 		$detalle->cantidad = $linea['cantidad'];
 		$detalle->precio = $linea['precio'];
 		$detalle->save();
@@ -352,13 +368,12 @@ Route::post('albaran', function (Request $request) {
 		$stock->UdsPed = $stock->UdsPed - $linea['cantidad'];
 		$stock->update();
 	}
-	foreach($request->listamaquinas as $key => $linea){
-		$maquina= new AlbaranMaquina();
-		$maquina->albaran_id= $albaran->id;
-		$maquina->maquina_id= $linea['id'];
-		$maquina->referencia= $linea['referencia'];
+	foreach ($request->listamaquinas as $key => $linea) {
+		$maquina = new AlbaranMaquina();
+		$maquina->albaran_id = $albaran->id;
+		$maquina->maquina_id = $linea['id'];
+		$maquina->referencia = $linea['referencia'];
 		$maquina->save();
-
 	}
 
 	return $albaran->id;
@@ -374,7 +389,7 @@ Route::get('delalbaranes/{id}', function ($id) {
 });
 //albaran por id
 Route::get('albaran/{id}', function ($id) {
-	$albaran = Albaran::where('id', $id)->with('detallealbaran')->get();
+	$albaran = Albaran::where('id', $id)->with('detallealbaran')->with('albaranmaquina')->get();
 
 	return ($albaran);
 });
@@ -395,9 +410,9 @@ Route::post('empleados', function (Request $request) {
 	$empleado = new Empleado();
 	$empleado->name = $request->name;
 	$empleado->telefono = $request->telefono;
-	$empleado->email=$request->email;
+	$empleado->email = $request->email;
 	$empleado->activo = $request->activo;
-	$empleado->appcode=$request->appcode;
+	$empleado->appcode = $request->appcode;
 
 	$empleado->save();
 	return $empleado;
@@ -424,7 +439,7 @@ Route::put('empleados/{id}', function (Request $request, $id) {
 
 	DB::table('empleados')
 		->where('id', $id)
-		->update(array('name' => $request->name, 'telefono' => $request->telefono, 'activo' => $request->activo, 'email'=>$request->email));
+		->update(array('name' => $request->name, 'telefono' => $request->telefono, 'activo' => $request->activo, 'email' => $request->email));
 	return json_encode(Empleado::get());
 });
 
@@ -449,7 +464,7 @@ Route::post('maquinas', function (Request $request) {
 	$maquina = new Maquina();
 	$maquina->nombre = $request->nombre;
 	$maquina->comentarios = $request->comentarios;
-	$maquina->save();	
+	$maquina->save();
 	return $maquina;
 });
 //index maquinas
@@ -483,4 +498,63 @@ Route::get('searchmaquina/{dd}', function ($dd) {
 Route::get('maquinas/{id}', function ($id) {
 	$maquina = Maquina::find($id);
 	return json_encode($maquina);
+});
+
+//historial de intervenciones en maquinas por referencia
+
+Route::get('maquinashistorial/{ref}', function ($ref) {
+	$historial = Albaranmaquina::where('referencia', 'LIKE', $ref)->orderBy('maquina_id')->orderBy('created_at', 'desc')->get();
+	return json_encode($historial);
+});
+
+Route::get('/imprimir/{id}', function ($id) {
+	$albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
+	$aviso = Aviso::find($albaran[0]->aviso_id);
+	$cliente= tbContacto::find($aviso->contacto_id);
+	$empleado= Empleado::find($aviso->empleado_id);
+	foreach($albaran[0]->albaranmaquina as $maq){
+		$maquina[$maq->maquina_id]= Maquina::find($maq->maquina_id);
+	}
+	$pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado','maquina'));
+	$pdf->save('albaranes/albaran' . $id . '.pdf');
+	return ($maquina);
+});
+Route::get('/enviar/{id}', function ($id) {
+	/*Configuracion de variables para enviar el correo*/
+	$mail_username="cyberwichi@gmail.com";//Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail_userpassword="";//Tu contraseña de gmail
+	$mail_addAddress="cyberwichi@gmail.com";//correo electronico que recibira el mensaje
+	$template=' '; //Ruta de la plantilla HTML para enviar nuestro mensaje
+				
+	/*Inicio captura de datos enviados por $_POST para enviar el correo */
+	$mail_setFromEmail=$mail_username;
+	$mail_setFromName=$mail_username;
+	$txt_message=$mail_username;
+	$mail_subject="yo";
+	
+		$mail = new PHPMailer(true);
+		$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
+		$mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
+		$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+		$mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+		$mail->Password = $mail_userpassword; 		// Tu contraseña de gmail
+		$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
+		$mail->Port = 587;                          // Puerto TCP  para conectarse 
+		$mail->setFrom($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
+		$mail->addReplyTo($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
+		$mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
+		 $mail->addAttachment('albaranes/albaran' . $id . '.pdf');         // Add attachments
+		$message = "hola";
+		$mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
+		
+		$mail->Subject = $mail_subject;
+		$mail->msgHTML($message);
+		if(!$mail->send()) {
+			echo '<p style="color:red">No se pudo enviar el mensaje..';
+			echo 'Error de correo: ' . $mail->ErrorInfo;
+			echo "</p>";
+		} else {
+			echo '<p style="color:green">Tu mensaje ha sido enviado!</p>';
+		}
+	
 });

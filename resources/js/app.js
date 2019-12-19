@@ -80,6 +80,7 @@ Vue.component('responsemaquinas-component', require('./components/maquinas/Respo
 Vue.component('maquinas-component', require('./components/maquinas/MaquinasComponent.vue').default);
 Vue.component('nuevomaquina-component', require('./components/maquinas/NuevoMaquinaComponent.vue').default);
 Vue.component('maquinasprincipal-component', require('./components/maquinas/MaquinasPrincipalComponent.vue').default);
+Vue.component('maquinashistorial-component', require('./components/maquinas/MaquinasHistorialComponent.vue').default);
 
 
 
