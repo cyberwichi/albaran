@@ -106,3 +106,5 @@ WARN  no build tool detected in workspace 'C:\wamp\www\tano2-copia'. The most co
 INFO  time: initialize in 0.73s
 WARN  no build tool detected in workspace 'E:\www\tano2-copia'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
 INFO  shutting down Metals
+INFO  time: initialize in 0.88s
+WARN  no build tool detected in workspace 'E:\www\tano2-copia'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 

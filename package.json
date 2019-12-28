@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "print-js": "^1.0.61",
+        "serialize-javascript": "^2.1.2",
         "signature_pad": "^3.0.0-beta.3",
         "vue-cal": "^2.14.0",
         "vue-moment": "^4.0.0",
