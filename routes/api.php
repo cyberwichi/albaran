@@ -374,9 +374,69 @@ Route::post('albaran', function (Request $request) {
 		$maquina->maquina_id = $linea['id'];
 		$maquina->referencia = $linea['referencia'];
 		$maquina->save();
+	
 	}
-
-	return $albaran->id;
+	$id= $albaran->id;
+	$albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
+	$aviso = Aviso::find($albaran[0]->aviso_id);
+	$cliente= tbContacto::find($aviso->contacto_id);
+	$empleado= Empleado::find($aviso->empleado_id);
+	$maquina=[];
+	if ($albaran[0]->albaranmaquina !== []){
+		foreach($albaran[0]->albaranmaquina as $maq){
+			$maquina[$maq->maquina_id]= Maquina::find($maq->maquina_id);
+		}
+	}
+	$pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado','maquina'));
+	$pdf->save('albaranes/albaran' . $id . '.pdf');
+	/*Configuracion de variables para enviar el correo*/
+	$mail_username="cyberwichi@gmail.com";//Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail_userpassword="huertagomple";//Tu contraseña de gmail
+	$mail_addAddress=$cliente->Email;//correo electronico que recibira el mensaje
+	$template='
+	<h1> Corrreo de envio de albaran</h1>
+	<img src="/img/logo.jpeg"  style="margin:auto;" alt="">
+	<h4> por favor no responda a este correo este es un mensaje atomatico para el envio de albaranes a clientes</h4>
+	<p> correo enviado a: <strong>'.$cliente->Nombre.'</strong> </p>
+	<p> albaran numero <strong> '.$id.' </strong> </p>
+	<p> Gracias por su confianza</p>
+	'; //Ruta de la plantilla HTML para enviar nuestro mensaje
+				
+	/*Inicio captura de datos enviados por $_POST para enviar el correo */
+	$mail_setFromEmail=$mail_username;
+	$mail_setFromName=$mail_username;
+	$txt_message=$mail_username;
+	$mail_subject="yo";
+	try {
+		$mail = new PHPMailer(true);
+		$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
+		$mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
+		$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+		$mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+		$mail->Password = $mail_userpassword; 		// Tu contraseña de gmail
+		$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
+		$mail->Port = 25;                          // Puerto TCP  para conectarse 
+		$mail->setFrom($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
+		$mail->addReplyTo($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
+		$mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
+		 $mail->addAttachment('albaranes/albaran' . $id . '.pdf');         // Add attachments
+		$message = $template;
+		$mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
+		
+		$mail->Subject = $mail_subject;
+		$mail->msgHTML($message);
+		if(!$mail->send()) {
+			echo '<p style="color:red">No se pudo enviar el mensaje..';
+			echo 'Error de correo: ' . $mail->ErrorInfo;
+			echo "</p>";
+		} else {
+			echo '<p style="color:green">Tu mensaje ha sido enviado!</p>';
+		}
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+	};
+	
 });
 
 //bora un albaran
@@ -507,6 +567,7 @@ Route::get('maquinashistorial/{ref}', function ($ref) {
 	return json_encode($historial);
 });
 
+//crear pdf y los almacena en public/albaran
 Route::get('/imprimir/{id}', function ($id) {
 	$albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
 	$aviso = Aviso::find($albaran[0]->aviso_id);
@@ -519,21 +580,44 @@ Route::get('/imprimir/{id}', function ($id) {
 	$pdf->save('albaranes/albaran' . $id . '.pdf');
 	return ($maquina);
 });
+
+//produce albaran pdf y envia por mail al cliente
 Route::get('/enviar/{id}', function ($id) {
+	$albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
+	$aviso = Aviso::find($albaran[0]->aviso_id);
+	$cliente= tbContacto::find($aviso->contacto_id);
+	$empleado= Empleado::find($aviso->empleado_id);
+	$maquina=[];
+	if ($albaran[0]->albaranmaquina !== []){
+		foreach($albaran[0]->albaranmaquina as $maq){
+			$maquina[$maq->maquina_id]= Maquina::find($maq->maquina_id);
+		}
+	}
+	$pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado','maquina'));
+	$pdf->save('albaranes/albaran' . $id . '.pdf');
 	/*Configuracion de variables para enviar el correo*/
 	$mail_username="cyberwichi@gmail.com";//Correo electronico saliente ejemplo: tucorreo@gmail.com
-	$mail_userpassword="";//Tu contraseña de gmail
-	$mail_addAddress="cyberwichi@gmail.com";//correo electronico que recibira el mensaje
-	$template=' '; //Ruta de la plantilla HTML para enviar nuestro mensaje
+	$mail_userpassword="huertagomple";//Tu contraseña de gmail
+	$mail_addAddress=$cliente->Email;//correo electronico que recibira el mensaje
+	$template='
+	<h1> Corrreo de envio de albaran</h1>
+	<img src="/img/logo.jpeg"  style="margin:auto;" alt="">
+	<h4> por favor no responda a este correo este es un mensaje atomatico para el envio de albaranes a clientes</h4>
+	<p> correo enviado a: <strong>'.$cliente->Nombre.'</strong> </p>
+	<p> albaran numero <strong> '.$id.' </strong> </p>
+	<p> Gracias por su confianza</p>
+	
+	'; //Ruta de la plantilla HTML para enviar nuestro mensaje
 				
 	/*Inicio captura de datos enviados por $_POST para enviar el correo */
 	$mail_setFromEmail=$mail_username;
 	$mail_setFromName=$mail_username;
 	$txt_message=$mail_username;
 	$mail_subject="yo";
-	
+	try {
 		$mail = new PHPMailer(true);
-		$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
+		$mail->isSMTP();   
+		$mail->SMTPDebug = 2;                         // Establecer el correo electrónico para utilizar SMTP
 		$mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
 		$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
 		$mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
@@ -544,7 +628,7 @@ Route::get('/enviar/{id}', function ($id) {
 		$mail->addReplyTo($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
 		$mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
 		 $mail->addAttachment('albaranes/albaran' . $id . '.pdf');         // Add attachments
-		$message = "hola";
+		$message = $template;
 		$mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
 		
 		$mail->Subject = $mail_subject;
@@ -556,5 +640,8 @@ Route::get('/enviar/{id}', function ($id) {
 		} else {
 			echo '<p style="color:green">Tu mensaje ha sido enviado!</p>';
 		}
-	
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+	};
 });

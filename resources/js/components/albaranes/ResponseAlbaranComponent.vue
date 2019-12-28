@@ -38,7 +38,15 @@
           
           v-on:click="editaralbaran()"
         />
-              
+        <a :href="'api/enviar/'+albaran.id">
+          <img
+          v-scroll-to="'#albaran'"
+          class="mr-4"
+          src="/img/sendmail.png"
+          width="40px"
+          height="40px"
+        />
+        </a>
       </div>
     </td>
   </tr>

@@ -92,6 +92,7 @@
               <td class="d-flex justify-content-around">
                 <div class="mr-2">Borrar</div>
                 <div class="mr-2">Ver Albaran</div>
+                <div class="mr-2">Enviar por Correo</div>
                 
               </td>
             </thead>

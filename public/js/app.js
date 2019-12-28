@@ -2556,6 +2556,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3473,6 +3474,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -13504,7 +13513,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.hidden {\r\n    display: none;\n}\n.cabecera {\r\n    width: 100%;\r\n    height: 200px;\n}\n.cabecera {\r\n    width: 100%;\r\n    height: 200px;\r\n    margin-bottom: 20px;\n}\n.faldon {\r\n    width: 100%;\r\n    text-align: center;\n}\n.firmas {    \r\n    display: inline-flex;\r\n    justify-content: space-around;\r\n    flex-wrap: nowrap;\n}\n.firmas :first-child{\r\n    align-self:start;\n}\n.poner {\r\n    display: none;\n}\n@media (max-width: 750px) {\n.firmas {\r\n        flex-wrap: wrap;\n}\n}\r\n", ""]);
+exports.push([module.i, "\n.hidden {\r\n    display: none;\n}\n.cabecera {\r\n    width: 100%;\r\n    height: 200px;\r\n    margin-bottom: 20px;\n}\n.faldon {\r\n    width: 100%;\r\n    text-align: center;\n}\n.firmas {    \r\n    display: inline-flex;\r\n    justify-content: space-around;\r\n    flex-wrap: nowrap;\n}\n.firmas :first-child{\r\n    align-self:start;\n}\n.poner {\r\n    display: none;\n}\n@media (max-width: 750px) {\n.firmas {\r\n        flex-wrap: wrap;\n}\n}\r\n", ""]);
 
 // exports
 
@@ -13542,7 +13551,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.botonesaccion {\n display: inline;\n}\n", ""]);
+exports.push([module.i, "\n.botonesaccion {\r\n display: inline;\n}\r\n", ""]);
 
 // exports
 
@@ -13656,7 +13665,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.botonesaccion {\n display: inline;\n}\n", ""]);
+exports.push([module.i, "\n.botonesaccion {\r\n display: inline;\n}\r\n", ""]);
 
 // exports
 
@@ -13770,7 +13779,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.botonesaccion {\n  display: inline;\n}\n.botonesaccion img{\n  cursor: pointer;\n}\n.terminado {\n  background-color: green;\n}\n.noterminado {\n  background-color: red;\n}\n", ""]);
+exports.push([module.i, "\n.botonesaccion {\r\n  display: inline;\n}\n.botonesaccion img{\r\n  cursor: pointer;\n}\n.terminado {\r\n  background-color: green;\n}\n.noterminado {\r\n  background-color: red;\n}\r\n", ""]);
 
 // exports
 
@@ -23642,9 +23651,9 @@ jQuery.ajaxTransport( function( options ) {
 				// akin to a jigsaw puzzle, we simply never set it to be sure.
 				// (it can always be set on a per-request basis or even using ajaxSetup)
 				// For same-domain requests, won't change header if already provided.
-				/*if ( !options.crossDomain && !headers[ "X-Requested-With" ] ) {
+				if ( !options.crossDomain && !headers[ "X-Requested-With" ] ) {
 					headers[ "X-Requested-With" ] = "XMLHttpRequest";
-				}*/
+				}
 
 				// Set headers
 				for ( i in headers ) {
@@ -63389,7 +63398,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-(("undefined"!==typeof self?self:this)["webpackJsonpvuecal"]=("undefined"!==typeof self?self:this)["webpackJsonpvuecal"]||[]).push([[9],{e240:function(e){e.exports=JSON.parse('{"weekDays":["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"],"months":["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],"years":"Años","year":"Año","month":"Mes","week":"Semana","day":"Día","today":"Hoy","noEvent":"No hay avisos","allDay":"Todo el día","deleteEvent":"Borrar","createEvent":"Crear un evento","dateFormat":"DDDD d mmmm yyyy"}')}}]);
+(("undefined"!==typeof self?self:this)["webpackJsonpvuecal"]=("undefined"!==typeof self?self:this)["webpackJsonpvuecal"]||[]).push([[9],{e240:function(e){e.exports=JSON.parse('{"weekDays":["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"],"months":["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],"years":"Años","year":"Año","month":"Mes","week":"Semana","day":"Día","today":"Hoy","noEvent":"No hay evento","allDay":"Todo el día","deleteEvent":"Borrar","createEvent":"Crear un evento","dateFormat":"DDDD d mmmm yyyy"}')}}]);
 
 /***/ }),
 
@@ -75981,7 +75990,9 @@ var staticRenderFns = [
       _c("td", { staticClass: "d-flex justify-content-around" }, [
         _c("div", { staticClass: "mr-2" }, [_vm._v("Borrar")]),
         _vm._v(" "),
-        _c("div", { staticClass: "mr-2" }, [_vm._v("Ver Albaran")])
+        _c("div", { staticClass: "mr-2" }, [_vm._v("Ver Albaran")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mr-2" }, [_vm._v("Enviar por Correo")])
       ])
     ])
   }
@@ -77036,7 +77047,22 @@ var render = function() {
                 return _vm.editaralbaran()
               }
             }
-          })
+          }),
+          _vm._v(" "),
+          _c("a", { attrs: { href: "api/enviar/" + _vm.albaran.id } }, [
+            _c("img", {
+              directives: [
+                {
+                  name: "scroll-to",
+                  rawName: "v-scroll-to",
+                  value: "#albaran",
+                  expression: "'#albaran'"
+                }
+              ],
+              staticClass: "mr-4",
+              attrs: { src: "/img/sendmail.png", width: "40px", height: "40px" }
+            })
+          ])
         ]
       )
     ])
@@ -107286,8 +107312,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\www\tano2-copia\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\www\tano2-copia\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\wamp64\www\tano\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\wamp64\www\tano\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
