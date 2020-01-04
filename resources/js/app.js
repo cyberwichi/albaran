@@ -75,6 +75,9 @@ Vue.component('empleadoprincipal-component', require('./components/empleados/Emp
 Vue.component('empleados-component', require('./components/empleados/EmpleadosComponent.vue').default);
 Vue.component('responseempleado-component', require('./components/empleados/ResponseempleadosComponent.vue').default);
 Vue.component('nuevoempleado-component', require('./components/empleados/NuevoempleadoComponent.vue').default);
+Vue.component('administradores-component', require('./components/empleados/AdministradoresComponent.vue').default);
+Vue.component('responseadministradores-component', require('./components/empleados/ResponseadministradoresComponent.vue').default);
+
 
 Vue.component('responsemaquinas-component', require('./components/maquinas/ResponseComponent.vue').default);
 Vue.component('maquinas-component', require('./components/maquinas/MaquinasComponent.vue').default);

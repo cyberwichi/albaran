@@ -17,7 +17,7 @@ class CreateEmpleadosTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('telefono');
-            $table->boolean('activo');            
+            $table->boolean('activo');
             $table->timestamps();
         });
     }

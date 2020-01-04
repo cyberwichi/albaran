@@ -57,7 +57,8 @@
                     :class="{ disabled: campo == 'noterminados' }"
                     v-on:click="vermasmethod('noterminados')"
                     v-scroll-to="'#noterminados'"
-                >No Terminados
+                >
+                    No Terminados
                 </button>
             </div>
             <div class="col text-center">
@@ -188,7 +189,7 @@
 </template>
 
 <script>
-import 'vue-cal/dist/i18n/zh-cn.js'
+import "vue-cal/dist/i18n/zh-cn.js";
 export default {
     components: { "vue-cal": vuecal },
     data() {
@@ -235,34 +236,72 @@ export default {
                     // a must be equal to b
                     return 0;
                 });
-                console.log(datos);
 
                 datos.forEach(element => {
+                    let data = {};
                     if (element.fechaPrevista) {
-                        if (element.empleado_id == null) {
-                            var empleado = "SIN ASIGNAR";
+                        if (
+                            element.empleado == null ||
+                            element.empleado_id == null
+                        ) {
+                            if (
+                                element.tb_contacto == null ||
+                                element.contacto_id == null
+                            ) {
+                                data = {
+                                };
+                            } else {
+                                data = {
+                                    start: element.fechaPrevista,
+                                    end: element.fechaPrevista,
+                                    title: element.id,
+                                    content:
+                                        "<br><strong>Cliente: " +
+                                        element.tb_contacto.Nombre +
+                                        "</strong>" +
+                                        "<br> Direccion Cliente: <strong> " +
+                                        element.tb_contacto.Direccion +
+                                        "</strong>" +
+                                        "<br> <br>Empleado asignado: <strong> Sin Asignar </strong>",
+                                    class: "btn btn-primary "
+                                };
+                                this.events.push(data);
+                            }
                         } else {
-                            var empleado = element.empleado.name;
+                            if (
+                                element.tb_contacto == null ||
+                                element.contacto_id == null
+                            ) {
+                                data = {
+                                    
+                                };
+                              
+                            } else {
+                                data = {
+                                    start: element.fechaPrevista,
+                                    end: element.fechaPrevista,
+                                    title: element.id,
+                                    content:
+                                        "<br><strong>Cliente: " +
+                                        element.tb_contacto.Nombre +
+                                        "</strong>" +
+                                        "<br> Direccion Cliente: <strong> " +
+                                        element.tb_contacto.Direccion +
+                                        "</strong>" +
+                                        "<br> <br>Empleado asignado: <strong> " +
+                                        element.empleado.name +
+                                        " </strong>",
+                                    class: "btn btn-primary "
+                                };
+                                this.events.push(data);
+                                
+                            }
                         }
-                        let data = {
-                            start: element.fechaPrevista,
-                            end: element.fechaPrevista,
-                            title: element.id,
-                            content:
-                                "<br><strong>Cliente: " +
-                                element.tb_contacto.Nombre +
-                                "</strong>" +
-                                "<br> Direccion Cliente: <strong> " +
-                                element.tb_contacto.Direccion +
-                                "</strong>" +
-                                "<br> <br>Empleado asignado: <strong> " +
-                                empleado +
-                                "</strong>",
-                            class: "btn btn-primary "
-                        };
-                        this.events.push(data);
+                        
+                       
+                        console.log(this.events);
+                        this.event = true;
                     }
-                    this.event = true;
                 });
             });
         },

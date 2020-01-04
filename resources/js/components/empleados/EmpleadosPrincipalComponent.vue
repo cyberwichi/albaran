@@ -13,6 +13,15 @@
                     Listado Editar Borrar Empleados
                 </button>
             </div>
+             <div class="col text-center">
+                <button
+                    class="btn btn-primary"
+                    v-on:click="vermasmethod('administradores')"
+                    :class="{ disabled: campo == 'administradores' }"
+                >
+                    Administradores
+                </button>
+            </div>
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
@@ -23,6 +32,11 @@
                 </button>
             </div>
         </div>
+        <administradores-component
+            v-if="campo == 'administradores'"
+            class="mt-5 mb-3"
+        ></administradores-component>
+
 
         <empleados-component
             v-if="campo == 'listado'"

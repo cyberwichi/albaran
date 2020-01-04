@@ -248,7 +248,7 @@ export default {
                     }
                     var found = this.avisos.findIndex(buscarregistro);
                     this.avisos.splice(found, 1);
-                    this.paginate(this.avisos);
+                    this.paginate();                                    
 
                     document.getElementById("app").style.cursor = "auto";
                 })
@@ -256,8 +256,9 @@ export default {
                     console.log(e);
                     document.getElementById("app").style.cursor = "auto";
                 })
-                .finally(function() {
+                .finally(() => {
                     $("#modalBorrar").modal("hide");
+                    
                     vm.$emit("salir");
                 });
         },
@@ -294,7 +295,7 @@ export default {
                 this.pages.push(index);
             }
         },
-        paginate(articulos) {
+        paginate() {
             let page = this.page;
             let perPage = this.perPage;
             let from = page * perPage - perPage;
