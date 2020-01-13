@@ -36,9 +36,10 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" class="card">
 
-        <nav class="navbar navbar-expand-md navbar-light shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light shadow-sm card-header">
+        
             <div class="w-100">                
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -48,7 +49,10 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                   <a class="mx-auto"  href="/">                    
+                    <img  src="/img/logo.jpeg"  width="150px" height="150px" alt="">
+                </a> 
+                    <ul class="navbar-nav left">
                         <!-- Authentication Links -->
                         @guest
                         <li class="nav-item">

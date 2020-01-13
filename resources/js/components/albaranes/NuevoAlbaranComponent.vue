@@ -6,7 +6,7 @@
                 v-on:submit.prevent="buscaaviso(numeroaviso)"
             >
                 <div class="form-group p-3">
-                    <label for="numeroaviso">Numero de aviso :</label>
+                    <label for="numeroaviso">Numero de Aviso:</label>
                     <input
                         class="form-control col-12"
                         type="text"
@@ -22,6 +22,15 @@
                 </div>
             </form>
         </div>
+        <b-alert
+                :show="dismissCountDown"
+                dismissible
+                variant="success"
+                @dismissed="dismissCountDown = 0"
+                @dismiss-count-down="countDownChanged"
+            >
+                {{mensaje}}
+            </b-alert>
         <div id="imprimible">
             <div>
                 <img
@@ -31,7 +40,7 @@
                 />
             </div>
 
-            <h4>Albaran de Cliente</h4>
+            <h4>Parte de Trabajo</h4>
             <!-- cliente -->
 
             <h5 class="card col-12 display-5">
@@ -93,7 +102,7 @@
                     <tbody>
                         <tr v-for="(linea, index) in detalles" :key="index">
                             <th scope="row" class="ocul">
-                                {{ linea.articulo_id }}
+                                {{ linea.referencia }}
                             </th>
                             <td>{{ linea.articulo_nombre }}</td>
                             <td>{{ linea.cantidad }}</td>
@@ -129,7 +138,7 @@
                             :key="index"
                         >
                             <th scope="row" class="ocul">
-                                {{ linea2.articulo_id }}
+                                {{ linea2.referencia }}
                             </th>
                             <td>{{ linea2.articulo_nombre }}</td>
                             <td>
@@ -144,6 +153,12 @@
                         </tr>
                     </tbody>
                 </table>
+                <autocompletararticulo-component
+                    @nuevaLinea="añadirArticulo($event)"
+                    v-model="linea3"
+                    class="card bg-light mb-3 quitar"
+                    name="articulo"
+                ></autocompletararticulo-component>
 
                 <table class="table table-secondary table-responsive p-1">
                     <tr class="d-flex justify-content-end bd-highlight">
@@ -309,7 +324,11 @@ export default {
             signaturePad: "",
             terminado: false,
             maquinas: [],
-            maquina: {}
+            maquina: {},
+            linea3: "",
+            dismissSecs: 5,
+            dismissCountDown: 0,
+            mensaje:''
         };
     },
     mounted() {
@@ -318,6 +337,24 @@ export default {
     },
 
     methods: {
+        añadirArticulo(datos) {
+            var detallealb = {
+                avisoid: this.numeroaviso,
+                articulo_id: datos.articuloId,
+                articulo_nombre: datos.articuloNombre,
+                cantidad: datos.articuloCantidad,
+                precio: datos.articuloPrecio,
+                referencia: datos.referencia
+            };
+            this.detallealbaran.push(detallealb);
+            this.calcularTotal();
+        },
+        countDownChanged(dismissCountDown) {
+            this.dismissCountDown = dismissCountDown;
+        },
+        showAlert() {
+            this.dismissCountDown = this.dismissSecs;
+        },
         anadirmaquina(maq) {
             let maquina = {
                 id: maq.id,
@@ -346,7 +383,7 @@ export default {
             this.numeroaviso = "";
             this.maquinas = [];
             this.maquina = {};
-            this.$emit("salir");
+            
         },
         buscaaviso(numeroaviso) {
             this.aviso = "";
@@ -370,21 +407,34 @@ export default {
         },
         buscaDetalles(id) {
             document.getElementById("app").style.cursor = "progress";
+            this.detallealbaran = [];
+            this.detalles = [];
             axios.get("/api/detalles/" + id).then(response => {
-                this.detallealbaran = [];
-                this.detalles = response.data;
-                this.detalles.forEach(element => {
-                    var detallealb = {
-                        avisoid: id,
-                        articulo_id: element.articulo_id,
-                        articulo_nombre: element.articulo_nombre,
-                        cantidad: element.cantidad,
-                        precio: element.precio
-                    };
-                    this.detallealbaran.push(detallealb);
-                    document.getElementById("app").style.cursor = "auto";
+                let detalles2 = response.data;
+                console.log(detalles2);
+                detalles2.forEach((element, index) => {
+                    axios
+                        .get("/api/referenciaid/" + element.articulo_id)
+                        .then(response => {
+                            var detallealb = {
+                                avisoid: id,
+                                articulo_id: element.articulo_id,
+                                articulo_nombre: element.articulo_nombre,
+                                cantidad: element.cantidad,
+                                precio: element.precio,
+                                referencia: response.data.referencia
+                            };
+                            console.log(detallealb);
+                            this.detallealbaran[index]=detallealb;
+                            this.detalles[index]=detallealb;
+                            
+                            document.getElementById("app").style.cursor =
+                                "auto";
+                            this.calcularTotal();    
+                        });
+                        
                 });
-                this.calcularTotal();
+                
             });
         },
         calcularTotal() {
@@ -474,9 +524,11 @@ export default {
             var numero = 0;
             axios
                 .post("/api/albaran", registroAlbaran)
-                .then(function(response) {
+                .then(response=> {
                     numero = response.data;
                     document.getElementById("app").style.cursor = "auto";
+                    
+                    this.$emit("salir", "Parte guardado correctamente");
                 });
             this.numeroAlbaran = numero;
             if (this.terminado) {

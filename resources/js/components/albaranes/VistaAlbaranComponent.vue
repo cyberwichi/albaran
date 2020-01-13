@@ -8,65 +8,47 @@
                     alt=""
                 />
             </div>
-            <h4 v-on:change="buscaaviso(albaran.aviso_id)">
-                Albaran de Cliente numero: {{ albaran.id }}
+            <h4 v-on:change="buscaaviso(albaran.aviso_id)" class="text-center">
+                <strong>Parte de Trabajo Numero: </strong> {{ albaran.id }}
+                <strong>
+                    Fecha :
+                </strong>
+                {{ albaran.created_at | moment("DD/MM/YYYY, h:mm a") }}
+                <strong>
+                    Numero de aviso :
+                </strong>
+                {{ albaran.aviso_id }}
+                <strong>
+                    Empleado:
+                </strong>
+                {{ aviso[0].empleado.name }}
             </h4>
 
             <div class="card-body">
                 <!-- cliente -->
-                <div class="card-body">
-                    <div class="card">
-                        <div class="firmas h4">
-                            <div class="">
-                                <div>
-                                    Numero de aviso : {{ albaran.aviso_id }}
-                                </div>
-                                <div>
-                                    Fecha Aviso:
-                                    {{
-                                        aviso[0].created_at
-                                            | moment("DD/MM/YYYY, h:mm a")
-                                    }}
-                                </div>
-                                <div>
-                                    Fecha Albaran:
-                                    {{
-                                        albaran.created_at
-                                            | moment("DD/MM/YYYY, h:mm a")
-                                    }}
-                                </div>
-                            </div>
-                            <div class="">
-                                <div>Cliente: {{ cliente.Nombre }}</div>
-                                <div>Direccion: {{ cliente.Direccion }}</div>
-                                <div>Telefono: {{ cliente.Telefono }}</div>
-                                <div>Nif: {{ cliente.Nif }}</div>
-                                <div>Email: {{ cliente.Email }}</div>
-                            </div>
+
+                <div class="card">
+                    <div class="firmas h4">
+                        <div class="">
+                            <div>Cliente: {{ cliente.Nombre }}</div>
+                            <div>Direccion: {{ cliente.Direccion }}</div>
+                            <div>Telefono: {{ cliente.Telefono }}</div>
+                        </div>
+                        <div class="">
+                            <div>Nif: {{ cliente.Nif }}</div>
+                            <div>Email: {{ cliente.Email }}</div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <h5 class="card col-12 display-5">
-                            <div>
-                                Empleado asignado: {{ aviso[0].empleado.name }}
-                            </div>
-                        </h5>
-                    </div>
                 </div>
+
                 <!-- maquinas -->
                 <div class="card sombra mt-2">
-                    <div class="card-header">
-                        <h4>
-                            Maquinas:
-                        </h4>
-                    </div>
-
-                    <div class="form-group p-3  table-responsive">
+                    <div class="table-responsive">
                         <table class="table">
                             <thead class="text-center thead">
                                 <tr>
                                     <th scope="col">Maquina</th>
-                                    <th scope="col">Referencia</th>
+                                    <th scope="col">Serie</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,7 +110,7 @@
                         <table class="table ">
                             <thead class="text-center thead">
                                 <tr>
-                                    <th scope="col">Id Articulo</th>
+                                    <th scope="col">Referencia</th>
                                     <th scope="col">Articulo</th>
                                     <th scope="col">Cantidad</th>
                                     <th scope="col">Precio</th>
@@ -141,7 +123,7 @@
                                     :key="index"
                                 >
                                     <th scope="row">
-                                        {{ linea2.articulo_id }}
+                                        {{ linea2.referencia }}
                                     </th>
                                     <td>{{ linea2.articulo_nombre }}</td>
                                     <td>{{ linea2.cantidad }}</td>
@@ -195,9 +177,21 @@
                     </div>
                     <div class=" card.body firmas sombra p-2">
                         <h5>Firma Cliente</h5>
-                        <img id="firmacli" width="150" height="150" v-show="albaran.firma_cliente" :src="albaran.firma_cliente" />
+                        <img
+                            id="firmacli"
+                            width="150"
+                            height="150"
+                            v-show="albaran.firma_cliente"
+                            :src="albaran.firma_cliente"
+                        />
                         <h5>Firma Empleado</h5>
-                        <img id="firmaemp"  width="150" height="150" v-show="albaran.firma_empleado"  :src="albaran.firma_empleado" />
+                        <img
+                            id="firmaemp"
+                            width="150"
+                            height="150"
+                            v-show="albaran.firma_empleado"
+                            :src="albaran.firma_empleado"
+                        />
                     </div>
                 </div>
                 <div class="faldon">
@@ -316,9 +310,25 @@ export default {
             axios
                 .get("/api/detallesalbaran/" + this.albaran.id)
                 .then(response => {
-                    this.detallealbaran = response.data;
-                    this.calcularTotal();
-                    document.getElementById("app").style.cursor = "auto";
+                    response.data.forEach(element => {
+                        axios
+                            .get("/api/referenciaid/" + element.articulo_id)
+                            .then(response => {
+                                var aux = {
+                                    id: element.id,
+                                    albaran_id: element.albaran_id,
+                                    articulo_id: element.articulo_id,
+                                    articulo_nombre: element.articulo_nombre,
+                                    cantidad: element.cantidad,
+                                    precio: element.precio,
+                                    referencia: response.data.referencia
+                                };
+                                this.detallealbaran.push(aux);
+                                this.calcularTotal();
+                                document.getElementById("app").style.cursor =
+                                    "auto";
+                            });
+                    });
                 });
             this.albaran.albaranmaquina.forEach((element, index) => {
                 axios
@@ -417,13 +427,13 @@ export default {
     width: 100%;
     text-align: center;
 }
-.firmas {    
+.firmas {
     display: inline-flex;
     justify-content: space-around;
     flex-wrap: nowrap;
 }
-.firmas :first-child{
-    align-self:start;
+.firmas :first-child {
+    align-self: start;
 }
 .poner {
     display: none;

@@ -15,7 +15,7 @@
 
                         <div class="d-flex flex-wrap p-2 text-center justify-content-around border border-secondary">
                             <h4 class="col-12">
-                            Albaranes de este pedido
+                            Partes de Trabajo de este pedido
                         </h4>
                             <button
                                 class=""
@@ -29,13 +29,13 @@
                                 {{ linea.id }}
                             </button>
                             <p v-if="albaranes==''">
-                                Sin albaranes
+                                Sin Partes de Trabajo
                             </p>
                         </div>
 
                       
                     </div>
-                     <button class="text-center" v-show="veralbaran" v-on:click="veralbaran=false">Cerrar Albaran</button>
+                     <button class="text-center" v-show="veralbaran" v-on:click="veralbaran=false">Cerrar Parte de Trabajo</button>
                       <vistaalbaran-component
                             class="albaran m-auto"
                             :albaran="numeroalbaran"

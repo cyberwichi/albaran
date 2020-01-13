@@ -4,7 +4,7 @@
             <div class="card-body">
                 <form>
                     <label for="referencia">
-                        Referencia a Buscar
+                        Numero de serie a Buscar
                     </label>
                     <input type="text" v-model="referencia" />
                     <button v-on:click.prevent="buscarreferencia">
@@ -12,8 +12,7 @@
                     </button>
                 </form>
                 <div v-if="tiposdemaquina">
-                    Encontradas {{ tiposdemaquina.length }} maquinas con esta
-                    referencia
+                    Encontradas {{ tiposdemaquina.length }} maquinas con este numero de serie
                     <div v-for="maq in tiposdemaquina" :key="maq.id">
                         <button class="text-uppercase" v-on:click.prevent="listamaquina(maq.id)">
                             {{ maq.nombre }}
@@ -21,7 +20,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    Ninguna maquina con esta referencia
+                    Ninguna maquina con este numero de serie
                 </div>
 
                 <div v-if="ver">
@@ -106,10 +105,10 @@
                     <div class="card table-responsive">
                         <table class="table table-table-striped ">
                             <thead class="table table-header card-header">
-                                <th>Numero Albaran</th>
+                                <th>Numero de Parte</th>
                                 <th>Fecha</th>
                                 <th class="d-flex justify-content-between">
-                                    <div class="m-2">Ver Albaran</div>
+                                    <div class="m-2">Ver Parte</div>
                                 </th>
                             </thead>
                             <tbody class="table table-body card-body sombra">

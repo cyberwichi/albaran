@@ -205,3 +205,19 @@ Route::get('/imprimir/{id}', 'PdfController@imprimir')->name('imprimirpdf');
 
 //produce albaran pdf y envia por mail al cliente
 Route::get('/enviar/{id}', 'PdfController@enviar')->name('enviarpdf');
+
+
+
+
+// nueva referencia
+Route::post('/referencia', 'ReferenciaController@store')->name ('nuevareferencia');
+//articulos por Referencia
+Route::get('/referencia/{referencia}', 'ReferenciaController@articulosporreferencia')->name('articulosporreferencia');
+//referencia por articulo
+Route::get('/referenciaid/{id}', 'ReferenciaController@referenciaid')->name('idreferencia');
+//index referencias
+Route::get('/referencias', 'ReferenciaController@index')->name('indexreferencias');
+//borrar referencia
+Route::get('/delreferencia/{id}', 'ReferenciaController@destroy')->name('deletereferencia');
+//actualizar referencia
+Route::put('/referencias/{id}', 'ReferenciaController@update')->name('updatereferencia');

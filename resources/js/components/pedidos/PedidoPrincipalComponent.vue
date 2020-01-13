@@ -1,9 +1,9 @@
 <template>
     <div class="">
-        <div class="col-12 text-center h2 mb-3">
+        <div class="col-12 text-center h1 mb-3">
             <strong>AVISOS</strong>
         </div>
-        <div class="row d-flex align-items-end">
+        <div class="row d-flex align-items-end align-text-bottom">
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
@@ -12,43 +12,6 @@
                     v-scroll-to="'#listado'"
                 >
                     Listado Avisos
-                </button>
-            </div>
-            <div class="col text-center">
-                <input
-                    type="text"
-                    v-model="idavisoedita"
-                    id=""
-                    placeholder="Numero:"
-                    style="width:60px;"
-                />
-                <button
-                    class="btn btn-primary"
-                    v-on:click="
-                        idaviso = idavisoedita;
-                        vermasmethod('edita');
-                    "
-                    :class="{ disabled: campo == 'edita' }"
-                    v-scroll-to="'#edita'"
-                >
-                    Modificar
-                </button>
-            </div>
-            <div class="col text-center">
-                <input
-                    type="text"
-                    v-model="numero"
-                    id=""
-                    placeholder="Numero:"
-                    style="width:65px;"
-                />
-                <button
-                    class="btn btn-primary"
-                    v-on:click="vermasmethod('pedido')"
-                    :class="{ disabled: campo == 'pedido' }"
-                    v-scroll-to="'#pedido'"
-                >
-                    Ver
                 </button>
             </div>
             <div class="col text-center">
@@ -61,6 +24,44 @@
                     No Terminados
                 </button>
             </div>
+            <div class="col text-center mb-0 form-group">
+                <input
+                    type="text"
+                    v-model="idavisoedita"
+                    id=""
+                    placeholder="Numero:"
+                    class=" form-control "
+                />
+                <button
+                    class="btn btn-primary"
+                    v-on:click="
+                        idaviso = idavisoedita;
+                        vermasmethod('edita');
+                    "
+                    :class="{ disabled: campo == 'edita'}"
+                    v-scroll-to="'#edita'"
+                >
+                    Modificar
+                </button>
+            </div>
+            <div class="col text-cente form-group mb-0">
+                <input
+                    type="text"
+                    v-model="numero"
+                    id=""
+                    placeholder="Numero:"
+                    class=" form-control "
+                />
+                <button
+                    class="btn btn-primary"
+                    v-on:click="vermasmethod('pedido')"
+                    :class="{ disabled: campo == 'pedido' }"
+                    v-scroll-to="'#pedido'"
+                >
+                    Ver
+                </button>
+            </div>
+            
             <div class="col text-center">
                 <button
                     class="btn btn-primary"

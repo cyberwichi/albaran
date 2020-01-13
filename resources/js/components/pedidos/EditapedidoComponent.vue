@@ -202,7 +202,7 @@
                                 width="50px"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Guardar Aviso e ir al Albaran"
+                                title="Guardar Aviso e ir al Parte de Trabajo"
                             />
                         </button>
                     </div>

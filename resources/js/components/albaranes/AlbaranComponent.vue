@@ -1,8 +1,17 @@
 <template>
-  <div class>
-    <div class="card">
-      <div class="card-body">
-         <nav aria-label="Page navigation example" class>
+    <div class>
+        <div class="card">
+            <div class="card-body">
+                <b-alert
+                    :show="dismissCountDown"
+                    dismissible
+                    variant="success"
+                    @dismissed="dismissCountDown = 0"
+                    @dismiss-count-down="countDownChanged"
+                >
+                    {{ textmensaje }}
+                </b-alert>
+                <nav aria-label="Page navigation example" class>
                     <ul class="pagination">
                         <li class="page-item">
                             <button
@@ -80,135 +89,147 @@
                         </li>
                     </ul>
                 </nav>
-        <div class="card table-responsive">
-          <table class="table">
-            <thead class="card-header">
-              <td>Numero Albaran</td>
-              <td>Numero Aviso</td>
-               <td>Fecha</td>
-               <td>Observaciones</td>
+                <div class="card table-responsive">
+                    <table class="table">
+                        <thead class="card-header">
+                            <td>Numero de Parte</td>
+                            <td>Numero Aviso</td>
+                            <td>Fecha</td>
+                            <td>Observaciones</td>
 
-              
-              <td class="d-flex justify-content-around">
-                <div class="mr-2">Borrar</div>
-                <div class="mr-2">Ver Albaran</div>
-                <div class="mr-2">Enviar por Correo</div>
-                
-              </td>
-            </thead>
-            <tbody class="card-footer sombra">
-              <responsealbaran-component
-                v-for="(albaran,index) in albaranesMostrados"
-                :key="index"
-                :albaran="albaran"
-                @delete="borraralbaran(albaran)"
-                @ver="veralbaran(albaran)"
-               
-               
-              ></responsealbaran-component>
-            </tbody>
-          </table>
+                            <td class="d-flex justify-content-around">
+                                <div class="mr-2">Borrar</div>
+                                <div class="mr-2">Ver Parte</div>
+                                <div class="mr-2">Enviar por Correo</div>
+                            </td>
+                        </thead>
+                        <tbody class="card-footer sombra">
+                            <responsealbaran-component
+                                v-for="(albaran, index) in albaranesMostrados"
+                                :key="index"
+                                :albaran="albaran"
+                                @delete="borraralbaran(albaran)"
+                                @ver="veralbaran(albaran)"
+                                @mensaje="mensaje($event)"                                
+                            ></responsealbaran-component>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
+        <div id="albaran"></div>
+        <vistaalbaran-component
+            :albaran="albaran"
+            v-if="flagver"
+        ></vistaalbaran-component>
     </div>
-    <div id="albaran"></div>
-    <vistaalbaran-component
-      :albaran="albaran" v-if="flagver"
-    ></vistaalbaran-component>
-    
-  </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      
-      albaranes: [],
-      page: 1,
-      perPage: 9,
-      pages: [],
-      albaran: {},
-      flagver:false,
-     
-      
-    };
-  },
-  mounted() {
-    this.getAlbaranes();
-  },
-  methods: {
-    borraralbaran(id) {
-      document.getElementById("app").style.cursor = "progress";
-      axios
-        .get("/api/delalbaranes/" + id.id)
-        .then(response => {
-          function buscarregistro(objeto) {
-            return id.id == objeto.id;
-          }
-          var found = this.albaranes.findIndex(buscarregistro);
-          this.albaranes.splice(found, 1);
-          paginate(this.albaranes);
-          document.getElementById("app").style.cursor = "auto";
-        })
-        .catch(e => {console.log(e);
-        document.getElementById("app").style.cursor = "auto";});
+    data() {
+        return {
+            albaranes: [],
+            page: 1,
+            perPage: 9,
+            pages: [],
+            albaran: {},
+            flagver: false,
+            dismissSecs: 5,
+            dismissCountDown: 0,
+            textmensaje:''        };
+    },
+    mounted() {
+        this.getAlbaranes();
+    },
+    methods: {
+        borraralbaran(id) {
+            document.getElementById("app").style.cursor = "progress";
+            axios
+                .get("/api/delalbaranes/" + id.id)
+                .then(response => {
+                    function buscarregistro(objeto) {
+                        return id.id == objeto.id;
+                    }
+                    var found = this.albaranes.findIndex(buscarregistro);
+                    this.albaranes.splice(found, 1);
+                    paginate(this.albaranes);
+                    document.getElementById("app").style.cursor = "auto";
+                })
+                .catch(e => {
+                    console.log(e);
+                    document.getElementById("app").style.cursor = "auto";
+                });
+        },
+
+        getAlbaranes() {
+            document.getElementById("app").style.cursor = "progress";
+            axios
+                .get("/api/albaranes")
+                .then(response => {
+                    this.albaranes = response.data;
+                    document.getElementById("app").style.cursor = "auto";
+                })
+                .catch(e => {
+                    console.log(e);
+                    document.getElementById("app").style.cursor = "auto";
+                });
+        },
+        setPages() {
+            let numberOfPages = Math.ceil(this.albaranes.length / this.perPage);
+            for (let index = 1; index <= numberOfPages; index++) {
+                this.pages.push(index);
+            }
+        },
+        paginate(albaranes) {
+            let page = this.page;
+            let perPage = this.perPage;
+            let from = page * perPage - perPage;
+            let to = page * perPage;
+
+            return albaranes.slice(from, to);
+        },
+        veralbaran(albaran) {
+            /* this.albaran=albaran;
+      this.flagver=true; */
+            window.open(
+                "albaranes/parte" + albaran.id + ".pdf",
+                "_blank",
+                "width=800,height=700"
+            );
+        },
+        countDownChanged(dismissCountDown) {
+            this.dismissCountDown = dismissCountDown;
+        },
+        showAlert() {
+            this.dismissCountDown = this.dismissSecs;
+        },
+        mensaje(texto) {
+            this.textmensaje = texto;
+            this.showAlert();
+        }
+    },
+    computed: {
+        albaranesMostrados() {
+            return this.paginate(this.albaranes);
+        }
+    },
+    watch: {
+        albaranes() {
+            this.setPages();
+        }
     },
 
-    getAlbaranes() {
-      document.getElementById("app").style.cursor = "progress";
-      axios
-        .get("/api/albaranes")
-        .then(response => {
-          this.albaranes = response.data;
-          document.getElementById("app").style.cursor = "auto";
-        })
-        .catch(e => {console.log(e);
-        document.getElementById("app").style.cursor = "auto";});
-    },
-    setPages() {
-      let numberOfPages = Math.ceil(this.albaranes.length / this.perPage);
-      for (let index = 1; index <= numberOfPages; index++) {
-        this.pages.push(index);
-      }
-    },
-    paginate(albaranes) {
-      let page = this.page;
-      let perPage = this.perPage;
-      let from = page * perPage - perPage;
-      let to = page * perPage;
-
-      return albaranes.slice(from, to);
-    },
-    veralbaran(albaran){
-      this.albaran=albaran;
-      this.flagver=true;
+    filters: {
+        trimWords(value) {
+            return (
+                value
+                    .split(" ")
+                    .splice(0, 20)
+                    .join(" ") + "..."
+            );
+        }
     }
-    
-   
-    
-  },
-  computed: {
-    albaranesMostrados() {
-      return this.paginate(this.albaranes);
-    }
-  },
-  watch: {
-    albaranes() {
-      this.setPages();
-    }
-  },
-
-  filters: {
-    trimWords(value) {
-      return (
-        value
-          .split(" ")
-          .splice(0, 20)
-          .join(" ") + "..."
-      );
-    }
-  }
 };
 </script>
 <style scoped>
@@ -216,7 +237,6 @@ button.page-link {
     display: inline-block;
     width: 60px;
     height: 60px;
-    
 }
 button.page-link {
     font-size: 11px;
@@ -229,9 +249,9 @@ button.page-link {
 }
 
 tr {
-  padding: 15px;
+    padding: 15px;
 }
 td {
-  padding: 5px;
+    padding: 5px;
 }
 </style>

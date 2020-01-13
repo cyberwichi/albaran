@@ -9,7 +9,7 @@
                 >
                     <div class="card-body sombra">
                         <div class="form-group">
-                            <label for="nombre">Nombre Contacto</label>
+                            <label for="nombre">Nombre Cliente</label>
                             <input
                                 type="text"
                                 class="form-control"

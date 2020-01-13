@@ -8,6 +8,7 @@ use App\Aviso;
 use App\tbContacto;
 use App\Empleado;
 use App\Maquina;
+use App\Referencia;
 use Barryvdh\DomPDF\Facade as PDF;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -25,33 +26,30 @@ class PdfController extends Controller
             $maquina[$maq->maquina_id] = Maquina::find($maq->maquina_id);
         }
         $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina'));
-        $pdf->save('albaranes/albaran' . $id . '.pdf');
+        $pdf->save('albaranes/parte' . $id . '.pdf');
         return ($maquina);
+
+        /*         $mi_pdf = 'albaranes/parte' . $id . '.pdf';
+        header('Content-type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . $mi_pdf . '"');
+        readfile($mi_pdf); */
     }
     public function enviar($id)
     {
         $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
         $aviso = Aviso::find($albaran[0]->aviso_id);
         $cliente = tbContacto::find($aviso->contacto_id);
-        $empleado = Empleado::find($aviso->empleado_id);
-        $maquina = [];
-        if ($albaran[0]->albaranmaquina !== []) {
-            foreach ($albaran[0]->albaranmaquina as $maq) {
-                $maquina[$maq->maquina_id] = Maquina::find($maq->maquina_id);
-            }
-        }
-        $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina'));
-        $pdf->save('albaranes/albaran' . $id . '.pdf');
+
         /*Configuracion de variables para enviar el correo*/
         $mail_username = "cyberwichi@gmail.com"; //Correo electronico saliente ejemplo: tucorreo@gmail.com
         $mail_userpassword = "huertagomple"; //Tu contraseña de gmail
         $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
         $template = '
-            <h1> Corrreo de envio de albaran</h1>
+            <h1> Corrreo de envio de parte de trabajo</h1>
             <img src="/img/logo.jpeg"  style="margin:auto;" alt="">
-            <h4> por favor no responda a este correo este es un mensaje atomatico para el envio de albaranes a clientes</h4>
-            <p> correo enviado a: <strong>' . $cliente->Nombre . '</strong> </p>
-            <p> albaran numero <strong> ' . $id . ' </strong> </p>
+            <h4> por favor no responda a este correo este es un mensaje atomatico para el envio de partes de trabajo a clientes</h4>
+            <p> Correo enviado a: <strong>' . $cliente->Nombre . '</strong> </p>
+            <p> Parte numero <strong> ' . $id . ' </strong> </p>
             <p> Gracias por su confianza</p>
             
 	    '; //Ruta de la plantilla HTML para enviar nuestro mensaje
@@ -74,7 +72,7 @@ class PdfController extends Controller
             $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
             $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
             $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
-            $mail->addAttachment('albaranes/albaran' . $id . '.pdf');         // Add attachments
+            $mail->addAttachment('albaranes/parte' . $id . '.pdf');         // Add attachments
             $message = $template;
             $mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
 
@@ -85,7 +83,7 @@ class PdfController extends Controller
                 echo 'Error de correo: ' . $mail->ErrorInfo;
                 echo "</p>";
             } else {
-                echo '<p style="color:green">Tu mensaje ha sido enviado!</p>';
+                echo '<p style="color:green">Su mensaje ha sido enviado!</p>';
             }
         } catch (Exception $e) {
             echo $e->getMessage();

@@ -1,15 +1,24 @@
 <template>
     <div class>
-      <div  v-if="alert" class="alert alert-danger" role="alert">
-                        Sin albaranes para mostrar
-                    </div>
+        <div v-if="alert" class="alert alert-danger" role="alert">
+            Sin partes de trabajo para mostrar
+        </div>
         <autocompletcontacto-component
             @newcontacto="buscaAlbaranes($event)"
         ></autocompletcontacto-component>
 
-        <div class="card">
-            <div class="card-body">
-                 <nav aria-label="Page navigation example" class>
+        <div class="card-body">
+            <div class="card">
+                <b-alert
+                    :show="dismissCountDown"
+                    dismissible
+                    variant="success"
+                    @dismissed="dismissCountDown = 0"
+                    @dismiss-count-down="countDownChanged"
+                >
+                    {{ textmensaje }}
+                </b-alert>
+                <nav aria-label="Page navigation example" class>
                     <ul class="pagination">
                         <li class="page-item">
                             <button
@@ -90,7 +99,7 @@
                 <div class="card table-responsive">
                     <table class="table">
                         <thead class="card-header">
-                            <td>Numero Albaran</td>
+                            <td>Numero de Parte</td>
                             <td>Numero Aviso</td>
                             <td>Fecha</td>
                             <td>Observaciones</td>
@@ -98,6 +107,7 @@
                             <td class="d-flex justify-content-around">
                                 <div class="mr-2">Borrar</div>
                                 <div class="mr-4">Ver</div>
+                                <div class="mr-4">Enviiar por correo</div>
                             </td>
                         </thead>
                         <tbody class="card-footer sombra">
@@ -107,13 +117,13 @@
                                 :albaran="albaran"
                                 @delete="borraralbaran(albaran)"
                                 @ver="veralbaran(albaran)"
+                                @mensaje="mensaje($event)"
                             ></responsealbaran-component>
                         </tbody>
                     </table>
-                    
                 </div>
             </div>
-               <div id="albaran"></div>
+            <div id="albaran"></div>
         </div>
         <vistaalbaran-component
             :albaran="albaran"
@@ -131,7 +141,10 @@ export default {
             perPage: 9,
             pages: [],
             flagver: false,
-            alert:false
+            alert: false,
+            dismissSecs: 5,
+            dismissCountDown: 0,
+            textmensaje: ""
         };
     },
     mounted() {},
@@ -153,8 +166,10 @@ export default {
                         }
                     });
                     if (this.albaranes.length == 0) {
-                      this.alert=true;
-                    } else{ this.alert=false}
+                        this.alert = true;
+                    } else {
+                        this.alert = false;
+                    }
                     document.getElementById("app").style.cursor = "auto";
                 });
         },
@@ -166,10 +181,11 @@ export default {
                 .then(response => {
                     this.albaranes = response.data;
                     document.getElementById("app").style.cursor = "auto";
-                    
                 })
-                .catch(e => {console.log(e);
-                document.getElementById("app").style.cursor = "auto";});
+                .catch(e => {
+                    console.log(e);
+                    document.getElementById("app").style.cursor = "auto";
+                });
         },
         setPages() {
             let numberOfPages = Math.ceil(this.albaranes.length / this.perPage);
@@ -186,9 +202,21 @@ export default {
             return albaranes.slice(from, to);
         },
         veralbaran(albaran) {
-            this.flagver = false;
-            this.albaran = albaran;
-            this.flagver = true;
+            window.open(
+                "albaranes/parte" + albaran.id + ".pdf",
+                "_blank",
+                "width=800,height=700"
+            );
+        },
+        countDownChanged(dismissCountDown) {
+            this.dismissCountDown = dismissCountDown;
+        },
+        showAlert() {
+            this.dismissCountDown = this.dismissSecs;
+        },
+        mensaje(texto) {
+            this.textmensaje = texto;
+            this.showAlert();
         }
     },
     computed: {
@@ -219,7 +247,6 @@ button.page-link {
     display: inline-block;
     width: 60px;
     height: 60px;
-    
 }
 button.page-link {
     font-size: 11px;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="col-12 text-center h2 mb-3">
+        <div class="col-12 text-center h1 mb-3">
             <strong>EMPLEADOS</strong>
         </div>
         <div class="row d-flex align-items-end">

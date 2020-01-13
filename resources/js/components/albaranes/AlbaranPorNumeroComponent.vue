@@ -1,7 +1,7 @@
 <template>
   <form v-on:submit.prevent="buscaAlbaran(querySearch)" >
     <div class="form-group">
-      <label for="input">Numero de Albaran</label>
+      <label for="input">Numero de Parte de Trabajo</label>
       <input class="form-control col-12" type="text" v-model="querySearch" name="input" />
     </div>
     <button type="submit">

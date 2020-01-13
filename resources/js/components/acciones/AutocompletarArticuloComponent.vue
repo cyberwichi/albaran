@@ -14,7 +14,6 @@
                 name="querySearch"
                 v-on:keyup="getResult()"
                 v-on:keydown="keyDown"
-                placeholder
                 autocomplete="off"
             />
             <div class="autocomplete-items" v-if="onFocus">
@@ -25,6 +24,7 @@
                         querySearch = articulo.Nombre;
                         upcForm = articulo.UPC;
                         onFocus = false;
+                        querySearch2= articulo.referencias[articulo.referencias.length - 1].referencia
                     "
                     :key="index"
                 >
@@ -34,7 +34,46 @@
                         }}</strong>
                         <span class="badge badge-warning"
                             >Stock : {{ articulo.tb_stock_art.Stock }}</span
-                        >
+                        >                        
+                    </div>
+                    {{articulo.referencias.length}}
+                </div>
+            </div>
+        </div>
+        <div class="autocomplete form-group">
+            <label for="querySearch2">Referencia</label>
+            <input
+                @blur="onBlur2 = true"
+                @focus="
+                    onFocus2 = true;
+                    onBlur2 = false;
+                "
+                class="form-control col-12"
+                type="text"
+                v-model="querySearch2"
+                name="querySearch2"
+                v-on:keyup="getResult2()"
+                v-on:keydown="keyDown2"
+                autocomplete="off"
+            />
+            <div class="autocomplete-items" v-if="onFocus2">
+                <div
+                    v-for="(articulo, index) in articulos2"
+                    @click="
+                        articuloIndex = articulo.tb_articulo.AutoId;
+                        querySearch = articulo.tb_articulo.Nombre;
+                        upcForm = articulo.tb_articulo.UPC;
+                        querySearch2= articulo.referencia
+                        onFocus = false;
+                    "
+                    :key="index"
+                >
+                    <div>
+                        <strong>{{
+                            articulo.tb_articulo.Nombre.substr(0, autocomplete.lenght)
+                           
+                        }}</strong>
+                        {{ articulo}}
                     </div>
                 </div>
             </div>
@@ -73,9 +112,13 @@ export default {
         return {
             articuloIndex: "",
             querySearch: "",
+            querySearch2:'',
             articulos: [],
+            articulos2: [],
             currentFocus: 2,
             autocomplete: "",
+            onBlur2: true,
+            onFocus2: false,
             onBlur: true,
             onFocus: false,
             upcForm: "0.00",
@@ -92,6 +135,7 @@ export default {
         var vm = this;
         document.addEventListener("click", function(e) {
             vm.onBlur ? (vm.onFocus = false) : false;
+            vm.onBlur2 ? (vm.onFocus2 = false) : false;
         });
     },
     methods: {
@@ -123,9 +167,36 @@ export default {
                         });
                         document.getElementById("app").style.cursor = "auto";
                     });
-            }
+            }            
+        },
+        getResult2() {
+            this.articulos2 = [];
+            if (this.querySearch2.length > 1) {
+                document.getElementById("app").style.cursor = "progress";
+                axios
+                    .get("/api/referencia/" + this.querySearch2)
+                    .then(response => {
+                        response.data.forEach(articulo => {
+                           console.log(articulo);
+                            this.articulos2.push(articulo);
+                        });
+                       
+                        document.getElementById("app").style.cursor = "auto";
+                    });
+            }            
         },
         keyDown(e) {
+            var vm = this;
+
+            if (e.keycode == 40) {
+                vm.currentFocus++;
+                vm.addActive();
+            } else if (e.keyCode == 38) {
+                vm.currentFocus--;
+                vm.addActive();
+            }
+        },
+         keyDown2(e) {
             var vm = this;
 
             if (e.keycode == 40) {
@@ -141,12 +212,14 @@ export default {
                 articuloId: this.articuloIndex,
                 articuloNombre: this.querySearch,
                 articuloCantidad: this.cantidadForm,
-                articuloPrecio: this.upcForm
+                articuloPrecio: this.upcForm,
+                referencia:this.querySearch2
             };
             this.articuloIndex = "";
             this.querySearch = "";
             this.cantidadForm = "1";
             this.upcForm = "";
+            this.querySearch2="";
             this.articulos = [];
 
             this.$emit("nuevaLinea", this.linea);

@@ -12,6 +12,7 @@ use App\Albaranmaquina;
 use App\tbContacto;
 use App\Empleado;
 use App\Maquina;
+use App\Referencia;
 use PhpParser\Node\Stmt\Catch_;
 use PhpParser\Node\Stmt\TryCatch;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -31,7 +32,7 @@ class AlbaranController extends Controller
         $avisos = Aviso::where('contacto_id', $id)->get();
         $albaranes = [];
         foreach ($avisos as $key => $aviso) {
-            $albaranes[$key] = Albaran::where('aviso_id', $aviso->id)->with('detallealbaran')->with('albaranmaquina')->get();
+            $albaranes[$key] = Albaran::where('aviso_id', $aviso->id)->orderBy('id', 'desc')->with('detallealbaran')->with('albaranmaquina')->get();
         }
         return json_encode($albaranes);
     }
@@ -78,23 +79,29 @@ class AlbaranController extends Controller
         $cliente = tbContacto::find($aviso->contacto_id);
         $empleado = Empleado::find($aviso->empleado_id);
         $maquina = [];
+        $referencias=[];
         if ($albaran[0]->albaranmaquina !== []) {
             foreach ($albaran[0]->albaranmaquina as $maq) {
                 $maquina[$maq->maquina_id] = Maquina::find($maq->maquina_id);
             }
         }
-        $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina'));
-        $pdf->save('albaranes/albaran' . $id . '.pdf');
+        if ($albaran[0]->detallealbaran !== []) {
+            foreach ($albaran[0]->detallealbaran as $det) {
+                $referencias[$det->articulo_id] = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
+            }
+        }
+        $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
+        $pdf->save('albaranes/parte' . $id . '.pdf');
         /*Configuracion de variables para enviar el correo*/
         $mail_username = "cyberwichi@gmail.com"; //Correo electronico saliente ejemplo: tucorreo@gmail.com
         $mail_userpassword = "huertagomple"; //Tu contraseña de gmail
         $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
         $template = '
-            <h1> Corrreo de envio de albaran</h1>
+            <h1> Corrreo de envio de Parte de trabajo</h1>
             <img src="/img/logo.jpeg"  style="margin:auto;" alt="">
-            <h4> por favor no responda a este correo este es un mensaje atomatico para el envio de albaranes a clientes</h4>
-            <p> correo enviado a: <strong>' . $cliente->Nombre . '</strong> </p>
-            <p> albaran numero <strong> ' . $id . ' </strong> </p>
+            <h4> Por favor no responda a este correo este es un mensaje atomatico para el envio de partes de trabajo a clientes</h4>
+            <p> Correo enviado a: <strong>' . $cliente->Nombre . '</strong> </p>
+            <p> Parte de trabajo numero <strong> ' . $id . ' </strong> </p>
             <p> Gracias por su confianza</p>
             '; //Ruta de la plantilla HTML para enviar nuestro mensaje
 
@@ -115,7 +122,7 @@ class AlbaranController extends Controller
             $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
             $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
             $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
-            $mail->addAttachment('albaranes/albaran' . $id . '.pdf');         // Add attachments
+            $mail->addAttachment('albaranes/parte' . $id . '.pdf');         // Add attachments
             $message = $template;
             $mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
 

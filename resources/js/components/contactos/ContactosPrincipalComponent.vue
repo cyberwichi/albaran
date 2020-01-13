@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="col-12 text-center h2 mb-3">
+        <div class="col-12 text-center h1 mb-3">
             <strong>CLIENTES</strong>
         </div>
         <div class="row d-flex align-items-end">
@@ -20,7 +20,7 @@
                     v-on:click="vermasmethod('nuevo')"
                     :class="{ disabled: campo == 'nuevo' }"
                 >
-                    Nuevo Contacto
+                    Nuevo Cliente
                     <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
                 </button>
             </div>

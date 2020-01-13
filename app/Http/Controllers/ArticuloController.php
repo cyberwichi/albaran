@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\tbArticulo;
 use App\tbStockArt;
+use App\Referencia;
 use Illuminate\Support\Facades\DB;
 
 class ArticuloController extends Controller
 {
     public function porid($id)
     {
-        $articulo = tbArticulo::with('tbStockArt')->find($id);
-        return json_encode($articulo);
+        $articulo = tbArticulo::with('tbStockArt')->with('referencias')->find($id);
+        return $articulo;
     }
     public function new(Request $request)
     {
@@ -49,14 +50,14 @@ class ArticuloController extends Controller
     }
     public function pornombre($dd)
     {
-        $articulos = tbArticulo::where('Nombre', 'LIKE', '%' . $dd . '%')->with('tbStockArt')->get();
+        $articulos = tbArticulo::where('Nombre', 'LIKE', '%' . $dd . '%')->with('tbStockArt')->with('referencias')->get();
         $ordenados = $articulos;
         $ordenados->sortBy('tbStockArt->Stock', SORT_REGULAR, true);
         return json_encode($ordenados);
     }
     public function index()
     {
-        $articulos = tbArticulo::orderBy('Id')->with('tbStockArt')->get();
+        $articulos = tbArticulo::orderBy('Id')->with('tbStockArt')->with('referencias')->get();
         return json_encode($articulos);
     }
 }

@@ -7,12 +7,14 @@ import VueRouter from 'vue-router';
 import VueCal from 'vue-cal';
 import 'vue-cal/dist/i18n/es';
 import 'vue-cal/dist/vuecal.css';
+import BootstrapVue from 'bootstrap-vue';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 Vue.use(VueRouter);
 Vue.use(require('vue-moment'));
 var VueScrollTo = require('vue-scrollto');
-
-Vue.use(VueScrollTo)
+Vue.use(BootstrapVue);
+Vue.use(VueScrollTo);
 
 // You can also pass in the default options
 Vue.use(VueScrollTo, {
@@ -85,7 +87,11 @@ Vue.component('nuevomaquina-component', require('./components/maquinas/NuevoMaqu
 Vue.component('maquinasprincipal-component', require('./components/maquinas/MaquinasPrincipalComponent.vue').default);
 Vue.component('maquinashistorial-component', require('./components/maquinas/MaquinasHistorialComponent.vue').default);
 
-
+Vue.component('referenciasprincipal-component', require('./components/referencias/ReferenciasPrincipalComponent.vue').default);
+Vue.component('referencias-component', require('./components/referencias/ReferenciasComponent.vue').default);
+Vue.component('responsereferencias-component', require('./components/referencias/ResponsereferenciasComponent.vue').default);
+Vue.component('nuevoreferencias-component', require('./components/referencias/NuevoreferenciasComponent.vue').default);
+Vue.component('porreferencias-component', require('./components/referencias/MostrarporreferenciasComponent.vue').default);
 
 const app = new Vue({
     el: '#app'

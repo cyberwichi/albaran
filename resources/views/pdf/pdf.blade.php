@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Parte de Trabajo</title>
     <style>
         body{
             margin: 0;
             padding: 0; 
             font-size: 12px;
             box-sizing: border-box;
+        }
+        tr{
+            max-width: 100%;
         }
         .itemcabecera{
             width: 50%;
@@ -87,7 +90,7 @@
                         <div class="">
                             <div>
                                 <strong>
-                                    Albaran de Cliente numero: {{ $albaran[0]->id }}
+                                    Parte de Trabajo numero: {{ $albaran[0]->id }}
                                 </strong>
                             </div>
 
@@ -100,7 +103,7 @@
                                 {{$albaran[0]->aviso->created_at }}
                             </div>
                             <div>
-                                Fecha Albaran:
+                                Fecha del Parte:
                                 {{$albaran[0]->created_at}}
                             </div>
                             <div>
@@ -121,12 +124,8 @@
                     </td>
                 </tbody>
             </table>
-            
-                <!-- maquinas -->
-                
-                    
+                            <!-- maquinas -->
                     <div class="tabla1 firmas">
-                        <h3 class="itemcabecera center">Maquinas:</h3>
                         <table  class="tabla1 itemcabecera center">
                             <thead >
                                 <tr>
@@ -157,6 +156,7 @@
                         <table class="tabla1">
                             <thead class="">
                                 <tr>
+                                    <th scope="col">Referencia</th>
                                     <th scope="col">Articulo</th>
                                     <th scope="col">Cantidad</th>
                                     <th scope="col">Precio</th>
@@ -166,6 +166,7 @@
                             <?php $subtotal =0 ?>
                                 @foreach($albaran[0]->detalleAlbaran  as $linea2 )
                                 <tr>
+                                    <td class="firmas center">{{ $referencias[$linea2->articulo_id]->referencia}}</td>
                                     <td class="firmas center">{{ $linea2->articulo_nombre }}</td>
                                     <td class="firmas right">{{ $linea2->cantidad }}</td>
                                     <td class="firmas right">{{ $linea2->precio }}</td>

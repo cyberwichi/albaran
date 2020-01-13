@@ -20,4 +20,8 @@ class tbArticulo extends Model
     {
         return $this->belongsTo(tbStockArt::class, 'Id', 'Articulo');
     }
+    public function referencias()
+    {
+        return $this->hasMany(Referencia::class, 'articulo_id', 'Id');
+    }
 }

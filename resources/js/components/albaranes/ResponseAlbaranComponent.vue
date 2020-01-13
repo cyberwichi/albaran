@@ -71,7 +71,11 @@ export default {
         },
         enviar() {
           console.log( this.albaran.id);
-            axios.get("/api/enviar/" + this.albaran.id);
+            axios.get("/api/enviar/" + this.albaran.id).then(
+                response=>{
+                   this.$emit("mensaje", "Envio Correcto"); 
+                }
+            );
         }
     },
     computed: {},

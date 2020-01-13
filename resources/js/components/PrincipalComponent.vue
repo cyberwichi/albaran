@@ -1,11 +1,8 @@
 <template>
     <div id="principal">
-        <header class="card">
-                     
-            <div class="card-footer row d-flex align-items-center">
-                 <a class=""  href="/">                    
-                    <img  src="/img/logo.jpeg"  width="150px" height="150px" alt="">
-                </a>  
+        <header class="">
+                                 
+            <div class="card-footer row d-flex align-items-stretch">                  
                 <div class="col text-center">
                     <button
                         class="btn btn-primary"
@@ -21,16 +18,25 @@
                         :class="{ disabled: campo == 'albaranes' }"
                         v-on:click="vermasmethod('albaranes')"
                     >
-                        Albaran
+                        Partes de Trabajo
                     </button>
                 </div>
-                <div class="col text-center">
+                <!-- <div class="col text-center">
                     <button
                         class="btn btn-primary"
                         :class="{ disabled: campo == 'articulos' }"
                         v-on:click="vermasmethod('articulos')"
                     >
                         Articulos
+                    </button>
+                </div> -->
+                <div class="col text-center">
+                    <button
+                        class="btn btn-primary"
+                        :class="{ disabled: campo == 'referencias' }"
+                        v-on:click="vermasmethod('referencias')"
+                    >
+                        Referencias de Articulos
                     </button>
                 </div>
                 <div class="col text-center">
@@ -90,6 +96,10 @@
             v-if="campo == 'maquinas'"
             class=""
         ></maquinasprincipal-component> 
+        <referenciasprincipal-component
+            v-if="campo == 'referencias'"
+            class=""
+        ></referenciasprincipal-component> 
         </header>
         
     </div>
