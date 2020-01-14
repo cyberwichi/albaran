@@ -19,7 +19,7 @@ class Aviso extends Model
     }
     public function tbContacto()
     {
-        return $this->belongsTo(tbContacto::class ,'contacto_id','AutoId');
+        return $this->belongsTo(tbContacto::class, 'contacto_id', 'AutoId');
     }
 
 }

@@ -38,7 +38,7 @@
         .cabecera {
         width: 100%;
         height: 200px;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         }
         .center{
         text-align: center; 
@@ -56,7 +56,12 @@
         }
         .firmas {
         border: 1px solid #000;
+        margin-bottom: 5px;     
+        }
+        .firmas2 {
+        border: 1px solid #000;
         margin-bottom: 5px;
+        width:50%!important;
         }
         h1 {
             text-align: center;
@@ -149,15 +154,16 @@
 
                 <!-- articulos entregados -->
                 <div class="firmas">
-                    <div class="card-header">
-                        <h5 class="center">Articulos Entregados</h5>
-                    </div>
-                    <div class="">
+                   <h5 class="center">Articulos Entregados</h5>
+                    
                         <table class="tabla1">
                             <thead class="">
                                 <tr>
                                     <th scope="col">Referencia</th>
-                                    <th scope="col">Articulo</th>
+                                    <th scope="col" >Articulo</th>
+                                    <th scope="col" ></th>
+                                    <th scope="col" ></th>
+                                    <th scope="col" ></th>
                                     <th scope="col">Cantidad</th>
                                     <th scope="col">Precio</th>
                                 </tr>
@@ -167,7 +173,7 @@
                                 @foreach($albaran[0]->detalleAlbaran  as $linea2 )
                                 <tr>
                                     <td class="firmas center">{{ $referencias[$linea2->articulo_id]->referencia}}</td>
-                                    <td class="firmas center">{{ $linea2->articulo_nombre }}</td>
+                                    <td colspan="4" class="firmas2  center">{{ $linea2->articulo_nombre }}</td>
                                     <td class="firmas right">{{ $linea2->cantidad }}</td>
                                     <td class="firmas right">{{ $linea2->precio }}</td>
                                    <?php $subtotal += $linea2->cantidad * $linea2->precio ?>
@@ -190,7 +196,7 @@
                         <table class="table table-secondary p-1">
                             
                         </table>
-                    </div>
+                    
                 </div>
 
                 <!-- observaciones -->

@@ -221,3 +221,10 @@ Route::get('/referencias', 'ReferenciaController@index')->name('indexreferencias
 Route::get('/delreferencia/{id}', 'ReferenciaController@destroy')->name('deletereferencia');
 //actualizar referencia
 Route::put('/referencias/{id}', 'ReferenciaController@update')->name('updatereferencia');
+
+
+//obtener Configuracion
+Route::get('/config', 'ConfiguracionController@index')->name('indexconfig');
+//modificar Configuracion
+Route::put('/config', 'ConfiguracionController@edit')->name('editconfig');
+

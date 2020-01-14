@@ -7,16 +7,6 @@
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
-                    v-on:click="vermasmethod('listado')"
-                    :class="{ disabled: campo == 'listado' }"
-                >
-                    Listado Editar Borrar Clientes
-                    <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
-                </button>
-            </div>
-            <div class="col text-center">
-                <button
-                    class="btn btn-primary"
                     v-on:click="vermasmethod('nuevo')"
                     :class="{ disabled: campo == 'nuevo' }"
                 >
@@ -24,6 +14,17 @@
                     <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
                 </button>
             </div>
+            <div class="col text-center">
+                <button
+                    class="btn btn-primary"
+                    v-on:click="vermasmethod('listado')"
+                    :class="{ disabled: campo == 'listado' }"
+                >
+                    Listado Editar Borrar Clientes
+                    <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
+                </button>
+            </div>
+            
         </div>
 
         <contactos-component

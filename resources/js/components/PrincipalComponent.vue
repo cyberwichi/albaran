@@ -1,8 +1,7 @@
 <template>
     <div id="principal">
         <header class="">
-                                 
-            <div class="card-footer row d-flex align-items-stretch">                  
+            <div class="card-footer row d-flex align-items-stretch">
                 <div class="col text-center">
                     <button
                         class="btn btn-primary"
@@ -67,41 +66,90 @@
                         Maquinas
                     </button>
                 </div>
+                <div class="col text-center">
+                    <button
+                        class="btn btn-primary"
+                        :class="{ disabled: campo == 'configuracion' }"
+                        v-on:click="vermasmethod('configuracion')"
+                    >
+                        Configuracion
+                    </button>
+                </div>
             </div>
             <albaranprincipal-component
-            v-if="campo == 'albaranes'"
-            class=""
-        ></albaranprincipal-component>
+                v-if="campo == 'albaranes'"
+                class=""
+            ></albaranprincipal-component>
 
-        <articuloprincipal-component
-            v-if="campo == 'articulos'"
-            class=""
-        ></articuloprincipal-component>
+            <articuloprincipal-component
+                v-if="campo == 'articulos'"
+                class=""
+            ></articuloprincipal-component>
 
-        <contactoprincipal-component
-            v-if="campo == 'clientes'"
-            class=""
-        ></contactoprincipal-component>
+            <contactoprincipal-component
+                v-if="campo == 'clientes'"
+                class=""
+            ></contactoprincipal-component>
 
-        <pedidoprincipal-component
-            v-if="campo == 'pedidos'"
-            class=""
-        ></pedidoprincipal-component>
+            <pedidoprincipal-component
+                v-if="campo == 'pedidos'"
+                class=""
+            ></pedidoprincipal-component>
 
-        <empleadoprincipal-component
-            v-if="campo == 'empleados'"
-            class=""
-        ></empleadoprincipal-component> 
-         <maquinasprincipal-component
-            v-if="campo == 'maquinas'"
-            class=""
-        ></maquinasprincipal-component> 
-        <referenciasprincipal-component
-            v-if="campo == 'referencias'"
-            class=""
-        ></referenciasprincipal-component> 
+            <empleadoprincipal-component
+                v-if="campo == 'empleados'"
+                class=""
+            ></empleadoprincipal-component>
+            <maquinasprincipal-component
+                v-if="campo == 'maquinas'"
+                class=""
+            ></maquinasprincipal-component>
+            <referenciasprincipal-component
+                v-if="campo == 'referencias'"
+                class=""
+            ></referenciasprincipal-component>
         </header>
-        
+        <div v-if="campo == 'configuracion'">
+            <div class="col-12 text-center h1 mb-3">
+                <strong>CONFIGURACION</strong>
+            </div>
+            <div class="text-center">
+                <form action="" class="inline">
+                    <div class="form-group">
+                        <h5>Direccion y Password de correo saliente</h5>
+                        <label for="correo">Direccion de correo</label>
+                        <input type="text" name="correo" v-model="correo" />
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            v-model="password"
+                        />
+                        <button v-on:click="guardaCorreo" class="btn btn-primary" type="button">
+                            Guardar
+                        </button>
+                        <div class="btn">
+                            <small>
+                                <a
+                                    href="https://myaccount.google.com/u/0/lesssecureapps?pli=1"
+                                >
+                                    Debe activar en su servicio de correo la
+                                    opcion de envio desde aplicaciones poco
+                                    seguras. Por ejemplo si usa Gmail utilice
+                                    este enlace
+                                </a></small
+                            >
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <h5>Sincronizar Articulos Clientes Stock</h5>
+                    <button class="btn btn-primary" type="">
+                        Sincronizar BBDD
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -109,13 +157,30 @@
 export default {
     data() {
         return {
-            campo: ""
+            campo: "",
+            correo: "Buscando... ",
+            password: ""
         };
     },
     mounted() {},
     methods: {
         vermasmethod(campo) {
             this.campo = campo;
+            if (campo == "configuracion") {
+                axios.get("/api/config/").then(response => {
+                    this.correo = response.data.email;
+                    this.password = response.data.password;
+                });
+            }
+        },
+        guardaCorreo(){
+            var reg={
+                correo:this.correo,
+                password:this.password
+            }
+            axios.put('/api/config', reg).then(response=>{
+                console.log(response.data);
+            })
         }
     }
 };
@@ -124,7 +189,6 @@ export default {
 .cabecera {
     width: 100%;
     height: 200px;
-    
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 </style>

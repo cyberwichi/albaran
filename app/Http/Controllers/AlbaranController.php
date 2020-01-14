@@ -9,6 +9,7 @@ use App\Aviso;
 use App\DetalleAlbaran;
 use App\tbStockArt;
 use App\Albaranmaquina;
+use App\Configuracion;
 use App\tbContacto;
 use App\Empleado;
 use App\Maquina;
@@ -79,7 +80,7 @@ class AlbaranController extends Controller
         $cliente = tbContacto::find($aviso->contacto_id);
         $empleado = Empleado::find($aviso->empleado_id);
         $maquina = [];
-        $referencias=[];
+        $referencias = [];
         if ($albaran[0]->albaranmaquina !== []) {
             foreach ($albaran[0]->albaranmaquina as $maq) {
                 $maquina[$maq->maquina_id] = Maquina::find($maq->maquina_id);
@@ -90,11 +91,13 @@ class AlbaranController extends Controller
                 $referencias[$det->articulo_id] = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
             }
         }
+        
         $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
         $pdf->save('albaranes/parte' . $id . '.pdf');
         /*Configuracion de variables para enviar el correo*/
-        $mail_username = "cyberwichi@gmail.com"; //Correo electronico saliente ejemplo: tucorreo@gmail.com
-        $mail_userpassword = "huertagomple"; //Tu contraseña de gmail
+        $config = Configuracion::first()->get();
+        $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
+        $mail_userpassword = $config->password; //Tu contraseña de gmail
         $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
         $template = '
             <h1> Corrreo de envio de Parte de trabajo</h1>
@@ -133,7 +136,7 @@ class AlbaranController extends Controller
                 echo 'Error de correo: ' . $mail->ErrorInfo;
                 echo "</p>";
             } else {
-                echo '<p style="color:green">Tu mensaje ha sido enviado!</p>';
+                return $id;
             }
         } catch (Exception $e) {
             echo $e->getMessage();

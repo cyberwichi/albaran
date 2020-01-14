@@ -23,14 +23,14 @@
             </form>
         </div>
         <b-alert
-                :show="dismissCountDown"
-                dismissible
-                variant="success"
-                @dismissed="dismissCountDown = 0"
-                @dismiss-count-down="countDownChanged"
-            >
-                {{mensaje}}
-            </b-alert>
+            :show="dismissCountDown"
+            dismissible
+            variant="success"
+            @dismissed="dismissCountDown = 0"
+            @dismiss-count-down="countDownChanged"
+        >
+            {{ mensaje }}
+        </b-alert>
         <div id="imprimible">
             <div>
                 <img
@@ -289,14 +289,8 @@
                 v-on:click="guardaAlbaran"
                 v-scroll-to="'#listado'"
             >
-                <img src="/img/Save.png" width="40px" alt />
-            </button>
-            <button class="btn btn-flat">
-                <img
-                    src="/img/print.png"
-                    v-on:click="imprimirElemento"
-                    width="40px"
-                />
+                <img src="/img/Save.png" width="40px" />
+                <img src="/img/print.png" width="40px" />
             </button>
         </div>
     </div>
@@ -328,7 +322,7 @@ export default {
             linea3: "",
             dismissSecs: 5,
             dismissCountDown: 0,
-            mensaje:''
+            mensaje: ""
         };
     },
     mounted() {
@@ -383,7 +377,6 @@ export default {
             this.numeroaviso = "";
             this.maquinas = [];
             this.maquina = {};
-            
         },
         buscaaviso(numeroaviso) {
             this.aviso = "";
@@ -425,16 +418,14 @@ export default {
                                 referencia: response.data.referencia
                             };
                             console.log(detallealb);
-                            this.detallealbaran[index]=detallealb;
-                            this.detalles[index]=detallealb;
-                            
+                            this.detallealbaran[index] = detallealb;
+                            this.detalles[index] = detallealb;
+
                             document.getElementById("app").style.cursor =
                                 "auto";
-                            this.calcularTotal();    
+                            this.calcularTotal();
                         });
-                        
                 });
-                
             });
         },
         calcularTotal() {
@@ -522,20 +513,40 @@ export default {
             };
             console.log(registroAlbaran);
             var numero = 0;
-            axios
-                .post("/api/albaran", registroAlbaran)
-                .then(response=> {
+            if (this.terminado) {
+                axios.get("/api/finaliza/" + this.numeroaviso).then(() => {
+                    axios
+                        .post("/api/albaran", registroAlbaran)
+                        .then(response => {
+                            numero = response.data;
+                            document.getElementById("app").style.cursor =
+                                "auto";
+                            this.numeroAlbaran = numero;
+                            window.open(
+                                "albaranes/parte" + numero + ".pdf",
+                                "_blank",
+                                "width=800,height=600"
+                            );
+                            this.poneraCero();
+                            this.$emit("salir", "Parte guardado correctamente");
+                            
+                        });
+                });
+            } else {
+                axios.post("/api/albaran", registroAlbaran).then(response => {
                     numero = response.data;
                     document.getElementById("app").style.cursor = "auto";
+                    this.numeroAlbaran = numero;
                     
+                    window.open(
+                                "albaranes/parte" + numero + ".pdf",
+                                "_blank",
+                                "width=800,height=600"
+                            );
+                    this.poneraCero();
                     this.$emit("salir", "Parte guardado correctamente");
                 });
-            this.numeroAlbaran = numero;
-            if (this.terminado) {
-                axios.get("/api/finaliza/" + this.numeroaviso);
             }
-
-            this.poneraCero();
         },
 
         imprimirElemento() {

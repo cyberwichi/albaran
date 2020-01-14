@@ -4,6 +4,15 @@
             <strong>PARTES DE TRABAJO</strong>
         </div>
         <div class="row d-flex align-items-end">
+             <div class="col text-center">
+                <button
+                    class="btn btn-primary"
+                    v-on:click="vermasmethod('nuevo')"
+                    :class="{ disabled: campo == 'nuevo' }"
+                >
+                    Nuevo Parte de Trabajo
+                </button>
+            </div>
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
@@ -12,6 +21,22 @@
                 >
                     Listado Partes <br />
                     <small>Ver Borrar</small>
+                </button>
+            </div>
+            <div class="col text-cente form-group mb-0">
+                <input
+                    type="text"
+                    v-model="numero"
+                    id=""
+                    placeholder="Numero:"
+                    class=" form-control "
+                />
+                <button
+                    class="btn btn-primary"
+                    v-on:click="verparte"
+                    v-scroll-to="'#pedido'"
+                >
+                    Ver Parte
                 </button>
             </div>
             <div class="col text-center">
@@ -23,15 +48,7 @@
                     Partes por cliente
                 </button>
             </div>
-            <div class="col text-center">
-                <button
-                    class="btn btn-primary"
-                    v-on:click="vermasmethod('nuevo')"
-                    :class="{ disabled: campo == 'nuevo' }"
-                >
-                    Nuevo Parte de Trabajo
-                </button>
-            </div>
+           
         </div>
                 <b-alert
                 :show="dismissCountDown"
@@ -66,7 +83,8 @@ export default {
             campo: "",
             dismissSecs: 5,
             dismissCountDown: 0,
-            textmensaje:''
+            textmensaje:'',
+            numero:''
         };
     },
     mounted() {},
@@ -84,6 +102,10 @@ export default {
             this.textmensaje=texto;
             this.campo='';
             this.showAlert();
+        },
+        verparte(){
+
+            window.open('albaranes/parte'+this.numero+'.pdf', '_blank','witdh=800,height=600' )
         }
     }
 };

@@ -7,6 +7,15 @@
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
+                    v-on:click="vermasmethod('nuevo')"
+                    :class="{ disabled: campo == 'nuevo' }"
+                >
+                    Nuevo Empleado
+                </button>
+            </div>
+            <div class="col text-center">
+                <button
+                    class="btn btn-primary"
                     v-on:click="vermasmethod('listado')"
                     :class="{ disabled: campo == 'listado' }"
                 >
@@ -22,15 +31,7 @@
                     Administradores
                 </button>
             </div>
-            <div class="col text-center">
-                <button
-                    class="btn btn-primary"
-                    v-on:click="vermasmethod('nuevo')"
-                    :class="{ disabled: campo == 'nuevo' }"
-                >
-                    Nuevo Empleado
-                </button>
-            </div>
+            
         </div>
         <administradores-component
             v-if="campo == 'administradores'"

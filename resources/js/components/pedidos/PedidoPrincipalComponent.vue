@@ -3,17 +3,18 @@
         <div class="col-12 text-center h1 mb-3">
             <strong>AVISOS</strong>
         </div>
-        <div class="row d-flex align-items-end align-text-bottom">
+        <div class="row d-flex align-items-end align-text-bottom"> 
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
-                    :class="{ disabled: campo == 'listado' }"
-                    v-on:click="vermasmethod('listado')"
-                    v-scroll-to="'#listado'"
+                    :class="{ disabled: campo == 'nuevo' }"
+                    v-on:click="vermasmethod('nuevo')"
+                    v-scroll-to="'#nuevo'"
                 >
-                    Listado Avisos
+                    Nuevo Aviso
                 </button>
-            </div>
+                <div id="vistapedido"></div>
+            </div>           
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
@@ -21,7 +22,7 @@
                     v-on:click="vermasmethod('noterminados')"
                     v-scroll-to="'#noterminados'"
                 >
-                    No Terminados
+                   Avisos Pendientes
                 </button>
             </div>
             <div class="col text-center mb-0 form-group">
@@ -71,17 +72,16 @@
                 >
                     Avisos por Cliente
                 </button>
-            </div>
+            </div>            
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
-                    :class="{ disabled: campo == 'nuevo' }"
-                    v-on:click="vermasmethod('nuevo')"
-                    v-scroll-to="'#nuevo'"
+                    :class="{ disabled: campo == 'listado' }"
+                    v-on:click="vermasmethod('listado')"
+                    v-scroll-to="'#listado'"
                 >
-                    Nuevo Aviso
+                    Listado Avisos
                 </button>
-                <div id="vistapedido"></div>
             </div>
             <div id="vistapedido"></div>
             <div id="listado"></div>

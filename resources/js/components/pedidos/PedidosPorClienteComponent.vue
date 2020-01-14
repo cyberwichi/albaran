@@ -100,6 +100,7 @@
                             <th class="d-flex justify-content-around">
                                 <div>Borrar</div>
                                 <div>Editar</div>
+                                <div>Crear Parte</div>
                                 <div>Detalle</div>
                             </th>
                         </thead>

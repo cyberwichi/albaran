@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Albaran;
 use App\Aviso;
+use App\Configuracion;
 use App\tbContacto;
 use App\Empleado;
 use App\Maquina;
@@ -29,10 +30,7 @@ class PdfController extends Controller
         $pdf->save('albaranes/parte' . $id . '.pdf');
         return ($maquina);
 
-        /*         $mi_pdf = 'albaranes/parte' . $id . '.pdf';
-        header('Content-type: application/pdf');
-        header('Content-Disposition: attachment; filename="' . $mi_pdf . '"');
-        readfile($mi_pdf); */
+
     }
     public function enviar($id)
     {
@@ -40,9 +38,9 @@ class PdfController extends Controller
         $aviso = Aviso::find($albaran[0]->aviso_id);
         $cliente = tbContacto::find($aviso->contacto_id);
 
-        /*Configuracion de variables para enviar el correo*/
-        $mail_username = "cyberwichi@gmail.com"; //Correo electronico saliente ejemplo: tucorreo@gmail.com
-        $mail_userpassword = "huertagomple"; //Tu contraseña de gmail
+        $config = Configuracion::first();
+        $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
+        $mail_userpassword = $config->password; //Tu contraseña de gmail
         $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
         $template = '
             <h1> Corrreo de envio de parte de trabajo</h1>
