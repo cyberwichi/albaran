@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="card-header ocul">
+        <div class="card-header">
             <form
                 class="sombra mb-3 "
                 v-on:submit.prevent="buscaaviso(numeroaviso)"
@@ -71,7 +71,7 @@
                     <thead class="text-center thead">
                         <tr>
                             <th scope="col">Maquina</th>
-                            <th scope="col">Referencia</th>
+                            <th scope="col">Numero Serie</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,7 +93,7 @@
                 <table class="table table-responsive">
                     <thead class="text-center thead">
                         <tr>
-                            <th scope="col" class="ocul">Id</th>
+                            <th scope="col" class="">Referencia</th>
                             <th scope="col">Articulo</th>
                             <th scope="col">Cantidad</th>
                             <th scope="col">Precio</th>
@@ -101,7 +101,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="(linea, index) in detalles" :key="index">
-                            <th scope="row" class="ocul">
+                            <th scope="row" class="">
                                 {{ linea.referencia }}
                             </th>
                             <td>{{ linea.articulo_nombre }}</td>
@@ -125,7 +125,7 @@
                 <table class="table table-responsive">
                     <thead class="text-center thead">
                         <tr>
-                            <th scope="col" class="ocul">Id</th>
+                            <th scope="col" class="">Referencia</th>
                             <th scope="col">Articulo</th>
                             <th scope="col">Cantidad</th>
                             <th scope="col">Precio</th>
@@ -137,7 +137,7 @@
                             v-for="(linea2, index) in detallealbaran"
                             :key="index"
                         >
-                            <th scope="row" class="ocul">
+                            <th scope="row" class="">
                                 {{ linea2.referencia }}
                             </th>
                             <td>{{ linea2.articulo_nombre }}</td>

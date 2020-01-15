@@ -117,11 +117,6 @@
                 </div>
             </div>
         </div>
-        <div id="albaran"></div>
-        <vistaalbaran-component
-            :albaran="albaran"
-            v-if="flagver"
-        ></vistaalbaran-component>
     </div>
 </template>
 

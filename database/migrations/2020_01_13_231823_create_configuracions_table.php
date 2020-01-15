@@ -19,6 +19,8 @@ class CreateConfiguracionsTable extends Migration
                 $table->bigIncrements('id');
                 $table->string('email');
                 $table->string('password');
+                $table->string('correo_tecnicos');
+                $table->string('correo_admin');
                 $table->timestamps();
             }
         );

@@ -24,7 +24,11 @@
                         querySearch = articulo.Nombre;
                         upcForm = articulo.UPC;
                         onFocus = false;
-                        querySearch2= articulo.referencias[articulo.referencias.length - 1].referencia
+                        querySearch2='';
+                        querySearch2 =
+                            articulo.referencias[
+                                articulo.referencias.length - 1
+                            ].referencia;
                     "
                     :key="index"
                 >
@@ -34,9 +38,8 @@
                         }}</strong>
                         <span class="badge badge-warning"
                             >Stock : {{ articulo.tb_stock_art.Stock }}</span
-                        >                        
+                        >
                     </div>
-                    {{articulo.referencias.length}}
                 </div>
             </div>
         </div>
@@ -63,17 +66,19 @@
                         articuloIndex = articulo.tb_articulo.AutoId;
                         querySearch = articulo.tb_articulo.Nombre;
                         upcForm = articulo.tb_articulo.UPC;
-                        querySearch2= articulo.referencia
+                        querySearch2 = articulo.referencia;
                         onFocus = false;
                     "
                     :key="index"
                 >
                     <div>
                         <strong>{{
-                            articulo.tb_articulo.Nombre.substr(0, autocomplete.lenght)
-                           
+                            articulo.tb_articulo.Nombre.substr(
+                                0,
+                                autocomplete.lenght
+                            )
                         }}</strong>
-                        {{ articulo}}
+                        
                     </div>
                 </div>
             </div>
@@ -112,7 +117,7 @@ export default {
         return {
             articuloIndex: "",
             querySearch: "",
-            querySearch2:'',
+            querySearch2: "sin referencia",
             articulos: [],
             articulos2: [],
             currentFocus: 2,
@@ -167,7 +172,7 @@ export default {
                         });
                         document.getElementById("app").style.cursor = "auto";
                     });
-            }            
+            }
         },
         getResult2() {
             this.articulos2 = [];
@@ -177,13 +182,13 @@ export default {
                     .get("/api/referencia/" + this.querySearch2)
                     .then(response => {
                         response.data.forEach(articulo => {
-                           console.log(articulo);
+                            console.log(articulo);
                             this.articulos2.push(articulo);
                         });
-                       
+
                         document.getElementById("app").style.cursor = "auto";
                     });
-            }            
+            }
         },
         keyDown(e) {
             var vm = this;
@@ -196,7 +201,7 @@ export default {
                 vm.addActive();
             }
         },
-         keyDown2(e) {
+        keyDown2(e) {
             var vm = this;
 
             if (e.keycode == 40) {
@@ -213,13 +218,13 @@ export default {
                 articuloNombre: this.querySearch,
                 articuloCantidad: this.cantidadForm,
                 articuloPrecio: this.upcForm,
-                referencia:this.querySearch2
+                referencia: this.querySearch2
             };
             this.articuloIndex = "";
             this.querySearch = "";
             this.cantidadForm = "1";
             this.upcForm = "";
-            this.querySearch2="";
+            this.querySearch2 = " ";
             this.articulos = [];
 
             this.$emit("nuevaLinea", this.linea);

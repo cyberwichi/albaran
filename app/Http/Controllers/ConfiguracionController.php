@@ -16,6 +16,8 @@ class ConfiguracionController extends Controller
         $config = Configuracion::first();
         $config->email=$request->correo;
         $config->password=$request->password;
+        $config->correo_admin=$request->correoAdmin;
+        $config->correo_tecnicos = $request->correoTecnicos;
         $config->save();
         return $request;
     }

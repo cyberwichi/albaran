@@ -9,14 +9,17 @@
                     >
                         X
                     </button>
-                    <div class="modal-header d-flex flex-wrap border border-secondary mb-2">
+                    <div
+                        class="modal-header d-flex flex-wrap border border-secondary mb-2"
+                    >
                         <h2 class="">Detalle Aviso Id: {{ avis.id }}</h2>
-                        
 
-                        <div class="d-flex flex-wrap p-2 text-center justify-content-around border border-secondary">
+                        <div
+                            class="d-flex flex-wrap p-2 text-center justify-content-around border border-secondary"
+                        >
                             <h4 class="col-12">
-                            Partes de Trabajo de este pedido
-                        </h4>
+                                Partes de Trabajo de este pedido
+                            </h4>
                             <button
                                 class=""
                                 v-for="linea in albaranes"
@@ -28,20 +31,30 @@
                             >
                                 {{ linea.id }}
                             </button>
-                            <p v-if="albaranes==''">
+                            <p v-if="albaranes == ''">
                                 Sin Partes de Trabajo
                             </p>
                         </div>
-
-                      
                     </div>
-                     <button class="text-center" v-show="veralbaran" v-on:click="veralbaran=false">Cerrar Parte de Trabajo</button>
-                      <vistaalbaran-component
+                    <button
+                        class="text-center"
+                        v-show="veralbaran"
+                        v-on:click="veralbaran = false"
+                    >
+                        Cerrar Parte de Trabajo
+                    </button>
+                    <!--                       <vistaalbaran-component
                             class="albaran m-auto"
                             :albaran="numeroalbaran"
                             v-show="veralbaran"
-                        ></vistaalbaran-component>
-                       
+                        ></vistaalbaran-component> -->
+                    <iframe
+                        width="600"
+                        height="400"
+                        v-show="veralbaran"
+                        :src="'/albaranes/parte' + numeroalbaran.id + '.pdf'"
+                        frameborder="0"
+                    ></iframe>
 
                     <div class="modal-body">
                         <slot name="body">
@@ -212,7 +225,6 @@ export default {
     .modal-container {
         max-width: 380px;
         max-height: 400px;
-
     }
     .modal-container table {
         font-size: 12px;

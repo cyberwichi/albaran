@@ -63,7 +63,6 @@ export default {
             this.$emit("delete", this.albaran);
         },
         editaralbaran() {
-            console.log(this.albaran);
             (this.flageditar = true), this.$emit("ver", this.albaran);
         },
         guardaralbaran() {

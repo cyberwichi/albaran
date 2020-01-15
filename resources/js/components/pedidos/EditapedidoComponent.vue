@@ -195,16 +195,7 @@
                                 title="Guardar Aviso"
                             />
                         </button>
-                        <button type="button" class="btn btn-flat m-3">
-                            <img
-                                src="/img/albaran.png"
-                                v-on:click="nuevoPedidoyalbaran"
-                                width="50px"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="Guardar Aviso e ir al Parte de Trabajo"
-                            />
-                        </button>
+                        
                     </div>
                 </form>
             </div>

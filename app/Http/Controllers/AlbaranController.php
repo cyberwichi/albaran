@@ -20,6 +20,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use stdClass;
 
 class AlbaranController extends Controller
 {
@@ -78,7 +79,13 @@ class AlbaranController extends Controller
         $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
         $aviso = Aviso::find($albaran[0]->aviso_id);
         $cliente = tbContacto::find($aviso->contacto_id);
-        $empleado = Empleado::find($aviso->empleado_id);
+        if (isset($aviso->empleado_id)) {
+            $empleado = Empleado::findOrFail($aviso->empleado_id);
+        } else {
+            $empleado = new Empleado();
+            $empleado->name = "Sin Asignar";
+        }
+
         $maquina = [];
         $referencias = [];
         if ($albaran[0]->albaranmaquina !== []) {
@@ -88,16 +95,28 @@ class AlbaranController extends Controller
         }
         if ($albaran[0]->detallealbaran !== []) {
             foreach ($albaran[0]->detallealbaran as $det) {
-                $referencias[$det->articulo_id] = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
+                $aux = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
+                if ($aux <> '') {
+                    $referencias[$det->articulo_id] = $aux;
+                } else {
+                    $aux2 = new stdClass;
+                    $aux2->referencia = "sin referencia";
+                    $referencias[$det->articulo_id] = $aux2;
+                }
             }
         }
-        
+
+
+
         $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
         $pdf->save('albaranes/parte' . $id . '.pdf');
         /*Configuracion de variables para enviar el correo*/
-        $config = Configuracion::first()->get();
+        $config = Configuracion::first();
         $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
         $mail_userpassword = $config->password; //Tu contraseña de gmail
+
+
+
         $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
         $template = '
             <h1> Corrreo de envio de Parte de trabajo</h1>
@@ -126,6 +145,11 @@ class AlbaranController extends Controller
             $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
             $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
             $mail->addAttachment('albaranes/parte' . $id . '.pdf');         // Add attachments
+            $mail->addCC($config->correo_admin);
+            $mail->addCC($config->correo_tecnicos);
+            if ($empleado->email <> '') {
+                $mail->addCC($empleado->email);
+            }
             $message = $template;
             $mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
 

@@ -125,9 +125,6 @@
                             name="password"
                             v-model="password"
                         />
-                        <button v-on:click="guardaCorreo" class="btn btn-primary" type="button">
-                            Guardar
-                        </button>
                         <div class="btn">
                             <small>
                                 <a
@@ -141,6 +138,33 @@
                             >
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="correoadmin"
+                            >Direccion de correo de administracion</label
+                        >
+                        <input
+                            type="text"
+                            name="correoadmin"
+                            v-model="correoAdmin"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="correotecnicos"
+                            >Direccion de correo de tecnicos</label
+                        >
+                        <input
+                            type="text"
+                            name="correotecnicos"
+                            v-model="correoTecnicos"
+                        />
+                    </div>
+                    <button
+                        v-on:click="guardaCorreo"
+                        class="btn btn-primary"
+                        type="button"
+                    >
+                        Guardar
+                    </button>
                 </form>
                 <div>
                     <h5>Sincronizar Articulos Clientes Stock</h5>
@@ -159,7 +183,9 @@ export default {
         return {
             campo: "",
             correo: "Buscando... ",
-            password: ""
+            password: "",
+            correoAdmin: "",
+            correoTecnicos: ""
         };
     },
     mounted() {},
@@ -170,17 +196,21 @@ export default {
                 axios.get("/api/config/").then(response => {
                     this.correo = response.data.email;
                     this.password = response.data.password;
+                    this.correoAdmin = response.data.correo_admin;
+                    this.correoTecnicos = response.data.correo_tecnicos;
                 });
             }
         },
-        guardaCorreo(){
-            var reg={
-                correo:this.correo,
-                password:this.password
-            }
-            axios.put('/api/config', reg).then(response=>{
+        guardaCorreo() {
+            var reg = {
+                correo: this.correo,
+                password: this.password,
+                correoAdmin:this.correoAdmin,
+                correoTecnicos: this.correoTecnicos
+            };
+            axios.put("/api/config", reg).then(response => {
                 console.log(response.data);
-            })
+            });
         }
     }
 };

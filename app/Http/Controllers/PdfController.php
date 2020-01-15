@@ -29,18 +29,22 @@ class PdfController extends Controller
         $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina'));
         $pdf->save('albaranes/parte' . $id . '.pdf');
         return ($maquina);
-
-
     }
     public function enviar($id)
     {
         $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
         $aviso = Aviso::find($albaran[0]->aviso_id);
+        $empleado = Empleado::find($aviso->empleado_id);
         $cliente = tbContacto::find($aviso->contacto_id);
-
         $config = Configuracion::first();
+
+
+        if ($empleado) {
+            $correo[3] = $empleado->email;
+        };
         $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
         $mail_userpassword = $config->password; //Tu contraseña de gmail
+
         $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
         $template = '
             <h1> Corrreo de envio de parte de trabajo</h1>
@@ -55,6 +59,7 @@ class PdfController extends Controller
         /*Inicio captura de datos enviados por $_POST para enviar el correo */
         $mail_setFromEmail = $mail_username;
         $mail_setFromName = $mail_username;
+
         $txt_message = $mail_username;
         $mail_subject = "yo";
         try {
@@ -70,6 +75,11 @@ class PdfController extends Controller
             $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
             $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
             $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
+            $mail->addCC($config->correo_admin);
+            $mail->addCC($config->correo_tecnicos);
+            if ($empleado->email <> '') {
+                $mail->addCC($empleado->email);
+            }
             $mail->addAttachment('albaranes/parte' . $id . '.pdf');         // Add attachments
             $message = $template;
             $mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
