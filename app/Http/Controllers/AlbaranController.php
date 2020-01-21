@@ -62,11 +62,12 @@ class AlbaranController extends Controller
             $detalle->cantidad = $linea['cantidad'];
             $detalle->precio = $linea['precio'];
             $detalle->save();
-
-            $stock = tbStockArt::where('Articulo', '=', $linea['articulo_id'])->first();
-            $stock->Stock = $stock->Stock - $linea['cantidad'];
-            $stock->UdsPed = $stock->UdsPed - $linea['cantidad'];
-            $stock->update();
+            if ($linea['articulo_id'] !== "0") {
+                $stock = tbStockArt::where('Articulo', '=', $linea['articulo_id'])->first();
+                $stock->Stock = $stock->Stock - $linea['cantidad'];
+                $stock->UdsPed = $stock->UdsPed - $linea['cantidad'];
+                $stock->update();
+            }
         }
         foreach ($request->listamaquinas as $key => $linea) {
             $maquina = new AlbaranMaquina();

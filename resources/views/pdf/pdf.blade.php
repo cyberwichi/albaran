@@ -28,16 +28,14 @@
         }
         .imfirma{
             width: 100%;
-            margin: 0;
-            padding: 5px;
             text-align: center;
         }
         .imfirma img{        
-            margin:0px 50px;
+            margin:10px 50px;
         }
         .linfirma{
             display: flex;
-            width: 100%;
+            width: 100%;           
         }
         .cabecera {
         width: 100%;
@@ -49,9 +47,17 @@
         width: 100%;   
         }
         .right{
-        text-align: right; 
-        width: 100%;
+        text-align: center; 
+        width: 50%;
 
+        }
+        .right-2{
+        text-align: right; 
+        width: 30%;
+
+        }
+        .right-3{
+        text-align: right; 
         }
         .faldon {
         width: 100%;
@@ -131,7 +137,7 @@
             </table>
                             <!-- maquinas -->
                     <div class="tabla1 firmas">
-                        <table  class="tabla1 itemcabecera center">
+                        <table  class="tabla1 center">
                             <thead >
                                 <tr>
                                     <th class="itemcabecera" scope="col">Maquina</th>
@@ -141,7 +147,7 @@
                             <tbody>
                             @foreach ($albaran[0]->albaranmaquina as $maq)
                                 <tr class="center" >
-                                    <th class="firmas itemcabecera">{{ $maquina[$maq->maquina_id]->nombre }}</th>
+                                    <td class="firmas itemcabecera">{{ $maquina[$maq->maquina_id]->nombre }}</td>
                                     <td class="firmas itemcabecera">
                                         {{ $maq->referencia }}
                                     </td>
@@ -154,15 +160,14 @@
 
                 <!-- articulos entregados -->
                 <div class="firmas">
-                   <h5 class="center">Articulos Entregados</h5>
-                    
-                        <table class="tabla1 table table-primary">
-                            <thead class="">
-                                <tr>
+                        <table class="tabla1">
+                            <thead class="text-center">
+                                <tr class="center">
                                     <th scope="col">Referencia</th>
-                                    <th scope="col" >Articulo</th>
                                     <th scope="col" ></th>
+                                    <th scope="col" >Articulos</th>
                                     <th scope="col" ></th>
+                                    <th scope="col" >Entregados</th>
                                     <th scope="col" ></th>
                                     <th scope="col">Cantidad</th>
                                     <th scope="col">Precio</th>
@@ -172,21 +177,21 @@
                             <?php $subtotal =0 ?>
                                 @foreach($albaran[0]->detalleAlbaran  as $linea2 )
                                 <tr>
-                                    <td class="firmas center">{{ $referencias[$linea2->articulo_id]->referencia}}</td>
-                                    <td colspan="4" class="firmas center">{{ $linea2->articulo_nombre }}</td>
-                                    <td class="firmas right">{{ $linea2->cantidad }}</td>
-                                    <td class="firmas right">{{ $linea2->precio }}</td>
+                                    <td class="firmas right">{{ $referencias[$linea2->articulo_id]->referencia}}</td>
+                                    <td colspan="5" class="firmas center">{{ $linea2->articulo_nombre }}</td>
+                                    <td class="firmas right-2">{{ $linea2->cantidad }}</td>
+                                    <td class="firmas right-2">{{ $linea2->precio }}</td>
                                    <?php $subtotal += $linea2->cantidad * $linea2->precio ?>
                                 </tr>
                                 @endforeach
                                 <tr class="p-2">
-                                    <td colspan="1" class="firmas right">
+                                    <td colspan="2" class="firmas right-3">
                                         <strong>Subtotal : {{ $subtotal }}€</strong>
                                     </td>
-                                    <td colspan="1" class="firmas right "> 
+                                    <td colspan="3" class="firmas right-3"> 
                                         <strong>21% Iva : {{ round(($subtotal * 0.21), 2) }}€</strong>
                                     </td>
-                                    <td colspan="4" class="firmas right">
+                                    <td colspan="3" class="firmas right-3">
                                         <strong>Total : {{ round(($subtotal * 0.21) + $subtotal, 2) }}€</strong>
                                     </td>
                                 </tr>
@@ -195,42 +200,37 @@
                 </div>
 
                 <!-- observaciones -->
-                <div class="firmas">
-                    <div class="">
-                        <h5>
-                            Trabajo Finalizado :
-                            @if ($albaran[0]->aviso->terminada)
-                            <strong>Si</strong>
-                            @else
-                            <strong>No</strong>
-                            @endif
-
-                        </h5>
-                    </div>
-                    <div class="">
-                        <h5>
-                        <strong>Observaciones / Material Pendiente</strong>
-                        </h5>
-                        <p>{{ $albaran[0]->observaciones }}</p>
-                    </div>
-                </div>                
+                <table class="tabla1 firmas">
+                    <tbody>
+                        <td>
+                            <div>Trabajo Finalizado :
+                                @if ($albaran[0]->aviso->terminada)
+                                <strong>Si</strong>
+                                @else
+                                <strong>No</strong>
+                                @endif
+                            </div>                    
+                        </td>
+                        <td class="firmas">
+                            <div class="center">
+                                <strong>Observaciones / Material Pendiente</strong>
+                            </div>
+                            <p>{{ $albaran[0]->observaciones }}</p>                 
+                        </td>
+                    </tbody>                    
+                </table>                
                   
                 <!-- firmas -->
                 <div class="firmas">
-                    <div class="">
-                        <h4>Firmas</h4>
-                    </div>
                     <div class="linfirma">
                         <div class="imfirma">
-                            Cliente
+                            Firma Cliente
                             <img id="firmacli" width="100" height="100" src="{{$albaran[0]->firma_cliente}}" />
                             <img id="firmaemp" width="100" height="100" src="{{$albaran[0]->firma_empleado}}" />
-                            Empleado
+                            Firma Empleado
                         </div>
                     </div>
                 </div>
-
-
         </div>
     </div>
 
