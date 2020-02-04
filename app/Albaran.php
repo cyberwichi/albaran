@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Albaran extends Model
 {
+    protected $connection = 'mysql';
     public function detallealbaran()
     {
         return $this->HasMany(DetalleAlbaran::class);

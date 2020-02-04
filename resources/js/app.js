@@ -31,6 +31,7 @@ Vue.use(VueScrollTo, {
     y: true
 })
 
+Vue.component('literales-component', require('./components/acciones/LiteralesComponent.vue').default);
 
 Vue.component('contactoprincipal-component', require('./components/contactos/ContactosPrincipalComponent.vue').default);
 Vue.component('contactos-component', require('./components/contactos/ContactosComponent.vue').default);

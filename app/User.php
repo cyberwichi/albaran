@@ -18,6 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name', 'email', 'password', 'email_verified_at'
     ];
+    protected $connection = 'mysql';
 
     /**
      * The attributes that should be hidden for arrays.

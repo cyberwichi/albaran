@@ -4,23 +4,23 @@
             <strong>CLIENTES</strong>
         </div>
         <div class="row d-flex align-items-end">
-            <div class="col text-center">
+            <!-- <div class="col text-center">
                 <button
                     class="btn btn-primary"
                     v-on:click="vermasmethod('nuevo')"
                     :class="{ disabled: campo == 'nuevo' }"
                 >
                     Nuevo Cliente
-                    <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
+                    <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true">
                 </button>
-            </div>
+            </div> -->
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
                     v-on:click="vermasmethod('listado')"
                     :class="{ disabled: campo == 'listado' }"
-                >
-                    Listado Editar Borrar Clientes
+                >Listado
+                    <!-- Listado Editar Borrar Clientes -->
                     <!-- <img src="/img/chevron-bottom.svg" width="15px" alt="" aria-hidden="true"> -->
                 </button>
             </div>

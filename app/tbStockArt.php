@@ -10,8 +10,9 @@ class tbStockArt extends Model
     public $timestamps = false;
     protected $primaryKey = 'AutoId';
     protected $fillable = [
-        'Stock','UdsPed'
+        'Stock', 'UdsPed', 'Articulo', 'AutoId', 'UdsComp'
     ];
+    protected $connection = 'mysql';
 
     //const CREATED_AT = 'FechaAlta';
     //const UPDATED_AT = 'FechaModif';

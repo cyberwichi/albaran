@@ -1,5 +1,12 @@
 <?php
 
+use App\Referencia;
+use App\SQLArticulos;
+use App\SQLContacto;
+use App\SQLStock;
+use App\tbArticulo;
+use App\tbContacto;
+use App\tbStockArt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,13 +22,83 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-	return $request->user();
-});
-//para el movil
-/* Route::get('movil/albaran/{id}', function ($id) {
-	return view("movil/albaran", compact('id'));
-}); */
+Route::middleware('auth:api')->get(
+    '/user',
+    function (Request $request) {
+        return $request->user();
+    }
+);
+
+Route::get(
+    'antonio',
+    function () {
+        tbArticulo::truncate();
+        SQLArticulos::chunk(
+            100, function ($antonio) {
+                foreach ($antonio as  $value) {
+                    $articulo = new tbArticulo();
+                    $articulo->AutoId = $value->AutoId;
+                    $articulo->Id = $value->Id;
+                    $articulo->Referencia = $value->Referencia;
+                    $articulo->Nombre = $value->Nombre;
+                    $articulo->UPC = $value->UPC;
+                    $articulo->save();
+                    if ($articulo->Referencia <> null) {
+                        $referencia = Referencia::where([['referencia', '=', $articulo->Referencia], ['articulo_id', '=', $articulo->Id]])
+                            ->get();
+                        if (count($referencia)) {
+
+                        } else {
+                            $referencia = new Referencia;
+                            $referencia->referencia = $articulo->Referencia;
+                            $referencia->articulo_id = $articulo->Id;
+                            $referencia->save();
+                        }
+                    }            
+                }
+            }
+        );   
+        return 'Ok';
+    }
+);
+Route::get(
+    'sincrostock', 
+    function () {
+        tbStockArt::truncate();
+        $antonito = SQLStock::get();
+        foreach ($antonito as  $value) {
+            $articulo = new tbStockArt();
+            $articulo->AutoId = $value->AutoId;
+            $articulo->Articulo = $value->Articulo;
+            $articulo->Stock = $value->Stock;
+            $articulo->UdsPed = $value->UdsPed;
+            $articulo->UdsComp = $value->UdsComp;
+            $articulo->save();
+        }
+        return 'Ok';
+    }
+);
+Route::get(
+    'sincrocontactos',
+    function () {
+        tbContacto::truncate();
+        $antonito=SQLContacto::get();
+        foreach ($antonito as $value) {
+            if ($value->Tipo == 'V') {
+                $contacto = new tbContacto();
+                $contacto->AutoId = $value->AutoId;
+                $contacto->Id = $value->Id;
+                $contacto->Nombre = $value->Nombre;
+                $contacto->Direccion = $value->Direccion;
+                $contacto->Telefono = $value->Telefono;
+                $contacto->Email = $value->Email;
+                $contacto->Nif = $value->Nif;
+                $contacto->save();
+            }            
+        }
+        return 'Ok';
+    }
+);
 
 
 //index contactos
@@ -210,7 +287,7 @@ Route::get('/enviar/{id}', 'PdfController@enviar')->name('enviarpdf');
 
 
 // nueva referencia
-Route::post('/referencia', 'ReferenciaController@store')->name ('nuevareferencia');
+Route::post('/referencia', 'ReferenciaController@store')->name('nuevareferencia');
 //articulos por Referencia
 Route::get('/referencia/{referencia}', 'ReferenciaController@articulosporreferencia')->name('articulosporreferencia');
 //referencia por articulo
@@ -227,4 +304,6 @@ Route::put('/referencias/{id}', 'ReferenciaController@update')->name('updaterefe
 Route::get('/config', 'ConfiguracionController@index')->name('indexconfig');
 //modificar Configuracion
 Route::put('/config', 'ConfiguracionController@edit')->name('editconfig');
+// añadir literales
+Route::post('/literales', 'ConfiguracionController@literales')->name('literales');
 

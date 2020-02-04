@@ -80,15 +80,15 @@ return [
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
+            'odbc_driver'   => '{ODBC Driver 17 for SQL Server}',
             'url' => env('DATABASE_URL_SQL'),
-            'host' => env('DB_HOST_SQL',''),
-            'port' => env('DB_PORT_SQL', ''),
-            'database' => env('DB_DATABASE_SQL', ''),
-            'username' => env('DB_USERNAME_SQL', ''),
+            'host' => env('DB_HOST_SQL', '127.0.0.1'),
+            'port' => env('DB_PORT_SQL', '1433'),
+            'database' => env('DB_DATABASE_SQL', 'forge'),
+            'username' => env('DB_USERNAME_SQL', 'forge'),
             'password' => env('DB_PASSWORD_SQL', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'prefix_indexes' => true,
         ],
 
     ],

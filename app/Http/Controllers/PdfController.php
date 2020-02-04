@@ -46,22 +46,16 @@ class PdfController extends Controller
         $mail_userpassword = $config->password; //Tu contraseña de gmail
 
         $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
-        $template = '
-            <h1> Corrreo de envio de parte de trabajo</h1>
-            <img src="/img/logo.jpeg"  style="margin:auto;" alt="">
-            <h4> por favor no responda a este correo este es un mensaje atomatico para el envio de partes de trabajo a clientes</h4>
-            <p> Correo enviado a: <strong>' . $cliente->Nombre . '</strong> </p>
-            <p> Parte numero <strong> ' . $id . ' </strong> </p>
+        $template = $config->asunto . ' 
+             <br>
+             <p> Parte numero <strong> ' . $id . ' </strong> </p>
             <p> Gracias por su confianza</p>
-            
-	    '; //Ruta de la plantilla HTML para enviar nuestro mensaje
-
+            <br> ' . $config->proteccion;
         /*Inicio captura de datos enviados por $_POST para enviar el correo */
         $mail_setFromEmail = $mail_username;
         $mail_setFromName = $mail_username;
-
         $txt_message = $mail_username;
-        $mail_subject = "yo";
+        $mail_subject = 'Corrreo de envio de parte de trabajo numero ' . $id;
         try {
             $mail = new PHPMailer(true);
             $mail->isSMTP();

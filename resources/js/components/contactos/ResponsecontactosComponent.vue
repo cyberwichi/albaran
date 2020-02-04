@@ -23,7 +23,7 @@
       <p v-if="!flageditar">{{ contacto.Email}}</p>
       <input v-else type="text" class="form-control" v-model="contacto.Email" />
     </td>
-    <td>
+    <!-- <td>
       <div class="botonesaccion  d-flex justify-content-around">
         <img v-if="!flageditar" src="/img/Delete.png" width="40px" height="40px" alt v-on:click="borrarcontacto()" />
         <img
@@ -58,7 +58,7 @@
         </p>
         
       </div>
-    </td>
+    </td> -->
   </tr>
 </template>
 

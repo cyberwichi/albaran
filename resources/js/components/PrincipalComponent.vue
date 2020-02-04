@@ -41,25 +41,6 @@
                 <div class="col text-center">
                     <button
                         class="btn btn-primary"
-                        :class="{ disabled: campo == 'clientes' }"
-                        v-on:click="vermasmethod('clientes')"
-                    >
-                        Clientes
-                    </button>
-                </div>
-
-                <div class="col text-center">
-                    <button
-                        class="btn btn-primary"
-                        :class="{ disabled: campo == 'empleados' }"
-                        v-on:click="vermasmethod('empleados')"
-                    >
-                        Empleados
-                    </button>
-                </div>
-                <div class="col text-center">
-                    <button
-                        class="btn btn-primary"
                         :class="{ disabled: campo == 'maquinas' }"
                         v-on:click="vermasmethod('maquinas')"
                     >
@@ -108,70 +89,119 @@
                 v-if="campo == 'referencias'"
                 class=""
             ></referenciasprincipal-component>
+            <literales-component v-if="campo == 'literales'"></literales-component>
         </header>
         <div v-if="campo == 'configuracion'">
             <div class="col-12 text-center h1 mb-3">
                 <strong>CONFIGURACION</strong>
             </div>
-            <div class="text-center">
-                <form action="" class="inline">
-                    <div class="form-group">
-                        <h5>Direccion y Password de correo saliente</h5>
-                        <label for="correo">Direccion de correo</label>
-                        <input type="text" name="correo" v-model="correo" />
-                        <label for="password">Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            v-model="password"
-                        />
-                        <div class="btn">
-                            <small>
-                                <a
-                                    href="https://myaccount.google.com/u/0/lesssecureapps?pli=1"
+            <div class="d-flex">
+                <div class="text-center border m-1 w-50">
+                    <form action="" class="inline">
+                        <div class="form-group">
+                            <h5>Direccion y Password de correo saliente</h5>
+                            <label for="correo">Direccion de correo</label>
+                            <input type="text" name="correo" v-model="correo" />
+                            <br>
+                            <label for="password">Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                v-model="password"
+                            />
+                            <div class="btn">
+                                <small>
+                                    <a
+                                        href="https://myaccount.google.com/u/0/lesssecureapps?pli=1"
+                                    >
+                                        Debe activar en su servicio de correo la
+                                        opcion de envio desde aplicaciones poco
+                                        seguras. Por ejemplo si usa Gmail
+                                        utilice este enlace
+                                    </a></small
                                 >
-                                    Debe activar en su servicio de correo la
-                                    opcion de envio desde aplicaciones poco
-                                    seguras. Por ejemplo si usa Gmail utilice
-                                    este enlace
-                                </a></small
-                            >
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="correoadmin"
-                            >Direccion de correo de administracion</label
+                        <div class="form-group">
+                            <label for="correoadmin"
+                                >Direccion de correo de administracion</label
+                            >
+                            <input
+                                type="text"
+                                name="correoadmin"
+                                v-model="correoAdmin"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="correotecnicos"
+                                >Direccion de correo de tecnicos</label
+                            >
+                            <input
+                                type="text"
+                                name="correotecnicos"
+                                v-model="correoTecnicos"
+                            />
+                        </div>
+                        <button
+                            v-on:click="guardaCorreo"
+                            class="btn btn-primary"
+                            type="button"
                         >
-                        <input
-                            type="text"
-                            name="correoadmin"
-                            v-model="correoAdmin"
-                        />
-                    </div>
-                    <div class="form-group">
-                        <label for="correotecnicos"
-                            >Direccion de correo de tecnicos</label
-                        >
-                        <input
-                            type="text"
-                            name="correotecnicos"
-                            v-model="correoTecnicos"
-                        />
-                    </div>
-                    <button
-                        v-on:click="guardaCorreo"
-                        class="btn btn-primary"
-                        type="button"
-                    >
-                        Guardar
-                    </button>
-                </form>
-                <div>
-                    <h5>Sincronizar Articulos Clientes Stock</h5>
-                    <button class="btn btn-primary" type="">
-                        Sincronizar BBDD
-                    </button>
+                            Guardar
+                        </button>
+                    </form>
                 </div>
+                <div class="border m-1 w-50 d-flex flex-wrap align-items-center">
+                    <div class="col text-center">
+                        <button
+                            class="btn btn-primary"
+                            :class="{ disabled: campo == 'clientes' }"
+                            v-on:click="vermasmethod('clientes')"
+                        >
+                            Clientes
+                        </button>
+                    </div>
+
+                    <div class="col text-center">
+                        <button
+                            class="btn btn-primary"
+                            :class="{ disabled: campo == 'empleados' }"
+                            v-on:click="vermasmethod('empleados')"
+                        >
+                            Empleados
+                        </button>
+                    </div>
+                    <div class="col text-center">
+                        <button
+                            class="btn btn-primary"
+                            :class="{ disabled: campo == 'literales' }"
+                            v-on:click="vermasmethod('literales')"
+                        >
+                            Literales Correo
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <h3>Sincronizar Articulos Clientes Stock</h3>
+                <button
+                    v-on:click="sincroniza"
+                    class="bg-gradient-info w-100 mx-auto text-dark display-5"
+                    type=""
+                >
+                    Pulse para sincronizar las bases de datos
+                    <br />
+                    <div
+                        class="form-item bg-warning mt-1"
+                        v-for="(msg, index) in msgactualizando"
+                        :key="index"
+                    >
+                        <span v-if="index">{{ index }} de 3.-</span>
+                        <strong>
+                            {{ msg }}
+                        </strong>
+                    </div>
+                </button>
             </div>
         </div>
     </div>
@@ -185,11 +215,36 @@ export default {
             correo: "Buscando... ",
             password: "",
             correoAdmin: "",
-            correoTecnicos: ""
+            correoTecnicos: "",
+            msgactualizando: ["Ok"]
         };
     },
     mounted() {},
     methods: {
+        sincroniza() {
+            this.msgactualizando.push(
+                "Actualizando tabla de articulos y referencias"
+            );
+            axios.get("/api/antonio/").then(response => {
+                if (response.data == "Ok") {
+                    this.msgactualizando[1] += "..." + response.data;
+                    this.msgactualizando.push("Actualizando tabla de clientes");
+                    axios.get("/api/sincrocontactos/").then(response => {
+                        if (response.data == "Ok") {
+                            this.msgactualizando[2] += "..." + response.data;
+                            this.msgactualizando.push(
+                                "Actualizando tabla de stock"
+                            );
+                            axios.get("/api/sincrostock").then(response => {
+                                this.msgactualizando[3] +=
+                                    "..." + response.data;
+                                this.msgactualizando = [response.data];
+                            });
+                        }
+                    });
+                }
+            });
+        },
         vermasmethod(campo) {
             this.campo = campo;
             if (campo == "configuracion") {
@@ -205,7 +260,7 @@ export default {
             var reg = {
                 correo: this.correo,
                 password: this.password,
-                correoAdmin:this.correoAdmin,
+                correoAdmin: this.correoAdmin,
                 correoTecnicos: this.correoTecnicos
             };
             axios.put("/api/config", reg).then(response => {

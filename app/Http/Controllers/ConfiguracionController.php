@@ -21,4 +21,12 @@ class ConfiguracionController extends Controller
         $config->save();
         return $request;
     }
+    public function literales(Request $request)
+    {
+        $config = Configuracion::first();
+        $config->proteccion=$request->proteccion;
+        $config->asunto = $request->asunto;
+        $config->save();
+        return 'Ok';
+    }
 }

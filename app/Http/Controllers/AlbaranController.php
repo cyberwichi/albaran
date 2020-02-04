@@ -53,6 +53,7 @@ class AlbaranController extends Controller
         $albaran->observaciones = $request->observaciones;
         $albaran->firma_cliente = $request->firma_cliente;
         $albaran->firma_empleado = $request->firma_empleado;
+        $albaran->trabajos=$request->trabajos;
         $albaran->save();
         foreach ($request->listaarticulos as $key => $linea) {
             $detalle = new DetalleAlbaran();
@@ -101,7 +102,7 @@ class AlbaranController extends Controller
                     $referencias[$det->articulo_id] = $aux;
                 } else {
                     $aux2 = new stdClass;
-                    $aux2->referencia = "sin referencia";
+                    $aux2->referencia = "-";
                     $referencias[$det->articulo_id] = $aux2;
                 }
             }
@@ -119,20 +120,16 @@ class AlbaranController extends Controller
 
 
         $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
-        $template = '
-            <h1> Corrreo de envio de Parte de trabajo</h1>
-            <img src="/img/logo.jpeg"  style="margin:auto;" alt="">
-            <h4> Por favor no responda a este correo este es un mensaje atomatico para el envio de partes de trabajo a clientes</h4>
-            <p> Correo enviado a: <strong>' . $cliente->Nombre . '</strong> </p>
-            <p> Parte de trabajo numero <strong> ' . $id . ' </strong> </p>
+        $template = $config->asunto . ' 
+             <br>
+             <p> Parte numero <strong> ' . $id . ' </strong> </p>
             <p> Gracias por su confianza</p>
-            '; //Ruta de la plantilla HTML para enviar nuestro mensaje
-
+            <br> ' . $config->proteccion;
         /*Inicio captura de datos enviados por $_POST para enviar el correo */
         $mail_setFromEmail = $mail_username;
         $mail_setFromName = $mail_username;
         $txt_message = $mail_username;
-        $mail_subject = "yo";
+        $mail_subject = 'Corrreo de envio de parte de trabajo numero' . $id;
         try {
             $mail = new PHPMailer(true);
             $mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP

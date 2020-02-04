@@ -12,6 +12,7 @@ class tbArticulo extends Model
     // protected $connection = 'sqlsrv';
     public $timestamps = false;
     protected $fillable = ['Nombre', 'UPC'];
+    protected $connection = 'mysql';
 
     //const CREATED_AT = 'FechaAlta';
     //const UPDATED_AT = 'FechaModif';

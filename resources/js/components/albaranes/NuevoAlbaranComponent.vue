@@ -207,6 +207,20 @@
                         rows="3"
                         :placeholder="observaciones"
                     ></textarea>
+
+                </div>
+                <div class="form-group p-3">
+                    <h5>
+                        <strong>Trabajos Realizados</strong>
+                    </h5>
+                    <textarea
+                        v-model="trabajos"
+                        class="form-control sombra"
+                        name="trabajos"
+                        cols="85"
+                        rows="3"                       
+                    ></textarea>
+                    
                 </div>
             </div>
 
@@ -314,6 +328,7 @@ export default {
             firmaemp: "",
             numeroAlbaran: "",
             comenta: "",
+            trabajos:"",
             signaturePad2: "",
             signaturePad: "",
             terminado: false,
@@ -377,6 +392,7 @@ export default {
             this.numeroaviso = "";
             this.maquinas = [];
             this.maquina = {};
+            this.trabajos='';
         },
         buscaaviso(numeroaviso) {
             this.aviso = "";
@@ -509,7 +525,8 @@ export default {
                 firma_cliente: this.firmacli,
                 firma_empleado: this.firmaemp,
                 listaarticulos: this.detallealbaran,
-                listamaquinas: this.maquinas
+                listamaquinas: this.maquinas,
+                trabajos: this.trabajos
             };
             console.log(registroAlbaran);
             var numero = 0;

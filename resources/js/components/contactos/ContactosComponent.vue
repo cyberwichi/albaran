@@ -89,10 +89,10 @@
               <th>Nif</th>
               <th>Telefono</th>
               <th>Email</th>
-              <th class="d-flex justify-content-around">
+              <!-- <th class="d-flex justify-content-around">
                 <div>Borrar</div>
                 <div>Editar</div>
-              </th>
+              </th> -->
             </thead>
             <tbody class="card-footer">
               <responsecontacto-component

@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Aviso extends Model
 {
     protected $fillable = ['contacto_id', 'empleado_id', 'fechaPrevista', 'comentario', 'terminada'];
- 
+    protected $connection = 'mysql';
+    
     public function detalleavisos()
     {
         return $this->hasMany(DetalleAviso::class);
