@@ -62,13 +62,7 @@ class AlbaranController extends Controller
             $detalle->articulo_nombre = $linea['articulo_nombre'];
             $detalle->cantidad = $linea['cantidad'];
             $detalle->precio = $linea['precio'];
-            $detalle->save();
-            if ($linea['articulo_id'] !== "0") {
-                $stock = tbStockArt::where('Articulo', '=', $linea['articulo_id'])->first();
-                $stock->Stock = $stock->Stock - $linea['cantidad'];
-                $stock->UdsPed = $stock->UdsPed - $linea['cantidad'];
-                $stock->update();
-            }
+            $detalle->save();            
         }
         foreach ($request->listamaquinas as $key => $linea) {
             $maquina = new AlbaranMaquina();
@@ -163,7 +157,7 @@ class AlbaranController extends Controller
         } catch (Exception $e) {
             echo $e->getMessage();
         };
-    }
+    } 
     public function delete($id)
     {
         Albaran::where('id', '=', $id)->delete();

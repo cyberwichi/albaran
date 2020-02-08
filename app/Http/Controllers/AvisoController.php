@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\DetalleAviso;
 use App\Aviso;
+use App\Configuracion;
+use App\Empleado;
 use App\tbStockArt;
-
+use Exception;
 use Illuminate\Http\Request;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class AvisoController extends Controller
 {
@@ -46,16 +49,95 @@ class AvisoController extends Controller
                 $detalle->cantidad = $linea['articuloCantidad'];
                 $detalle->precio = $linea['articuloPrecio'];
                 $detalle->save();
+            };
+            $config = Configuracion::first();
+            $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
+            $mail_userpassword = $config->password; //Tu contraseña de gmail
+            $mail_addAddress = $config->correo_tecnicos; //correo electronico que recibira el mensaje
+            $template = '
+            <p> Nuevo aviso generado</p>
+            <br>
+            <p> Aviso  numero <strong> ' . $aviso->id . ' </strong> </p>
+            <br>
+            <p> Fecha prevista realizacion  <strong> ' .  $aviso->fechaPrevista . ' </strong> </p>
+            <br> ';
+            /*Inicio captura de datos enviados por $_POST para enviar el correo */
+            $mail_setFromEmail = $mail_username;
+            $mail_setFromName = $mail_username;
+            $mail_subject = 'Nuevo aviso recibido numero' . $aviso->id;
+            try {
+                $mail = new PHPMailer(true);
+                $mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
+                $mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
+                $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+                $mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+                $mail->Password = $mail_userpassword;         // Tu contraseña de gmail
+                $mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
+                $mail->Port = 25;                          // Puerto TCP  para conectarse 
+                $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
+                $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
+                $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado         // Add attachments
+                $message = $template;
+                $mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
 
-                $stock = tbStockArt::where('Articulo', '=', $linea['articuloId'])->first();
-                $stock->UdsPed = $stock->UdsPed + $linea['articuloCantidad'];
-                $stock->update();
+                $mail->Subject = $mail_subject;
+                $mail->msgHTML($message);
+                if (!$mail->send()) {
+                    echo '<p style="color:red">No se pudo enviar el mensaje..';
+                    echo 'Error de correo: ' . $mail->ErrorInfo;
+                    echo "</p>";
+                }
+            } catch (Exception $e) {
+                echo $e->getMessage();
             };
         } else {
             $aviso = Aviso::find($request->id);
             $aviso->contacto_id = $request->clientid;
             $aviso->fechaPrevista = $request->fechaPrevista;
             $aviso->comentario = $request->observaciones;
+            if ($aviso->empleado_id !== $request->empleado) {
+                $config = Configuracion::first();               
+                $empleado = Empleado::find($request->empleado);
+                $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
+                $mail_userpassword = $config->password; //Tu contraseña de gmail
+                $mail_addAddress = $empleado->email; //correo electronico que recibira el mensaje
+                $template = '
+                    <p> Nuevo aviso asignado</p>
+                    <br>
+                    <p> Aviso  numero <strong> ' . $aviso->id . ' </strong> </p>
+                    <br>
+                    <p> Fecha prevista realizacion  <strong> ' .  $aviso->fechaPrevista . ' </strong> </p>
+                    <br> ';
+                /*Inicio captura de datos enviados por $_POST para enviar el correo */
+                $mail_setFromEmail = $mail_username;
+                $mail_setFromName = $mail_username;
+                $mail_subject = 'Nuevo aviso recibido numero' . $aviso->id;
+                try {
+                    $mail = new PHPMailer(true);
+                    $mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
+                    $mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
+                    $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+                    $mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+                    $mail->Password = $mail_userpassword;         // Tu contraseña de gmail
+                    $mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
+                    $mail->Port = 25;                          // Puerto TCP  para conectarse 
+                    $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
+                    $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
+                    $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado         // Add attachments
+                    $message = $template;
+                    $mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
+
+                    $mail->Subject = $mail_subject;
+                    $mail->msgHTML($message);
+                    if (!$mail->send()) {
+                        echo '<p style="color:red">No se pudo enviar el mensaje..';
+                        echo 'Error de correo: ' . $mail->ErrorInfo;
+                        echo "</p>";
+                    }
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+                };
+            }
             $aviso->empleado_id = $request->empleado;
             $aviso->update();
             if ($request->listaarticulos) {
@@ -75,13 +157,9 @@ class AvisoController extends Controller
                     $detalle->cantidad = $linea['cantidad'];
                     $detalle->precio = $linea['precio'];
                     $detalle->save();
-
-                    $stock = tbStockArt::where('Articulo', '=', $linea['articulo_id'])->first();
-                    $stock->UdsPed = $stock->UdsPed + $linea['cantidad'];
-                    $stock->update();
                 };
             }
-        }
+        }        
         return $aviso->id;
     }
     public function  index()
@@ -109,7 +187,8 @@ class AvisoController extends Controller
         $detalles = DetalleAviso::where('aviso_id', $id)->get();
         return json_encode($detalles);
     }
-    public function porempleado($id){
+    public function porempleado($id)
+    {
         $avisos = Aviso::where('empleado_id', $id)->orderBy('Id', 'desc')->with('empleado')->with('tbContacto')->get();
         return json_encode($avisos);
     }
@@ -122,5 +201,8 @@ class AvisoController extends Controller
     {
         $avisos = Aviso::where('empleado_id', $id)->where('terminada', null)->orderBy('Id', 'desc')->with('empleado')->with('tbContacto')->get();
         return json_encode($avisos);
+    }
+    public function asignarempleado($id)
+    {
     }
 }

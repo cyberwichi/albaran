@@ -25,7 +25,7 @@
                                 v-for="linea in albaranes"
                                 :key="linea.id"
                                 v-on:click="
-                                    veralbaran = true;
+                                    verparte(linea.id);
                                     numeroalbaran = linea;
                                 "
                             >
@@ -36,25 +36,19 @@
                             </p>
                         </div>
                     </div>
-                    <button
-                        class="text-center"
-                        v-show="veralbaran"
-                        v-on:click="veralbaran = false"
-                    >
-                        Cerrar Parte de Trabajo
-                    </button>
                     <!--                       <vistaalbaran-component
                             class="albaran m-auto"
                             :albaran="numeroalbaran"
                             v-show="veralbaran"
                         ></vistaalbaran-component> -->
-                    <iframe
+                    <!-- <iframe
+
                         width="600"
                         height="400"
                         v-show="veralbaran"
-                        :src="'/albaranes/parte' + numeroalbaran.id + '.pdf'"
+                        :src="'albaranes/parte' + numeroalbaran.id + '.pdf'"
                         frameborder="0"
-                    ></iframe>
+                    ></iframe> -->
 
                     <div class="modal-body">
                         <slot name="body">
@@ -147,6 +141,10 @@ export default {
         this.buscaDetalles(this.avis.id);
     },
     methods: {
+        verparte(id){
+
+            window.open('albaranes/parte'+id+'.pdf', '_blank','witdh=800,height=600' )
+        },
         buscaDetalles(id) {
             document.getElementById("app").style.cursor = "progress";
             axios.get("/api/detalles/" + id).then(response => {

@@ -16,7 +16,6 @@ class CreateAlbaransTable extends Migration
         Schema::create('albarans', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('aviso_id');
-            //$table->integer('detallealbaran_id');
             $table->text('observaciones')->nullable();
             $table->text('firma_cliente')->nullable();
             $table->text('firma_empleado')->nullable();

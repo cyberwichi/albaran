@@ -121,14 +121,20 @@
             <div class="card sombra mt-1">
                 <div class="card-header">
                     <h5 class>Articulos Entregados</h5>
+                    <b-button
+                        class="botoncillo btn btn-success"
+                        v-b-modal.modal-prevent-closing
+                        >Articulo No Registrado</b-button
+                    >
                 </div>
-                <table class="table table-responsive">
-                    <thead class="text-center thead">
+                <table class="table table-responsive w-100">
+                    <thead class="text-center mx-auto thead">
                         <tr>
                             <th scope="col" class="">Referencia</th>
                             <th scope="col">Articulo</th>
                             <th scope="col">Cantidad</th>
                             <th scope="col">Precio</th>
+                            <th scope="col">Eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -140,7 +146,7 @@
                             <th scope="row" class="">
                                 {{ linea2.referencia }}
                             </th>
-                            <td>{{ linea2.articulo_nombre }}</td>
+                            <td class="w-50 text-center">{{ linea2.articulo_nombre }}</td>
                             <td>
                                 <input
                                     type="text"
@@ -150,6 +156,7 @@
                                 />
                             </td>
                             <td>{{ linea2.precio }}</td>
+                            <td @click="eliminarArticulo(index)">X</td>
                         </tr>
                     </tbody>
                 </table>
@@ -176,6 +183,42 @@
                     </tr>
                 </table>
             </div>
+            <b-modal
+                id="modal-prevent-closing"
+                ref="modal"
+                title="Articulo No Registrado"
+                size="xl"
+                @ok="handleOk"
+            >
+                <form ref="form" @submit.stop.prevent="añadirArticulo;">
+                    <b-form-group
+                        :state="nameState"
+                        label="Nombre"
+                        label-for="name-input"
+                        invalid-feedback="Introcuce el nombre del articulo"
+                    >
+                        <b-form-input
+                            id="name-input"
+                            v-model="name"
+                            :state="nameState"
+                            required
+                        ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                        :state="upcState"
+                        label="Precio"
+                        label-for="upc-input"
+                        invalid-feedback="Introcuce el precio del articulo"
+                    >
+                        <b-form-input
+                            id="upc-input"
+                            v-model="upc"
+                            :state="upcState"
+                            required
+                        ></b-form-input>
+                    </b-form-group>
+                </form>
+            </b-modal>
 
             <!-- observaciones -->
             <div class="card sombra mt-1">
@@ -207,7 +250,6 @@
                         rows="3"
                         :placeholder="observaciones"
                     ></textarea>
-
                 </div>
                 <div class="form-group p-3">
                     <h5>
@@ -218,9 +260,8 @@
                         class="form-control sombra"
                         name="trabajos"
                         cols="85"
-                        rows="3"                       
+                        rows="3"
                     ></textarea>
-                    
                 </div>
             </div>
 
@@ -288,6 +329,7 @@
                     <img id="firmaemp" alt />
                 </div>
             </div>
+
             <div class="faldon">
                 <small>
                     C.I.F. B-72177827 - Telefono 956 59 125 -Pol. Ind. Puente
@@ -328,7 +370,7 @@ export default {
             firmaemp: "",
             numeroAlbaran: "",
             comenta: "",
-            trabajos:"",
+            trabajos: "",
             signaturePad2: "",
             signaturePad: "",
             terminado: false,
@@ -337,7 +379,14 @@ export default {
             linea3: "",
             dismissSecs: 5,
             dismissCountDown: 0,
-            mensaje: ""
+            mensaje: "",
+            name: "",
+            upc: "",
+            nameState: null,
+            upcState: null,
+            ref: "",
+            articulo:{}
+            
         };
     },
     mounted() {
@@ -346,16 +395,43 @@ export default {
     },
 
     methods: {
+        handleOk(bvModalEvt) {
+            // Prevent modal from closing
+            bvModalEvt.preventDefault();
+            // Trigger submit handler
+            this.articulo = {
+                articuloId: "0",
+                articuloNombre: this.name,
+                articuloPrecio: this.upc,
+                referencia:this.ref,
+            };
+            this.añadirArticulo(this.articulo);
+            this.$nextTick(() => {
+                this.$bvModal.hide("modal-prevent-closing");
+                this.articulo={};
+            });
+            
+        },
+        checkFormValidity() {
+            const valid = this.$refs.form.checkValidity();
+            this.nameState = valid;
+            this.upcState = valid;
+            return valid;
+        },
         añadirArticulo(datos) {
             var detallealb = {
                 avisoid: this.numeroaviso,
                 articulo_id: datos.articuloId,
                 articulo_nombre: datos.articuloNombre,
-                cantidad: datos.articuloCantidad,
+                cantidad: 1,
                 precio: datos.articuloPrecio,
                 referencia: datos.referencia
             };
             this.detallealbaran.push(detallealb);
+            this.calcularTotal();
+        },
+        eliminarArticulo(index){
+            this.detallealbaran.splice(index, 1);
             this.calcularTotal();
         },
         countDownChanged(dismissCountDown) {
@@ -392,7 +468,7 @@ export default {
             this.numeroaviso = "";
             this.maquinas = [];
             this.maquina = {};
-            this.trabajos='';
+            this.trabajos = "";
         },
         buscaaviso(numeroaviso) {
             this.aviso = "";
@@ -546,7 +622,6 @@ export default {
                             );
                             this.poneraCero();
                             this.$emit("salir", "Parte guardado correctamente");
-                            
                         });
                 });
             } else {
@@ -554,12 +629,12 @@ export default {
                     numero = response.data;
                     document.getElementById("app").style.cursor = "auto";
                     this.numeroAlbaran = numero;
-                    
+
                     window.open(
-                                "albaranes/parte" + numero + ".pdf",
-                                "_blank",
-                                "width=800,height=600"
-                            );
+                        "albaranes/parte" + numero + ".pdf",
+                        "_blank",
+                        "width=800,height=600"
+                    );
                     this.poneraCero();
                     this.$emit("salir", "Parte guardado correctamente");
                 });

@@ -38,7 +38,7 @@ export default {
                 proteccion: this.proteccion,
                 asunto: this.asunto
             }
-            axios.post('/api/literales/', aux).then(response=>{
+            axios.post('/api/literales', aux).then(response=>{
                 if (response.data == 'Ok') {
                     alert('Literales guardados correctamente');
                 }

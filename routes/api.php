@@ -41,7 +41,11 @@ Route::get(
                     $articulo->Id = $value->Id;
                     $articulo->Referencia = $value->Referencia;
                     $articulo->Nombre = $value->Nombre;
-                    $articulo->UPC = $value->UPC;
+                    if ($value->UPC==0) {
+                        $articulo->UPC = $value->PVP;
+                    } else {
+                        $articulo->UPC = $value->UPC;
+                    }
                     $articulo->save();
                     if ($articulo->Referencia <> null) {
                         $referencia = Referencia::where([['referencia', '=', $articulo->Referencia], ['articulo_id', '=', $articulo->Id]])
