@@ -9,6 +9,6 @@ class DetalleAviso extends Model
     protected $connection = 'mysql';
     public function articulo()
     {
-        return $this->belongsTo(tbArticulo::class);
+        return $this->belongsTo(tbArticulo::class, 'articulo_id', 'AutoId');
     }
 }

@@ -41,21 +41,21 @@ Route::get(
                     $articulo->Id = $value->Id;
                     $articulo->Referencia = $value->Referencia;
                     $articulo->Nombre = $value->Nombre;
-                    if ($value->UPC==0) {
-                        $articulo->UPC = $value->PVP;
-                    } else {
+                    if ($value->PVP==0) {
                         $articulo->UPC = $value->UPC;
+                    } else {
+                        $articulo->UPC = $value->PVP;
                     }
                     $articulo->save();
                     if ($articulo->Referencia <> null) {
-                        $referencia = Referencia::where([['referencia', '=', $articulo->Referencia], ['articulo_id', '=', $articulo->Id]])
+                        $referencia = Referencia::where([['referencia', '=', $articulo->Referencia], ['articulo_id', '=', $articulo->AutoId]])
                             ->get();
                         if (count($referencia)) {
 
                         } else {
                             $referencia = new Referencia;
                             $referencia->referencia = $articulo->Referencia;
-                            $referencia->articulo_id = $articulo->Id;
+                            $referencia->articulo_id = $articulo->AutoId;
                             $referencia->save();
                         }
                     }            

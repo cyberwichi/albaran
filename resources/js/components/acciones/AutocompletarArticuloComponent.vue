@@ -91,7 +91,6 @@
                 v-model="upcForm"
                 name="upc"
                 autocomplete="off"
-                readonly
             />
         </div>
         <div class="form-group">
@@ -161,12 +160,18 @@ export default {
                             this.articulos.push(articulo);
                         });
                         this.articulos.sort(function(a, b) {
+                            if (a.tb_stock_art === null){
+                                a.tb_stock_art=0;                               
+                            }
+                            if (b.tb_stock_art === null){
+                                b.tb_stock_art=0 ;                              
+                            }
                             if (a.tb_stock_art.Stock > b.tb_stock_art.Stock) {
                                 return -1;
-                            }
-                            if (a.tb_stock_art.Stock < b.tb_stock_art.Stock) {
-                                return 1;
-                            }
+                                }
+                                if (a.tb_stock_art.Stock < b.tb_stock_art.Stock) {
+                                    return 1;
+                                }
                             // a must be equal to b
                             return 0;
                         });

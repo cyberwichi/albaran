@@ -155,7 +155,14 @@
                                     class="peq"
                                 />
                             </td>
-                            <td>{{ linea2.precio }}</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    :placeholder="linea2.precio"
+                                    v-model="linea2.precio"
+                                    class="peq"
+                                />
+                            </td>
                             <td @click="eliminarArticulo(index)">X</td>
                         </tr>
                     </tbody>

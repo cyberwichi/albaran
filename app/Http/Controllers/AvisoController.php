@@ -141,12 +141,6 @@ class AvisoController extends Controller
             $aviso->empleado_id = $request->empleado;
             $aviso->update();
             if ($request->listaarticulos) {
-                $detalle = DetalleAviso::where('aviso_id', $request->id)->get();
-                foreach ($detalle as $key => $linea) {
-                    $stock = tbStockArt::where('Articulo', '=', $linea['articulo_id'])->first();
-                    $stock->UdsPed = $stock->UdsPed - $linea['cantidad'];
-                    $stock->update();
-                }
                 $detalle = DetalleAviso::where('aviso_id', $request->id);
                 $detalle->delete();
                 foreach ($request->listaarticulos as $key => $linea) {
@@ -184,7 +178,7 @@ class AvisoController extends Controller
     }
     public function detalles($id)
     {
-        $detalles = DetalleAviso::where('aviso_id', $id)->get();
+        $detalles = DetalleAviso::where('aviso_id', $id)->with('articulo.referencias')->get();
         return json_encode($detalles);
     }
     public function porempleado($id)

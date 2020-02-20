@@ -19,10 +19,10 @@ class tbArticulo extends Model
 
     public function tbStockArt()
     {
-        return $this->belongsTo(tbStockArt::class, 'Id', 'Articulo');
+        return $this->belongsTo(tbStockArt::class, 'AutoId', 'AutoId');
     }
     public function referencias()
     {
-        return $this->hasMany(Referencia::class, 'articulo_id', 'Id');
+        return $this->hasMany(Referencia::class, 'articulo_id', 'AutoId');
     }
 }

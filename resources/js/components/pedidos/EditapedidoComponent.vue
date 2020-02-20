@@ -118,7 +118,7 @@
                                 <thead class="text-center thead">
                                     <h5 class="text-center">Pedido</h5>
                                     <tr>
-                                        <th scope="col">Id Articulo</th>
+                                        <th scope="col">Ref. Articulo</th>
                                         <th scope="col">Articulo</th>
                                         <th scope="col">Cantidad</th>
                                         <th scope="col">Precio</th>
@@ -131,7 +131,7 @@
                                         :key="index"
                                     >
                                         <th scope="row">
-                                            {{ linea.articulo_id }}
+                                            {{ linea.articulo.Referencia }}
                                         </th>
                                         <td>{{ linea.articulo_nombre }}</td>
                                         <td>
@@ -143,7 +143,14 @@
                                                 v-on:change="actualizaTotal"
                                             />
                                         </td>
-                                        <td>{{ linea.precio }}</td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                name=""
+                                                id=""
+                                                v-model="linea.precio"
+                                                v-on:change="actualizaTotal"
+                                            /></td>
                                         <td>
                                             <img
                                                 class="m-3 vertical-aling"

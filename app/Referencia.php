@@ -11,6 +11,6 @@ class Referencia extends Model
 
     public function tbArticulo()
     {
-        return $this->belongsTo(tbArticulo::class, 'articulo_id', 'Id');
+        return $this->belongsTo(tbArticulo::class, 'articulo_id', 'AutoId');
     }
 }

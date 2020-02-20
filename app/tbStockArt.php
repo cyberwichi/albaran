@@ -19,6 +19,6 @@ class tbStockArt extends Model
 
     public function tbArticulo()
     {
-        return $this->belongsTo(tbArticulo::class, 'Articulo', 'Id');
+        return $this->belongsTo(tbArticulo::class, 'Articulo', 'AutoId');
     }
 }

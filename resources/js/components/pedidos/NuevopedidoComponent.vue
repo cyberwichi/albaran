@@ -70,7 +70,7 @@
                         <thead class="text-center thead">
                             <h5 class="text-center">Pedido</h5>
                             <tr>
-                                <th scope="col">Id Articulo</th>
+                                <th scope="col">Ref. Articulo</th>
                                 <th scope="col">Articulo</th>
                                 <th scope="col">Cantidad</th>
                                 <th scope="col">Precio</th>
@@ -79,7 +79,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="(linea, index) in pedido" :key="index">
-                                <th scope="row">{{ linea.articuloId }}</th>
+                                <th scope="row">{{ linea.referencia }}</th>
                                 <td>{{ linea.articuloNombre }}</td>
                                 <td>{{ linea.articuloCantidad }}</td>
                                 <td>{{ linea.articuloPrecio }}</td>
