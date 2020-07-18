@@ -92,13 +92,7 @@ class AlbaranController extends Controller
         if ($albaran[0]->detallealbaran !== []) {
             foreach ($albaran[0]->detallealbaran as $det) {
                 $aux = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
-                if ($aux <> '') {
-                    $referencias[$det->articulo_id] = $aux;
-                } else {
-                    $aux2 = new stdClass;
-                    $aux2->referencia = "-";
-                    $referencias[$det->articulo_id] = $aux2;
-                }
+                $referencias[$det->articulo_id] = $aux;                
             }
         }
 
@@ -106,19 +100,18 @@ class AlbaranController extends Controller
 
         $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
         $pdf->save('albaranes/parte' . $id . '.pdf');
+
         /*Configuracion de variables para enviar el correo*/
         $config = Configuracion::first();
         $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
-        $mail_userpassword = $config->password; //Tu contraseña de gmail
-
-
-
-        $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
+        $mail_userpassword = $config->password; //Tu contraseña de gmail+
+        $mail_addAddress = explode(";", $cliente->Email); //correo electronico que recibira el mensaje
         $template = $config->asunto . ' 
              <br>
              <p> Parte numero <strong> ' . $id . ' </strong> </p>
             <p> Gracias por su confianza</p>
             <br> ' . $config->proteccion;
+
         /*Inicio captura de datos enviados por $_POST para enviar el correo */
         $mail_setFromEmail = $mail_username;
         $mail_setFromName = $mail_username;
@@ -135,7 +128,10 @@ class AlbaranController extends Controller
             $mail->Port = 25;                          // Puerto TCP  para conectarse 
             $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
             $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
-            $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
+            foreach($mail_addAddress as $iten) {
+                $mail->addAddress($iten);   // Agregar quien recibe el e-mail enviado
+            }           
+
             $mail->addAttachment('albaranes/parte' . $id . '.pdf');         // Add attachments
             $mail->addCC($config->correo_admin);
             $mail->addCC($config->correo_tecnicos);

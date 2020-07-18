@@ -136,7 +136,7 @@ export default {
                         document.getElementById("app").style.cursor = "auto";
                     });
             }
-        },
+        }, 
         keyDown(e) {
             var vm = this;
 

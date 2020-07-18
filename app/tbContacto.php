@@ -15,6 +15,6 @@ class tbContacto extends Model
     //const UPDATED_AT = 'FechaModif';
     public function aviso()
     {
-        return $this->hasMany(Aviso::class, 'AutoId',  'contacto_id');
+        return $this->hasMany(Aviso::class, 'Id',  'contacto_id');
     }
 }
