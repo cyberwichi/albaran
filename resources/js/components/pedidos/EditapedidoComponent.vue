@@ -7,6 +7,11 @@
                     Id Aviso:
                     <strong>{{ idaviso }}</strong>
                 </h5>
+                <h5>
+                    <label><input type="checkbox" id="cbox1" value="first_checkbox" v-model="terminada" />
+                Aviso Terminado</label
+            >
+                </h5>
             </div>
 
             <div class="card">
@@ -130,27 +135,19 @@
                                         v-for="(linea, index) in pedido"
                                         :key="index"
                                     >
-                                        <th scope="row">
+                                        <th
+                                            v-if="'articulo' in linea"
+                                            scope="row"
+                                        >
                                             {{ linea.articulo.Referencia }}
                                         </th>
+                                        <th v-else scope="row">
+                                            {{ linea.referencia }}
+                                        </th>
                                         <td>{{ linea.articulo_nombre }}</td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                name=""
-                                                id=""
-                                                v-model="linea.cantidad"
-                                                v-on:change="actualizaTotal"
-                                            />
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="text"
-                                                name=""
-                                                id=""
-                                                v-model="linea.precio"
-                                                v-on:change="actualizaTotal"
-                                            /></td>
+                                        <td>{{ linea.cantidad }}</td>
+                                        <td>{{ linea.precio }}</td>
+
                                         <td>
                                             <img
                                                 class="m-3 vertical-aling"
@@ -187,6 +184,7 @@
                         @nuevaLinea="añadirArticulo($event)"
                         class="card bg-light mb-3"
                         name="articulo"
+                        v-model="linea"
                     ></autocompletararticulo-component>
                     <div class="text-center">
                         <button
@@ -202,7 +200,6 @@
                                 title="Guardar Aviso"
                             />
                         </button>
-                        
                     </div>
                 </form>
             </div>
@@ -239,7 +236,9 @@ export default {
             flageditar: false,
             flageditarfecha: false,
             empleados: [],
-            nombreEmpl: ""
+            nombreEmpl: "",
+            linea: {},
+            terminada: false
         };
     },
     created() {
@@ -296,6 +295,7 @@ export default {
                         this.contacto = this.aviso[0].tb_contacto;
                         this.fechaprevista = this.aviso[0].fechaPrevista;
                         this.observaciones = this.aviso[0].comentario;
+                        this.terminada= this.aviso[0].terminada;
                         document.getElementById("app").style.cursor = "auto";
                     })
                     .catch(e => {
@@ -314,7 +314,8 @@ export default {
                 cantidad: linea.articuloCantidad,
                 articulo_id: linea.articuloId,
                 articulo_nombre: linea.articuloNombre,
-                precio: linea.articuloPrecio
+                precio: linea.articuloPrecio,
+                referencia: linea.referencia
             };
             this.pedido.push(aux);
             this.actualizaTotal();
@@ -353,7 +354,8 @@ export default {
                 fechaPrevista: this.aviso[0].fechaPrevista,
                 listaarticulos: this.pedido,
                 observaciones: this.aviso[0].comentario,
-                empleado: this.aviso[0].empleado_id
+                empleado: this.aviso[0].empleado_id,
+               
             };
             document.getElementById("app").style.cursor = "progress";
             axios.post("/api/aviso", data).then(response => {
@@ -369,7 +371,8 @@ export default {
                 fechaPrevista: this.aviso[0].fechaPrevista,
                 listaarticulos: this.pedido,
                 observaciones: this.aviso[0].comentario,
-                empleado: this.aviso[0].empleado_id
+                empleado: this.aviso[0].empleado_id,
+                 terminada: this.terminada
             };
             console.log(data);
             document.getElementById("app").style.cursor = "progress";
@@ -384,6 +387,7 @@ export default {
             document.getElementById("app").style.cursor = "progress";
             axios.get("/api/detalles/" + id).then(response => {
                 this.pedido = response.data;
+
                 this.actualizaTotal();
             });
         }

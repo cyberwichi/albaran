@@ -214,7 +214,11 @@
                         <?php $subtotal =0 ?>
                         @foreach($albaran[0]->detalleAlbaran as $linea2 )
                         <tr>
+                            @if (isset( $referencias[$linea2->articulo_id]))
                             <td class="firmas right">{{ $referencias[$linea2->articulo_id]->referencia}}</td>
+                            @else
+                            <td class="firmas right"> sin referencia</td>
+                            @endif
                             <td colspan="5" class="firmas center articulo">{{ substr($linea2->articulo_nombre , 0, 40) }}</td>
                             <td class="firmas right-2">{{ $linea2->cantidad }}</td>
                             <td class="firmas right-2">{{ $linea2->precio }}</td>

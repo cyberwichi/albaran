@@ -214,7 +214,7 @@ export default {
             this.iva = Number(this.iva.toFixed(2));
             this.total = this.subtotal + this.iva;
             this.total = Number(this.total.toFixed(2));
-        },
+        }, 
 
         añadirArticulo(linea) {
             this.pedido.push(linea);

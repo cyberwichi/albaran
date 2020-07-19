@@ -28,16 +28,7 @@
                     >
                         Articulos
                     </button>
-                </div> -->
-                <div class="col text-center">
-                    <button
-                        class="btn btn-primary"
-                        :class="{ disabled: campo == 'referencias' }"
-                        v-on:click="vermasmethod('referencias')"
-                    >
-                        Referencias de Articulos
-                    </button>
-                </div>
+                </div> -->                
                 <div class="col text-center">
                     <button
                         class="btn btn-primary"
@@ -180,6 +171,15 @@
                             Literales Correo
                         </button>
                     </div>
+                    <div class="col text-center">
+                    <button
+                        class="btn btn-primary"
+                        :class="{ disabled: campo == 'referencias' }"
+                        v-on:click="vermasmethod('referencias')"
+                    >
+                        Referencias de Articulos
+                    </button>
+                </div>
                 </div>
             </div>
             <div class="text-center">

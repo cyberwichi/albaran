@@ -95,6 +95,7 @@ class AvisoController extends Controller
             $aviso->contacto_id = $request->clientid;
             $aviso->fechaPrevista = $request->fechaPrevista;
             $aviso->comentario = $request->observaciones;
+            $aviso->terminada=$request->terminada;
             if ($aviso->empleado_id !== $request->empleado) {
                 $config = Configuracion::first();               
                 $empleado = Empleado::find($request->empleado);
