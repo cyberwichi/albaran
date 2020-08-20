@@ -25,7 +25,7 @@
                    Avisos Pendientes
                 </button>
             </div>
-            <div class="col text-center mb-0 form-group">
+<!--             <div class="col text-center mb-0 form-group">
                 <input
                     type="text"
                     v-model="idavisoedita"
@@ -43,9 +43,9 @@
                     v-scroll-to="'#edita'"
                 >
                     Modificar
-                </button>
-            </div>
-            <div class="col text-cente form-group mb-0">
+                </button> -->
+            <!-- </div> -->
+<!--             <div class="col text-cente form-group mb-0">
                 <input
                     type="text"
                     v-model="numero"
@@ -61,8 +61,19 @@
                 >
                     Ver
                 </button>
-            </div>
+            </div> -->
             
+             <div class="col text-cente form-group mb-0">
+ 
+                <button
+                    class="btn btn-primary"
+                    :class="{ disabled: campo == 'fechas' }"
+                    v-on:click="fecha=true;vermasmethod('fechas')"
+                    v-scroll-to="'#listado'"                   
+                >
+                    Ver por Fechas
+                </button>
+            </div>
             <div class="col text-center">
                 <button
                     class="btn btn-primary"
@@ -95,7 +106,18 @@
             @salir="ireditarAviso($event)"
             v-if="campo == 'listado'"
             class="mt-5 mb-3"
+            
+
         ></pedidos-component>
+        <pedidosporfechas-component
+            :key="reload"
+            @salir="ireditarAviso($event)"
+            v-if="campo == 'fechas'"
+            class="mt-5 mb-3"
+            
+
+        ></pedidosporfechas-component>
+
 
         <pedidosporcliente-component
             @salir="ireditarAviso($event)"
@@ -187,6 +209,7 @@
             </button>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -203,7 +226,9 @@ export default {
             events: [],
             event: 0,
             idaviso: 0,
-            idavisoedita: ""
+            idavisoedita: "",
+            fecha:false,
+
         };
     },
     created() {

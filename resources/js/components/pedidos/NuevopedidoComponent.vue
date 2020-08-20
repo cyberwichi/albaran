@@ -11,6 +11,27 @@
 
             <div class="card-body">
                 <form>
+                    <label for="myChoice">¿Valorar los partes creados por este aviso?</label>
+                    SI
+                    <input
+                        id="default_yes"
+                        name="myChoice"
+                        value="1"
+                        type="radio"
+                        v-model="valorar"
+                        required
+                        selected
+                    />
+                    NO
+                    <input
+                        id="default_no"
+                        name="myChoice"
+                        value="0"
+                        type="radio"
+                        v-model="valorar"
+                        required
+                    />
+
                     <autocompletcontacto-component
                         :contactoexterno="contacto"
                         @newcontacto="añadircontacto($event)"
@@ -60,7 +81,7 @@
                                 data-placement="top"
                                 title="Guardar Aviso"
                             />
-                        </button>                        
+                        </button>
                     </div>
                 </form>
             </div>
@@ -125,9 +146,9 @@
 
 <script>
 export default {
-   
     data: function() {
         return {
+            valorar:'1',
             vermas: false,
             pedido: [],
             linea: {},
@@ -139,17 +160,19 @@ export default {
             fechaprevista: "",
             observaciones: "",
             veralbaran: false,
-            idaviso:0,
+            idaviso: 0
         };
     },
-    created() {this.buscaDatos()},
+    created() {
+        this.buscaDatos();
+    },
     computed: {},
 
     methods: {
-        buscaDatos(){
+        buscaDatos() {
             //cargar los datos
-            if (this.idaviso){
-                 document.getElementById("app").style.cursor = "progress";
+            if (this.idaviso) {
+                document.getElementById("app").style.cursor = "progress";
                 axios
                     .get("/api/avisos/" + this.idaviso)
                     .then(response => {
@@ -157,18 +180,16 @@ export default {
                         console.log(this.aviso[0]);
                         this.buscaDetalles(this.idaviso);
                         this.comenta = this.aviso[0].comentario;
-                        this.contacto=this.aviso[0].tb_contacto;
-                        this.fechaprevista=this.aviso[0].fechaPrevista;
-                        this.observaciones='this.aviso[0].comentario';                        
+                        this.contacto = this.aviso[0].tb_contacto;
+                        this.fechaprevista = this.aviso[0].fechaPrevista;
+                        this.observaciones = "this.aviso[0].comentario";
                         document.getElementById("app").style.cursor = "auto";
                     })
                     .catch(e => {
                         console.log(e);
                         document.getElementById("app").style.cursor = "auto";
-                    });             
-
-            }              
-
+                    });
+            }
         },
         nuevoPedidoyalbaran() {
             this.nuevoPedido();
@@ -188,7 +209,6 @@ export default {
                 this.$emit("salir");
                 document.getElementById("app").style.cursor = "auto";
             });
-           
         },
         buscaDetalles(id) {
             document.getElementById("app").style.cursor = "progress";
@@ -214,11 +234,19 @@ export default {
             this.iva = Number(this.iva.toFixed(2));
             this.total = this.subtotal + this.iva;
             this.total = Number(this.total.toFixed(2));
-        }, 
+        },
 
         añadirArticulo(linea) {
+            if (this.valorar==1){
+                    
+
+            } else{
+              
+                linea.articuloPrecio=0
+            }
             this.pedido.push(linea);
             this.actualizaTotal();
+        
         },
         borrarArticulo(index) {
             this.pedido.splice(index, 1);

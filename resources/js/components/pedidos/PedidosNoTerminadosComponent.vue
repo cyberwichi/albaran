@@ -87,6 +87,7 @@
                             <th>Id</th>
                             <th>Cliente</th>
                             <th class="">Empleado asignado</th>
+                             <th class="">Fecha Creacion</th>
                             <th class="">Fecha Prevista</th>
                             <th class="">Comentario</th>
                             <th class="">Terminada</th>

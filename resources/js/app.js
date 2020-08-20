@@ -9,8 +9,15 @@ import 'vue-cal/dist/i18n/es';
 import 'vue-cal/dist/vuecal.css';
 import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import 'vue-select/dist/vue-select.css';
+
+import vSelect from 'vue-select';
+
+Vue.component('v-select', vSelect)
 
 Vue.use(VueRouter);
+
+
 Vue.use(require('vue-moment'));
 var VueScrollTo = require('vue-scrollto');
 Vue.use(BootstrapVue);
@@ -72,6 +79,9 @@ Vue.component('pedidosporcliente-component', require('./components/pedidos/Pedid
 Vue.component('pedidosnoterminados-component', require('./components/pedidos/PedidosNoTerminadosComponent.vue').default);
 Vue.component('vistapedido-component', require('./components/pedidos/VistaPedidoComponent.vue').default);
 Vue.component('editapedido-component', require('./components/pedidos/EditapedidoComponent.vue').default);
+Vue.component('pedidosporfechas-component', require('./components/pedidos/PedidosPorFechaComponent.vue').default);
+
+
 
 
 Vue.component('empleadoprincipal-component', require('./components/empleados/EmpleadosPrincipalComponent.vue').default);
@@ -95,7 +105,9 @@ Vue.component('nuevoreferencias-component', require('./components/referencias/Nu
 Vue.component('porreferencias-component', require('./components/referencias/MostrarporreferenciasComponent.vue').default);
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+   
+
     
     
 });
