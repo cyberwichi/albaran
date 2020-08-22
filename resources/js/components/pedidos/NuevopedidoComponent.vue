@@ -201,8 +201,10 @@ export default {
                 clientid: this.contacto.Id,
                 fechaPrevista: this.fechaprevista,
                 listaarticulos: this.pedido,
-                observaciones: this.observaciones
+                observaciones: this.observaciones,
+                valorar:this.valorar
             };
+            console.log(data);
             document.getElementById("app").style.cursor = "progress";
             axios.post("/api/aviso", data).then(response => {
                 this.idaviso = response.data;
@@ -214,7 +216,7 @@ export default {
             document.getElementById("app").style.cursor = "progress";
             axios.get("/api/detalles/" + id).then(response => {
                 this.pedido = response.data;
-                console.log(this.pedido);
+             
                 this.actualizaTotal();
             });
         },
@@ -237,13 +239,7 @@ export default {
         },
 
         añadirArticulo(linea) {
-            if (this.valorar==1){
-                    
-
-            } else{
-              
-                linea.articuloPrecio=0
-            }
+            
             this.pedido.push(linea);
             this.actualizaTotal();
         

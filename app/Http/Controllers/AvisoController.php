@@ -27,6 +27,7 @@ class AvisoController extends Controller
         $aviso->fechaPrevista = $request->fechaPrevista;
         $aviso->comentario = $request->comentario;
         $aviso->empleado_id = $request->empleado_id;
+        $aviso->valorar=$request->valorar;
         $aviso->update();
         return ($aviso);
     }
@@ -39,6 +40,7 @@ class AvisoController extends Controller
             $aviso->contacto_id = $request->clientid;
             $aviso->fechaPrevista = $request->fechaPrevista;
             $aviso->comentario = $request->observaciones;
+            $aviso->valorar = $request->valorar;
             $aviso->save();
 
             foreach ($request->listaarticulos as $key => $linea) {
@@ -96,6 +98,7 @@ class AvisoController extends Controller
             $aviso->fechaPrevista = $request->fechaPrevista;
             $aviso->comentario = $request->observaciones;
             $aviso->terminada=$request->terminada;
+            $aviso->valorar = $request->valorar;
             if ($aviso->empleado_id !== $request->empleado) {
                 $config = Configuracion::first();               
                 $empleado = Empleado::find($request->empleado);

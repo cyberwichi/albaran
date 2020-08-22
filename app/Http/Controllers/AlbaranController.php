@@ -53,7 +53,7 @@ class AlbaranController extends Controller
         $albaran->observaciones = $request->observaciones;
         $albaran->firma_cliente = $request->firma_cliente;
         $albaran->firma_empleado = $request->firma_empleado;
-        $albaran->trabajos=$request->trabajos;
+        $albaran->trabajos = $request->trabajos;
         $albaran->save();
         foreach ($request->listaarticulos as $key => $linea) {
             $detalle = new DetalleAlbaran();
@@ -62,7 +62,7 @@ class AlbaranController extends Controller
             $detalle->articulo_nombre = $linea['articulo_nombre'];
             $detalle->cantidad = $linea['cantidad'];
             $detalle->precio = $linea['precio'];
-            $detalle->save();            
+            $detalle->save();
         }
         foreach ($request->listamaquinas as $key => $linea) {
             $maquina = new AlbaranMaquina();
@@ -92,13 +92,16 @@ class AlbaranController extends Controller
         if ($albaran[0]->detallealbaran !== []) {
             foreach ($albaran[0]->detallealbaran as $det) {
                 $aux = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
-                $referencias[$det->articulo_id] = $aux;                
+                $referencias[$det->articulo_id] = $aux;
             }
         }
 
+        if ($aviso->valorar) {
+            $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
+        } else {
+            $pdf = PDF::loadView('pdf/pdfnovalora', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
+        }
 
-
-        $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
         $pdf->save('albaranes/parte' . $id . '.pdf');
 
         /*Configuracion de variables para enviar el correo*/
@@ -128,9 +131,9 @@ class AlbaranController extends Controller
             $mail->Port = 25;                          // Puerto TCP  para conectarse 
             $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
             $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
-            foreach($mail_addAddress as $iten) {
+            foreach ($mail_addAddress as $iten) {
                 $mail->addAddress($iten);   // Agregar quien recibe el e-mail enviado
-            }           
+            }
 
             $mail->addAttachment('albaranes/parte' . $id . '.pdf');         // Add attachments
             $mail->addCC($config->correo_admin);
@@ -153,7 +156,7 @@ class AlbaranController extends Controller
         } catch (Exception $e) {
             echo $e->getMessage();
         };
-    } 
+    }
     public function delete($id)
     {
         Albaran::where('id', '=', $id)->delete();

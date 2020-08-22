@@ -12,6 +12,27 @@
                 Aviso Terminado</label
             >
                 </h5>
+
+                <label for="myChoice">¿Valorar los partes creados por este aviso?</label>
+                    SI
+                    <input
+                        id="default_yes"
+                        name="myChoice"
+                        value="1"
+                        type="radio"
+                        v-model="valorar"
+                        required
+                        selected
+                    />
+                    NO
+                    <input
+                        id="default_no"
+                        name="myChoice"
+                        value="0"
+                        type="radio"
+                        v-model="valorar"
+                        required
+                    />
             </div>
 
             <div class="card">
@@ -238,7 +259,8 @@ export default {
             empleados: [],
             nombreEmpl: "",
             linea: {},
-            terminada: false
+            terminada: false,
+            valorar:true,
         };
     },
     created() {
@@ -296,6 +318,7 @@ export default {
                         this.fechaprevista = this.aviso[0].fechaPrevista;
                         this.observaciones = this.aviso[0].comentario;
                         this.terminada= this.aviso[0].terminada;
+                        this.valorar= this.aviso[0].valorar;
                         document.getElementById("app").style.cursor = "auto";
                     })
                     .catch(e => {
@@ -372,7 +395,8 @@ export default {
                 listaarticulos: this.pedido,
                 observaciones: this.aviso[0].comentario,
                 empleado: this.aviso[0].empleado_id,
-                 terminada: this.terminada
+                terminada: this.terminada,
+                valorar: this.valorar
             };
             console.log(data);
             document.getElementById("app").style.cursor = "progress";

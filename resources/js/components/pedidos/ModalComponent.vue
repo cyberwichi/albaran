@@ -13,6 +13,8 @@
                         class="modal-header d-flex flex-wrap border border-secondary mb-2"
                     >
                         <h2 class="">Detalle Aviso Id: {{ avis.id }}</h2>
+                        <h4 v-if="!avis.valorar">NO VALORAR</h4>
+                        <H4 v-else>SI VALORAR</H4>
 
                         <div
                             class="d-flex flex-wrap p-2 text-center justify-content-around border border-secondary"
