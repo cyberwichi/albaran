@@ -1,5 +1,5 @@
 <template>
-    <tr>
+    <tr class="linea">
         <td>
             <p>{{ albaran.id }}</p>
         </td>
@@ -18,16 +18,16 @@
                 <img
                     class="mr-4"
                     src="/img/Delete.png"
-                    width="40px"
-                    height="40px"
+                    width="20px"
+                    height="20px"
                     v-on:click="borraralbaran()"
                 />
                 <img
                     v-scroll-to="'#albaran'"
                     class="mr-4"
                     src="/img/eye2.png"
-                    width="40px"
-                    height="40px"
+                    width="20px"
+                    height="20px"
                     alt
                     v-on:click="editaralbaran()"
                 />
@@ -36,8 +36,8 @@
                         v-scroll-to="'#albaran'"
                         class="mr-4"
                         src="/img/sendmail.png"
-                        width="40px"
-                        height="40px"
+                        width="20px"
+                        height="20px"
                     />
                 </a>
             </div>
@@ -83,4 +83,8 @@ export default {
     filters: {}
 };
 </script>
-<style scoped></style>
+<style scoped>
+.linea td{
+    padding: 1px;
+}
+</style>

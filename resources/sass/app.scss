@@ -88,7 +88,17 @@ button {
 }
 .page-link {
     height: 40px !important;
+    width:50px !important;
     background-color: #a39df5 !important;
     color: #000000 !important;
+    border-radius: 50%;
 
+}
+.page-item:last-child .page-link {
+    border-top-right-radius: 50%!important;
+    border-bottom-right-radius: 0.25rem;
+}
+.page-item:first-child .page-link {
+    border-top-left-radius: 50%!important;
+    border-bottom-left-radius: 0.25rem;
 }

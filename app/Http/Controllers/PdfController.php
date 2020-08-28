@@ -33,19 +33,27 @@ class PdfController extends Controller
     public function enviar($id)
     {
         $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
-        $aviso = Aviso::find($albaran[0]->aviso_id);
-        $empleado = Empleado::find($aviso->empleado_id);
-        $cliente = tbContacto::find($aviso->contacto_id);
+        if ($albaran[0]->aviso_id) {
+            $aviso = Aviso::find($albaran[0]->aviso_id);
+            $empleado = Empleado::find($aviso->empleado_id);
+            $cliente = tbContacto::find($aviso->contacto_id);
+        } else {
+            $empleado='';
+            
+            $cliente = '';
+        }
         $config = Configuracion::first();
-
-
         if ($empleado) {
             $correo[3] = $empleado->email;
         };
         $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
         $mail_userpassword = $config->password; //Tu contraseña de gmail
-
-        $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
+        if ($cliente){
+            $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
+        } else{
+            $mail_addAddress=$config->correo_admin;
+        }
+        
         $template = $config->asunto . ' 
              <br>
              <p> Parte numero <strong> ' . $id . ' </strong> </p>
@@ -71,7 +79,7 @@ class PdfController extends Controller
             $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
             $mail->addCC($config->correo_admin);
             $mail->addCC($config->correo_tecnicos);
-            if ($empleado->email <> '') {
+            if ($empleado) {
                 $mail->addCC($empleado->email);
             }
             $mail->addAttachment('albaranes/parte' . $id . '.pdf');         // Add attachments

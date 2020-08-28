@@ -1,5 +1,5 @@
 <template>
-    <tr>
+    <tr class="linea">
         <td class="text-center">
             <p>{{ aviso.id }}</p>
             <input type="hidden" name="_token" :value="csrf" />
@@ -9,7 +9,7 @@
         </td>
         <td class="text-center">
             <p v-if="!flageditar">{{ nombreEmpl }}</p>
-
+<!-- 
             <div v-else class="dropdown">
                 <button
                     class="btn btn-secondary dropdown-toggle"
@@ -38,7 +38,7 @@
                         {{ empleado.name }}
                     </button>
                 </div>
-            </div>
+            </div> -->
         </td>
         <td class="text-center">
             <p v-if="!flageditar">
@@ -50,21 +50,21 @@
             <p v-if="!flageditar">
                 {{ aviso.fechaPrevista | moment("DD/MM/YYYY, h:mm a") }}
             </p>
-            <input
+      <!--       <input
                 v-else
                 type="datetime-local"
                 class="form-control"
                 v-model="aviso.fechaPrevista"
-            />
+            /> -->
         </td>
         <td class="text-center">
             <p v-if="!flageditar">{{ aviso.comentario }}</p>
-            <input
+    <!--         <input
                 v-else
                 type="text"
                 class="form-control"
                 v-model="aviso.comentario"
-            />
+            /> -->
         </td>
 
         <td class="text-center">
@@ -79,16 +79,16 @@
                     v-if="!flageditar"
                     class="m-3"
                     src="/img/Delete.png"
-                    width="40px"
-                    height="40px"
+                    width="30px"
+                    height="30px"
                     alt
                     v-on:click="borrararticulo()"
                 />
                 <img
                     class="m-3"
                     src="/img/Edit.png"
-                    width="40px"
-                    height="40px"
+                    width="30px"
+                    height="30px"
                     alt
                     v-if="!flageditar"
                     v-scroll-to="'#empleado'"
@@ -97,42 +97,42 @@
                 <img
                     class="m-3"
                     src="/img/albaran.png"
-                    width="40px"
-                    height="40px"
+                    width="30px"
+                    height="30px"
                     v-scroll-to="'#albaran'"
                     v-on:click="iralbaran()"
                 />
                 <img
                     class="m-3"
                     src="/img/detalle.png"
-                    width="40px"
-                    height="40px"
+                    width="30px"
+                    height="30px"
                     alt
                     v-if="!flageditar"
                     @click="showModal = true"
                 />
-                <p v-if="flageditar">
+ <!--                <p v-if="flageditar">
                     <img
                         class="m-3"
                         src="/img/Save.png"
-                        width="40px"
-                        height="40px"
+                        width="20px"
+                        height="20px"
                         alt
                         v-on:click="guardararticulo()"
                     />
                     Guardar
-                </p>
-                <p v-if="flageditar">
+                </p> -->
+               <!--  <p v-if="flageditar">
                     <img
                         class="m-3"
                         src="/img/Delete.png"
-                        width="40px"
-                        height="40px"
+                        width="20px"
+                        height="20px"
                         alt
                         v-on:click="flageditar = false"
                     />
                     Cancelar
-                </p>
+                </p> -->
             </div>
         </td>
 
@@ -226,5 +226,16 @@ export default {
 }
 .noterminado {
     background-color: red;
+}
+td {
+    padding: 5px!important;
+}
+td p {
+    margin-bottom: 0;
+   
+}
+.linea td div img{
+
+    vertical-align: middle;
 }
 </style>

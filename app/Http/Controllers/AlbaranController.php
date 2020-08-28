@@ -45,70 +45,139 @@ class AlbaranController extends Controller
     }
     public function new(Request $request)
     {
-        if ($request->terminada == true) {
-            Aviso::find($request->aviso_id)->update(['terminada' => "1"]);
-        }
-        $albaran = new  Albaran();
-        $albaran->aviso_id = $request->aviso_id;
-        $albaran->observaciones = $request->observaciones;
-        $albaran->firma_cliente = $request->firma_cliente;
-        $albaran->firma_empleado = $request->firma_empleado;
-        $albaran->trabajos = $request->trabajos;
-        $albaran->save();
-        foreach ($request->listaarticulos as $key => $linea) {
-            $detalle = new DetalleAlbaran();
-            $detalle->albaran_id = $albaran->id;
-            $detalle->articulo_id = $linea['articulo_id'];
-            $detalle->articulo_nombre = $linea['articulo_nombre'];
-            $detalle->cantidad = $linea['cantidad'];
-            $detalle->precio = $linea['precio'];
-            $detalle->save();
-        }
-        foreach ($request->listamaquinas as $key => $linea) {
-            $maquina = new AlbaranMaquina();
-            $maquina->albaran_id = $albaran->id;
-            $maquina->maquina_id = $linea['id'];
-            $maquina->referencia = $linea['referencia'];
-            $maquina->save();
-        }
-        $id = $albaran->id;
-        $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
-        $aviso = Aviso::find($albaran[0]->aviso_id);
-        $cliente = tbContacto::find($aviso->contacto_id);
-        if (isset($aviso->empleado_id)) {
-            $empleado = Empleado::findOrFail($aviso->empleado_id);
-        } else {
-            $empleado = new Empleado();
-            $empleado->name = "Sin Asignar";
-        }
 
-        $maquina = [];
-        $referencias = [];
-        if ($albaran[0]->albaranmaquina !== []) {
-            foreach ($albaran[0]->albaranmaquina as $maq) {
-                $maquina[$maq->maquina_id] = Maquina::find($maq->maquina_id);
+        if ($request->aviso_id == 0) {
+
+            $albaran = new  Albaran();
+            $albaran->aviso_id = $request->aviso_id;
+            $albaran->observaciones = $request->observaciones;
+            $albaran->firma_cliente = $request->firma_cliente;
+            $albaran->firma_empleado = $request->firma_empleado;
+            $albaran->trabajos = $request->trabajos;
+            $albaran->save();
+            $empleado = Empleado::findOrFail($request->aviso['codigoEmpleado']);
+
+            foreach ($request->listaarticulos as $key => $linea) {
+                $detalle = new DetalleAlbaran();
+                $detalle->albaran_id = $albaran->id;
+                $detalle->articulo_id = $linea['articulo_id'];
+                $detalle->articulo_nombre = $linea['articulo_nombre'];
+                $detalle->cantidad = $linea['cantidad'];
+                $detalle->precio = $linea['precio'];
+                $detalle->save();
             }
-        }
-        if ($albaran[0]->detallealbaran !== []) {
-            foreach ($albaran[0]->detallealbaran as $det) {
-                $aux = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
-                $referencias[$det->articulo_id] = $aux;
+            foreach ($request->listamaquinas as $key => $linea) {
+                $maquina = new AlbaranMaquina();
+                $maquina->albaran_id = $albaran->id;
+                $maquina->maquina_id = $linea['id'];
+                $maquina->referencia = $linea['referencia'];
+                $maquina->save();
             }
-        }
+            $id = $albaran->id;
+            $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
 
-        if ($aviso->valorar) {
-            $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
+
+            $maquina = [];
+            $referencias = [];
+            $cliente = $request->aviso['tb_contacto'];
+            logger($cliente);
+            if ($albaran[0]->albaranmaquina !== []) {
+                foreach ($albaran[0]->albaranmaquina as $maq) {
+                    $maquina[$maq->maquina_id] = Maquina::find($maq->maquina_id);
+                }
+            }
+            if ($albaran[0]->detallealbaran !== []) {
+                foreach ($albaran[0]->detallealbaran as $det) {
+                    $aux = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
+                    $referencias[$det->articulo_id] = $aux;
+                }
+            }
+
+            if ($request->aviso['valorar']) {
+                $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
+            } else {
+                $pdf = PDF::loadView('pdf/pdfnovalora', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
+            }
+
+            $pdf->save('albaranes/parte' . $id . '.pdf');
         } else {
-            $pdf = PDF::loadView('pdf/pdfnovalora', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
-        }
+            if ($request->terminada == true) {
+                Aviso::find($request->aviso_id)->update(['terminada' => "1"]);
+            }
+            $albaran = new  Albaran();
+            $albaran->aviso_id = $request->aviso_id;
+            $albaran->observaciones = $request->observaciones;
+            $albaran->firma_cliente = $request->firma_cliente;
+            $albaran->firma_empleado = $request->firma_empleado;
+            $albaran->trabajos = $request->trabajos;
+            $albaran->save();
+            foreach ($request->listaarticulos as $key => $linea) {
+                $detalle = new DetalleAlbaran();
+                $detalle->albaran_id = $albaran->id;
+                $detalle->articulo_id = $linea['articulo_id'];
+                $detalle->articulo_nombre = $linea['articulo_nombre'];
+                $detalle->cantidad = $linea['cantidad'];
+                $detalle->precio = $linea['precio'];
+                $detalle->save();
+            }
+            foreach ($request->listamaquinas as $key => $linea) {
+                $maquina = new AlbaranMaquina();
+                $maquina->albaran_id = $albaran->id;
+                $maquina->maquina_id = $linea['id'];
+                $maquina->referencia = $linea['referencia'];
+                $maquina->save();
+            }
+            $id = $albaran->id;
 
-        $pdf->save('albaranes/parte' . $id . '.pdf');
+            if ($request->aviso_id !== 0) {
+                $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
+                $aviso = Aviso::find($albaran[0]->aviso_id);
+                $cliente = tbContacto::find($aviso->contacto_id);
+            }
+
+            if (isset($aviso->empleado_id)) {
+                $empleado = Empleado::findOrFail($aviso->empleado_id);
+            } else {
+                $empleado = new Empleado();
+                $empleado->name = "Sin Asignar";
+            }
+
+            $maquina = [];
+            $referencias = [];
+            if ($albaran[0]->albaranmaquina !== []) {
+                foreach ($albaran[0]->albaranmaquina as $maq) {
+                    $maquina[$maq->maquina_id] = Maquina::find($maq->maquina_id);
+                }
+            }
+            if ($albaran[0]->detallealbaran !== []) {
+                foreach ($albaran[0]->detallealbaran as $det) {
+                    $aux = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
+                    $referencias[$det->articulo_id] = $aux;
+                }
+            }
+
+            if ($aviso->valorar) {
+
+
+                $pdf = PDF::loadView('pdf/pdf', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
+            } else {
+
+                $pdf = PDF::loadView('pdf/pdfnovalora', compact('albaran', 'cliente', 'empleado', 'maquina', 'referencias'));
+            }
+
+            $pdf->save('albaranes/parte' . $id . '.pdf');
+        }
 
         /*Configuracion de variables para enviar el correo*/
         $config = Configuracion::first();
         $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
         $mail_userpassword = $config->password; //Tu contraseña de gmail+
-        $mail_addAddress = explode(";", $cliente->Email); //correo electronico que recibira el mensaje
+        if ( $cliente['Email']){
+            $mail_addAddress = explode(";", $cliente['Email']); //correo electronico que recibira el mensaje
+        } else {
+            $mail_addAddress[] = $config->correo_admin;
+        }
+       
         $template = $config->asunto . ' 
              <br>
              <p> Parte numero <strong> ' . $id . ' </strong> </p>

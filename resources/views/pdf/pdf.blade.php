@@ -148,8 +148,10 @@
         
                             <div>
                                 Fecha Aviso:
+                                @if ($albaran[0]->aviso)
                                 {{$albaran[0]->aviso->created_at }}
-                            </div>
+                                @endif
+                            </div> 
                             <div>
                                 Fecha del Parte:
                                 {{$albaran[0]->created_at}}
@@ -161,12 +163,12 @@
                     </td>
                     <td class="itemcabecera">
                         <!- Cliente-!>
-                            <div>
-                                <div>Cliente: {{ $cliente->Nombre }}</div>
-                                <div>Direccion: {{ $cliente->Direccion }}</div>
-                                <div>Telefono: {{ $cliente->Telefono }}</div>
-                                <div>Nif: {{ $cliente->Nif }}</div>
-                                <div>Email: {{ $cliente->Email }}</div>
+                            <div>                            
+                                <div>Cliente: {{ $cliente['Nombre'] }}</div>
+                                <div>Direccion: {{ $cliente['Direccion'] }}</div>
+                                <div>Telefono: {{ $cliente['Telefono'] }}</div>
+                                <div>Nif: {{ $cliente['Nif'] }}</div>
+                                <div>Email: {{ $cliente['Email'] }}</div> 
                             </div>
         
                     </td>
@@ -251,10 +253,12 @@
                 <tr>
                     <td class="finalizado firmas">
                         <div>Trabajo Finalizado :
+                        @if($albaran[0]->aviso)
                             @if ($albaran[0]->aviso->terminada)
                             <strong>Si</strong>
                             @else
                             <strong>No</strong>
+                            @endif
                             @endif
                         </div>
                     </td>
