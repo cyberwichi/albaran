@@ -117,7 +117,12 @@ class AlbaranController extends Controller
                 $detalle->articulo_id = $linea['articulo_id'];
                 $detalle->articulo_nombre = $linea['articulo_nombre'];
                 $detalle->cantidad = $linea['cantidad'];
-                $detalle->precio = $linea['precio'];
+                if ($linea['precio']){
+                    $detalle->precio = $linea['precio'];
+                } else{
+                    $detalle->precio = 0;
+                }
+               
                 $detalle->save();
             }
             foreach ($request->listamaquinas as $key => $linea) {

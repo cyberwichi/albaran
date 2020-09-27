@@ -11,7 +11,7 @@
                     <label><input type="checkbox" id="cbox1" value="first_checkbox" v-model="terminada" />
                 Aviso Terminado</label
             >
-                </h5>
+                </h5> 
 
                 <label for="myChoice">¿Valorar los partes creados por este aviso?</label>
                     SI

@@ -40,8 +40,54 @@ class AvisoController extends Controller
             $aviso->contacto_id = $request->clientid;
             $aviso->fechaPrevista = $request->fechaPrevista;
             $aviso->comentario = $request->observaciones;
+            $aviso->franquiciado=$request->franquiciado;
             $aviso->valorar = $request->valorar;
+            
+            $aviso->empleado_id = $request->empleado;
             $aviso->save();
+            if ($request->empleado) {
+                $config = Configuracion::first();               
+                $empleado = Empleado::find($request->empleado);
+                $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
+                $mail_userpassword = $config->password; //Tu contraseña de gmail
+                $mail_addAddress = $empleado->email; //correo electronico que recibira el mensaje
+                $template = '
+                    <p> Nuevo aviso asignado</p>
+                    <br>
+                    <p> Aviso  numero <strong> ' . $aviso->id . ' </strong> </p>
+                    <br>
+                    <p> Fecha prevista realizacion  <strong> ' .  $aviso->fechaPrevista . ' </strong> </p>
+                    <br> ';
+                /*Inicio captura de datos enviados por $_POST para enviar el correo */
+                $mail_setFromEmail = $mail_username;
+                $mail_setFromName = $mail_username;
+                $mail_subject = 'Nuevo aviso recibido numero' . $aviso->id;
+                try {
+                    $mail = new PHPMailer(true);
+                    $mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
+                    $mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
+                    $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+                    $mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+                    $mail->Password = $mail_userpassword;         // Tu contraseña de gmail
+                    $mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
+                    $mail->Port = 25;                          // Puerto TCP  para conectarse 
+                    $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
+                    $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
+                    $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado         // Add attachments
+                    $message = $template;
+                    $mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
+
+                    $mail->Subject = $mail_subject;
+                    $mail->msgHTML($message);
+                    if (!$mail->send()) {
+                        echo '<p style="color:red">No se pudo enviar el mensaje..';
+                        echo 'Error de correo: ' . $mail->ErrorInfo;
+                        echo "</p>";
+                    }
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+                };
+            }
 
             foreach ($request->listaarticulos as $key => $linea) {
                 $detalle = new DetalleAviso();
