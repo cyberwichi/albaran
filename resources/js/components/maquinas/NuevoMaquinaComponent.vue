@@ -49,7 +49,7 @@ export default {
             document.getElementById("app").style.cursor = "progress";
             this.maquina.nombre=this.nombre;
             this.maquina.comentarios=this.comentarios;
-            console.log(this.maquina);
+            
             axios.post("/api/maquinas", this.maquina).then(response => {              
                 document.getElementById("app").style.cursor = "auto";
                

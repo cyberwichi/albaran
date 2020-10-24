@@ -323,9 +323,6 @@ export default {
                                 
                             }
                         }
-                        
-                       
-                        console.log(this.events);
                         this.event = true;
                     }
                 });

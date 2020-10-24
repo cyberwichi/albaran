@@ -9,6 +9,7 @@ class Aviso extends Model
 {
     protected $fillable = ['contacto_id', 'empleado_id', 'fechaPrevista', 'comentario', 'terminada'];
     protected $connection = 'mysql';
+    protected $with=['tbContacto'];
     
     public function detalleavisos()
     {

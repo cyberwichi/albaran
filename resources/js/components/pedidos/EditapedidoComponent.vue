@@ -398,7 +398,6 @@ export default {
                 terminada: this.terminada,
                 valorar: this.valorar
             };
-            console.log(data);
             document.getElementById("app").style.cursor = "progress";
             axios.post("/api/aviso", data).then(response => {
                 this.idaviso = response.data;

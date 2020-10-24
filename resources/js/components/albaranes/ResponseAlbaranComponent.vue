@@ -4,6 +4,9 @@
             <p>{{ albaran.id }}</p>
         </td>
         <td>
+            <p>{{ albaran.aviso.tb_contacto.Nombre }}</p>
+        </td>
+        <td>
             <p>{{ albaran.aviso_id }}</p>
         </td>
         <td class>
@@ -69,7 +72,7 @@ export default {
             (this.flageditar = false), this.$emit("guardar", this.albaran);
         },
         enviar() {
-          console.log( this.albaran.id);
+       
             axios.get("/api/enviar/" + this.albaran.id).then(
                 response=>{
                    this.$emit("mensaje", "Envio Correcto"); 

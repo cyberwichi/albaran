@@ -167,13 +167,7 @@ export default {
     mounted() {},
     methods: {
         veralbaran(id){
-            /* axios.get("api/albaran/"+id).then(response=>{
-                console.log(this.albaran);
-                this.albaran=response.data[0];
-                  console.log(this.albaran);
-                this.albaranver=true;
-
-            }) */
+           
             window.open('/albaranes/parte'+id+'.pdf', '_blank','width=800,height=600');
         },
         buscarreferencia() {

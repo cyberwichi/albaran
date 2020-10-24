@@ -126,15 +126,16 @@ export default {
             onBlur: true,
             onFocus: false,
             upcForm: "0.00",
-            cantidadForm: "1",
+            cantidadForm: '1.5',
             linea: {
                 articuloId: "",
                 articuloNombre: "",
-                articuloCantidad: "",
+                articuloCantidad: '1.5',
                 articuloPrecio: ""
             }
         };
     },
+   
     mounted() {
         var vm = this;
         document.addEventListener("click", function(e) {
@@ -187,7 +188,7 @@ export default {
                     .get("/api/referencia/" + this.querySearch2)
                     .then(response => {
                         response.data.forEach(articulo => {
-                            console.log(articulo);
+                            
                             this.articulos2.push(articulo);
                         });
 
@@ -227,7 +228,7 @@ export default {
             };
             this.articuloIndex = "";
             this.querySearch = "";
-            this.cantidadForm = "1";
+            this.cantidadForm = '1.5';
             this.upcForm = "";
             this.querySearch2 = " ";
             this.articulos = [];

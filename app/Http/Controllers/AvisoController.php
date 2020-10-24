@@ -11,6 +11,7 @@ use App\tbStockArt;
 use Exception;
 use Illuminate\Http\Request;
 use PHPMailer\PHPMailer\PHPMailer;
+use App\tbContacto;
 
 class AvisoController extends Controller
 {
@@ -45,6 +46,7 @@ class AvisoController extends Controller
             
             $aviso->empleado_id = $request->empleado;
             $aviso->save();
+            $valortbcontacto = tbContacto::where('id', $aviso->contacto_id)->get();
             if ($request->empleado) {
                 $config = Configuracion::first();               
                 $empleado = Empleado::find($request->empleado);
@@ -52,8 +54,10 @@ class AvisoController extends Controller
                 $mail_userpassword = $config->password; //Tu contraseña de gmail
                 $mail_addAddress = $empleado->email; //correo electronico que recibira el mensaje
                 $template = '
-                    <p> Nuevo aviso asignado</p>
-                    <br>
+                    <p> Nuevo aviso generado</p>
+                    <p> Cliente : <strong> ' . $valortbcontacto[0]->Nombre . ' </strong> </p>
+                    <p> Trabajo a realizar : <strong> ' . $aviso->comentario . ' </strong> </p>
+                    <br> 
                     <p> Aviso  numero <strong> ' . $aviso->id . ' </strong> </p>
                     <br>
                     <p> Fecha prevista realizacion  <strong> ' .  $aviso->fechaPrevista . ' </strong> </p>
@@ -103,12 +107,15 @@ class AvisoController extends Controller
             $mail_userpassword = $config->password; //Tu contraseña de gmail
             $mail_addAddress = $config->correo_tecnicos; //correo electronico que recibira el mensaje
             $template = '
-            <p> Nuevo aviso generado</p>
-            <br>
-            <p> Aviso  numero <strong> ' . $aviso->id . ' </strong> </p>
-            <br>
-            <p> Fecha prevista realizacion  <strong> ' .  $aviso->fechaPrevista . ' </strong> </p>
-            <br> ';
+                    <p> Nuevo aviso asignado</p>
+                    <br>
+                    <p> Cliente : <strong> ' . $valortbcontacto[0]->Nombre . ' </strong> </p>
+                    <p> Trabajo a realizar : <strong> ' . $aviso->comentario . ' </strong> </p>
+                    <br> 
+                    <p> Aviso  numero <strong> ' . $aviso->id . ' </strong> </p>
+                    <br>
+                    <p> Fecha prevista realizacion  <strong> ' .  $aviso->fechaPrevista . ' </strong> </p>
+                    <br> ';
             /*Inicio captura de datos enviados por $_POST para enviar el correo */
             $mail_setFromEmail = $mail_username;
             $mail_setFromName = $mail_username;
@@ -145,6 +152,7 @@ class AvisoController extends Controller
             $aviso->comentario = $request->observaciones;
             $aviso->terminada=$request->terminada;
             $aviso->valorar = $request->valorar;
+            $valortbcontacto = tbContacto::where('id', $aviso->contacto_id)->get();          
             if ($aviso->empleado_id !== $request->empleado) {
                 $config = Configuracion::first();               
                 $empleado = Empleado::find($request->empleado);
@@ -153,6 +161,8 @@ class AvisoController extends Controller
                 $mail_addAddress = $empleado->email; //correo electronico que recibira el mensaje
                 $template = '
                     <p> Nuevo aviso asignado</p>
+                    <br>
+                    <p> Cliente : <strong> ' . $valortbcontacto[0]->Nombre . ' </strong> </p>
                     <br>
                     <p> Aviso  numero <strong> ' . $aviso->id . ' </strong> </p>
                     <br>

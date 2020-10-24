@@ -166,7 +166,6 @@ export default {
             axios.get("/api/detalles/" + id).then(response => {
                 this.detalles = response.data;
                 this.calcularTotal();
-                console.log(this.detalles);
             });
         },
 

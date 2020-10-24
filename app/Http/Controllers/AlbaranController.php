@@ -26,7 +26,7 @@ class AlbaranController extends Controller
 {
     public function index()
     {
-        $albaranes = Albaran::orderBy('Id', 'desc')->with('detallealbaran')->with('albaranmaquina')->get();
+        $albaranes = Albaran::orderBy('Id', 'desc')->with('detallealbaran')->with("aviso")->with('albaranmaquina')->get();
         return json_encode($albaranes);
     }
     public function porcliente($id)

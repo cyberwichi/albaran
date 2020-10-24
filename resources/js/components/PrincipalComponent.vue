@@ -263,9 +263,9 @@ export default {
                 correoAdmin: this.correoAdmin,
                 correoTecnicos: this.correoTecnicos
             };
-            axios.put("/api/config", reg).then(response => {
-                console.log(response.data);
-            });
+           /*  axios.put("/api/config", reg).then(response => {
+             
+            }); */
         }
     }
 };

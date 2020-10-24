@@ -168,7 +168,7 @@
                                 <div>Direccion: {{ $cliente['Direccion'] }}</div>
                                 <div>Telefono: {{ $cliente['Telefono'] }}</div>
                                 <div>Nif: {{ $cliente['Nif'] }}</div>
-                                <div>Email: {{ $cliente['Email'] }}</div> 
+                               
                             </div>
         
                     </td>
@@ -223,7 +223,11 @@
                             @endif
                             <td colspan="5" class="firmas center articulo">{{ substr($linea2->articulo_nombre , 0, 40) }}</td>
                             <td class="firmas right-2">{{ $linea2->cantidad }}</td>
-                            <td class="firmas right-2">{{ $linea2->precio }}</td>
+                            	@if ($linea2->precio <> 0)
+                            		<td class="firmas right-2">{{ $linea2->precio }}</td>
+                            	@else
+                            		<td class="firmas right-2">  </td>	
+                            	@endif	
                             <?php $subtotal += $linea2->cantidad * $linea2->precio ?>
                         </tr>
                         @endforeach
@@ -234,17 +238,33 @@
         </div>
         <div class="foot">
             <table class="tablas1">
-                <tr class="p-2">
-                    <td colspan="2" class="firmas right-3 total">
-                        <strong>Subtotal : {{ $subtotal }}€</strong>
-                    </td>
-                    <td colspan="3" class="firmas right-3 total">
-                        <strong>21% Iva : {{ round(($subtotal * 0.21), 2) }}€</strong>
-                    </td>
-                    <td colspan="3" class="firmas right-3 total">
-                        <strong>Total : {{ round(($subtotal * 0.21) + $subtotal, 2) }}€</strong>
-                    </td>
-                </tr>
+            	@if ($subtotal <> 0)
+	                <tr class="p-2">
+	                    <td colspan="2" class="firmas right-3 total">
+	                        <strong>Subtotal : {{ $subtotal }}€</strong>
+	                    </td>
+	                    <td colspan="3" class="firmas right-3 total">
+	                        <strong>21% Iva : {{ round(($subtotal * 0.21), 2) }}€</strong>
+	                    </td>
+	                    <td colspan="3" class="firmas right-3 total">
+	                        <strong>Total : {{ round(($subtotal * 0.21) + $subtotal, 2) }}€</strong>
+	                    </td>
+	                </tr>
+                @else
+                	<tr class="p-2">
+	                    <td colspan="2" class="firmas right-3 total">
+	                        <strong>Subtotal :      </strong>
+	                    </td>
+	                    <td colspan="3" class="firmas right-3 total">
+	                        <strong>21% Iva :      </strong>
+	                    </td>
+	                    <td colspan="3" class="firmas right-3 total">
+	                        <strong>Total :      </strong>
+	                    </td>
+                	</tr>
+            	@endif
+            </table>
+
             </table>
         
             <!-- observaciones -->

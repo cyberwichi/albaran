@@ -158,7 +158,6 @@ export default {
                 .get("/api/referencias")
                 .then(response => {
                     this.contactos = response.data;
-                    console.log(this.contactos);
                     document.getElementById("app").style.cursor = "auto";
                 })
                 .catch(e => {

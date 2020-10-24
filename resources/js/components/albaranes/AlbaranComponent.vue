@@ -93,6 +93,7 @@
                     <table class="table">
                         <thead class="card-header">
                             <td>Numero de Parte</td>
+                            <td>Cliente</td>
                             <td>Numero Aviso</td>
                             <td>Fecha</td>
                             <td>Observaciones</td>

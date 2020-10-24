@@ -89,7 +89,7 @@ export default {
                 });
         },
         actualizarempleado(empleado) {
-            console.log("empleado");
+            
 
             document.getElementById("app").style.cursor = "progress";
             if (empleado.email_verified_at) {
@@ -97,7 +97,7 @@ export default {
             } else {
                 empleado.email_verified_at = null;
             }
-            console.log(empleado);
+         
             axios
                 .post("/api/administradores/" + empleado.id, empleado)
                 .then(response => {
