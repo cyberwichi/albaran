@@ -45,7 +45,7 @@ class AlbaranController extends Controller
     }
     public function new(Request $request)
     {
-
+        logger($request);
         if ($request->aviso_id == 0) {
 
             $albaran = new  Albaran();
@@ -74,9 +74,9 @@ class AlbaranController extends Controller
                 $maquina->save();
             }
             $id = $albaran->id;
-            $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
+            $albaran = Albaran::where('id', $id)->with('detallealbaran')->with('albaranmaquina')->get();
 
-
+ 
             $maquina = [];
             $referencias = [];
             $cliente = $request->aviso['tb_contacto'];
@@ -122,6 +122,7 @@ class AlbaranController extends Controller
                 } else{
                     $detalle->precio = 0;
                 }
+                logger($detalle);
                
                 $detalle->save();
             }

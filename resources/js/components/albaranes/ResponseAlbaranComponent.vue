@@ -4,7 +4,9 @@
             <p>{{ albaran.id }}</p>
         </td>
         <td>
-            <p>{{ albaran.aviso.tb_contacto.Nombre }}</p>
+            <p v-if="albaran.aviso">{{ albaran.aviso.tb_contacto.Nombre }}</p>
+            <p v-else>CLIENTE NO REGISTRADO VER PARTE</p>
+
         </td>
         <td>
             <p>{{ albaran.aviso_id }}</p>
