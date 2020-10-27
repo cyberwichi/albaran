@@ -186,12 +186,13 @@ export default {
             if (this.aviso.empleado_id == null) {
                 vm.nombreEmpl = "Sin Asignar";
             } else {
-                axios
+                /* axios
                     .get("/api/empleados/" + this.aviso.empleado_id)
                     .then(response => {
                         vm.nombreEmpl = response.data.name;
                     })
-                    .catch(e => console.log(e));
+                    .catch(e => console.log(e)); */
+                    this.nombreEmpl = this.aviso.empleado.name;
             }
         },
 
