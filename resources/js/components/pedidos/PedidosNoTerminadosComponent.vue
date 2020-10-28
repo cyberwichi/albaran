@@ -101,7 +101,7 @@
                         <tbody class="card-footer sombra">
                             <responseaviso-component
                                 v-for="(aviso, index) in articulosMostrados"
-                                :key="index"
+                                :key="aviso.id"
                                 :aviso="aviso"
                                 :empleados="empleados"
                                 @delete="borrararticulo(aviso)"
@@ -212,7 +212,7 @@ export default {
             for (let index = 1; index <= numberOfPages; index++) {
                 this.pages.push(index);
             }
-        },
+        }, 
         paginate(articulos) {
             let page = this.page;
             let perPage = this.perPage;

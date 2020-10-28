@@ -289,7 +289,7 @@ export default {
                     console.log(e);
                     document.getElementById("app").style.cursor = "auto";
                 });
-        },
+        }, 
         setPages() {
             let numberOfPages = Math.ceil(this.avisos.length / this.perPage);
             for (let index = 1; index <= numberOfPages; index++) {

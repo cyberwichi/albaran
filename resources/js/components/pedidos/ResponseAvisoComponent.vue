@@ -183,7 +183,7 @@ export default {
         nombreEmpleado() {
             this.nombreEmpl = "";
             var vm = this;
-            if (this.aviso.empleado_id == null) {
+            if (!this.aviso.empleado_id) {
                 vm.nombreEmpl = "Sin Asignar";
             } else {
                 /* axios
@@ -192,19 +192,11 @@ export default {
                         vm.nombreEmpl = response.data.name;
                     })
                     .catch(e => console.log(e)); */
+                    console.log(this.aviso.empleado.name);
                     this.nombreEmpl = this.aviso.empleado.name;
             }
         },
 
-        asignarEmpleado(empleado) {
-            if (empleado !== null) {
-                this.nombreEmpl = empleado.name;
-                this.aviso.empleado_id = empleado.id;
-            } else {
-                this.aviso.empleado_id = null;
-                this.nombreEmpl = null;
-            }
-        },
         iralbaran() {
             this.$emit("albaran");
         }
