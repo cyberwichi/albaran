@@ -95,7 +95,7 @@
       <div class="d-flex">
         <div class="text-center border m-1 w-50">
           <form action="" class="inline">
-            <div class="form-group">
+<!--             <div class="form-group">
               <h5>Direccion y Password de correo saliente</h5>
               <label for="correo">Direccion de correo</label>
               <input type="text" name="correo" v-model="correo" />
@@ -113,7 +113,7 @@
                   </a></small
                 >
               </div>
-            </div>
+            </div> -->
             <div class="form-group">
               <label for="correoadmin"
                 >Direccion de correo de administracion</label
