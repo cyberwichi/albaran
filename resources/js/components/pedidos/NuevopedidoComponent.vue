@@ -33,10 +33,8 @@
             v-model="valorar"
             required
           />
-<br>
-           <label for="myChoice2"
-            >¿Cliente franquiciado?</label
-          >
+          <br />
+          <label for="myChoice2">¿Cliente franquiciado?</label>
           SI
           <input
             id="default_yes"
@@ -45,7 +43,6 @@
             type="radio"
             v-model="franquiciado"
             required
-            
           />
           NO
           <input
@@ -57,6 +54,10 @@
             required
             selected
           />
+          <div>
+            <label for="correo">Correo Alternativo del Cliente</label>
+            <input type="email" name="correo" v-model="correo" id="" />
+          </div>
 
           <div>
             <h4 v-if="!flageditar" v-on:click="flageditar = !flageditar">
@@ -235,7 +236,8 @@ export default {
         empleado_id: "",
         name: "Sin Asignar",
       },
-      franquiciado:0
+      franquiciado: 0,
+      correo: "",
     };
   },
   created() {
@@ -304,7 +306,8 @@ export default {
         observaciones: this.observaciones,
         valorar: this.valorar,
         empleado: this.empleado.empleado_id,
-        franquiciado:this.franquiciado
+        franquiciado: this.franquiciado,
+        correo: this.correo
       };
 
       document.getElementById("app").style.cursor = "progress";

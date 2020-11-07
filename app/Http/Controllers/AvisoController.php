@@ -28,7 +28,9 @@ class AvisoController extends Controller
         $aviso->fechaPrevista = $request->fechaPrevista;
         $aviso->comentario = $request->comentario;
         $aviso->empleado_id = $request->empleado_id;
-        $aviso->valorar=$request->valorar;
+        $aviso->valorar = $request->valorar;
+        $aviso->franquiciado = $request->franquiciado;
+        $aviso->correo = $request->correo;
         $aviso->update();
         return ($aviso);
     }
@@ -36,19 +38,18 @@ class AvisoController extends Controller
     public function new(Request $request)
     {
         if ($request->id == 0) {
-
             $aviso = new Aviso();
             $aviso->contacto_id = $request->clientid;
             $aviso->fechaPrevista = $request->fechaPrevista;
             $aviso->comentario = $request->observaciones;
-            $aviso->franquiciado=$request->franquiciado;
+            $aviso->franquiciado = $request->franquiciado;
             $aviso->valorar = $request->valorar;
-            
+            $aviso->correo = $request->correo;
             $aviso->empleado_id = $request->empleado;
             $aviso->save();
             $valortbcontacto = tbContacto::where('id', $aviso->contacto_id)->get();
             if ($request->empleado) {
-                $config = Configuracion::first();               
+                $config = Configuracion::first();
                 $empleado = Empleado::find($request->empleado);
                 $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
                 $mail_userpassword = $config->password; //Tu contraseña de gmail
@@ -150,11 +151,14 @@ class AvisoController extends Controller
             $aviso->contacto_id = $request->clientid;
             $aviso->fechaPrevista = $request->fechaPrevista;
             $aviso->comentario = $request->observaciones;
-            $aviso->terminada=$request->terminada;
+            $aviso->terminada = $request->terminada;
             $aviso->valorar = $request->valorar;
-            $valortbcontacto = tbContacto::where('id', $aviso->contacto_id)->get();          
+
+            $aviso->franquiciado = $request->franquiciado;
+            $aviso->correo = $request->correo;
+            $valortbcontacto = tbContacto::where('id', $aviso->contacto_id)->get();
             if ($aviso->empleado_id !== $request->empleado) {
-                $config = Configuracion::first();               
+                $config = Configuracion::first();
                 $empleado = Empleado::find($request->empleado);
                 $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
                 $mail_userpassword = $config->password; //Tu contraseña de gmail
@@ -213,7 +217,7 @@ class AvisoController extends Controller
                     $detalle->save();
                 };
             }
-        }        
+        }
         return $aviso->id;
     }
     public function  index()
@@ -228,7 +232,7 @@ class AvisoController extends Controller
     }
     public function porcliente($id)
     {
-        $aviso = Aviso::where('contacto_id', $id)->orderBy('Id', 'desc')->with('tbContacto')->get();
+        $aviso = Aviso::where('contacto_id', $id)->orderBy('Id', 'desc')->with('tbContacto')->with('empleado')->get();
         return json_encode($aviso);
     }
     public function finalizado($id)

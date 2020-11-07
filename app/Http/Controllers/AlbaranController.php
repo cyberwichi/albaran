@@ -139,6 +139,9 @@ class AlbaranController extends Controller
                 $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
                 $aviso = Aviso::find($albaran[0]->aviso_id);
                 $cliente = tbContacto::find($aviso->contacto_id);
+                if ($aviso->correo){
+                    $cliente->Email= $aviso->correo;
+                }
             }
 
             if (isset($aviso->empleado_id)) {

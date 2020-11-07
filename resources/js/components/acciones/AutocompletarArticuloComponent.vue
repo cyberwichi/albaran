@@ -126,11 +126,11 @@ export default {
             onBlur: true,
             onFocus: false,
             upcForm: "0.00",
-            cantidadForm: '1.5',
+            cantidadForm: '1',
             linea: {
                 articuloId: "",
                 articuloNombre: "",
-                articuloCantidad: '1.5',
+                articuloCantidad: '1',
                 articuloPrecio: ""
             }
         };
