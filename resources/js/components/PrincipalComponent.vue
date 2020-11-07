@@ -131,7 +131,7 @@
               />
             </div>
             <button
-              v-on:click="guardaCorreo"
+              v-on:click="guardaCorreo()"
               class="btn btn-primary"
               type="button"
             >
@@ -260,15 +260,17 @@ export default {
       }
     },
     guardaCorreo() {
+      console.log('reg');
       var reg = {
         correo: this.correo,
         password: this.password,
         correoAdmin: this.correoAdmin,
         correoTecnicos: this.correoTecnicos,
       };
-      /*  axios.put("/api/config", reg).then(response => {
-             
-            }); */
+      
+      axios.post("/api/config", reg).then(response => {
+             console.log(response.data)
+            }); 
     },
   },
 };
