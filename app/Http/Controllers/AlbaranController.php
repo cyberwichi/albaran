@@ -76,7 +76,7 @@ class AlbaranController extends Controller
             $id = $albaran->id;
             $albaran = Albaran::where('id', $id)->with('detallealbaran')->with('albaranmaquina')->get();
 
- 
+
             $maquina = [];
             $referencias = [];
             $cliente = $request->aviso['tb_contacto'];
@@ -117,13 +117,13 @@ class AlbaranController extends Controller
                 $detalle->articulo_id = $linea['articulo_id'];
                 $detalle->articulo_nombre = $linea['articulo_nombre'];
                 $detalle->cantidad = $linea['cantidad'];
-                if ($linea['precio']){
+                if ($linea['precio']) {
                     $detalle->precio = $linea['precio'];
-                } else{
+                } else {
                     $detalle->precio = 0;
                 }
                 logger($detalle);
-               
+
                 $detalle->save();
             }
             foreach ($request->listamaquinas as $key => $linea) {
@@ -139,6 +139,9 @@ class AlbaranController extends Controller
                 $albaran = Albaran::where('id', $id)->with('aviso')->with('detallealbaran')->with('albaranmaquina')->get();
                 $aviso = Aviso::find($albaran[0]->aviso_id);
                 $cliente = tbContacto::find($aviso->contacto_id);
+                if ($aviso->correo) {
+                    $cliente->Email = $aviso->correo;
+                }
             }
 
             if (isset($aviso->empleado_id)) {
@@ -176,14 +179,27 @@ class AlbaranController extends Controller
 
         /*Configuracion de variables para enviar el correo*/
         $config = Configuracion::first();
-        $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
-        $mail_userpassword = $config->password; //Tu contraseña de gmail+
-        if ( $cliente['Email']){
+        $mail_username = env('MAIL_DIRECCION'); //Correo electronico saliente ejemplo: tucorreo@gmail.com
+        $mail_userpassword = env('MAIL_PASSWORD'); //Tu contraseña de gmail
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
+        $mail->Host = env('MAIL_HOST');             // Especificar el servidor de correo a utilizar 
+        $mail->Port = env('MAIL_PORT');
+        $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+        $mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+        $mail->Password = $mail_userpassword;         // Tu contraseña de gmail
+        $mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada          
+        $mail_setFromEmail = $mail_username;
+        $mail_setFromName = $mail_username;
+        $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
+        $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
+
+        if ($cliente['Email']) {
             $mail_addAddress = explode(";", $cliente['Email']); //correo electronico que recibira el mensaje
         } else {
             $mail_addAddress[] = $config->correo_admin;
         }
-       
+
         $template = $config->asunto . ' 
              <br>
              <p> Parte numero <strong> ' . $id . ' </strong> </p>
@@ -191,21 +207,9 @@ class AlbaranController extends Controller
             <br> ' . $config->proteccion;
 
         /*Inicio captura de datos enviados por $_POST para enviar el correo */
-        $mail_setFromEmail = $mail_username;
-        $mail_setFromName = $mail_username;
-        $txt_message = $mail_username;
+
         $mail_subject = 'Corrreo de envio de parte de trabajo numero' . $id;
         try {
-            $mail = new PHPMailer(true);
-            $mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
-            $mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
-            $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-            $mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-            $mail->Password = $mail_userpassword;         // Tu contraseña de gmail
-            $mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
-            $mail->Port = 25;                          // Puerto TCP  para conectarse 
-            $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
-            $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
             foreach ($mail_addAddress as $iten) {
                 $mail->addAddress($iten);   // Agregar quien recibe el e-mail enviado
             }

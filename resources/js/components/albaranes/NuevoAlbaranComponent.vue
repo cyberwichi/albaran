@@ -46,7 +46,10 @@
         <div>Direccion: {{ cliente.Direccion }}</div>
         <div>Telefono: {{ cliente.Telefono }}</div>
         <div>Nif: {{ cliente.Nif }}</div>
-        <div>Email: {{ cliente.Email }}</div>
+        <div v-if="correo">
+          <strong>Correo alternativo: {{ correo }}</strong>
+        </div>
+        <div v-else>Email: {{ cliente.Email }}</div>
       </h5>
 
       <!-- maquinas -->
@@ -360,6 +363,7 @@ export default {
   data: function () {
     return {
       aviso: {},
+      correo: "",
       detalles: [],
       detallealbaran: [],
       cliente: {},
@@ -479,6 +483,7 @@ export default {
       this.maquinas = [];
       this.maquina = {};
       this.trabajos = "";
+      this.correo = "";
     },
     buscaaviso(numeroaviso) {
       this.aviso = "";
@@ -493,6 +498,7 @@ export default {
           this.buscaDetalles(numeroaviso);
           this.buscaCliente(this.aviso[0].contacto_id);
           this.comenta = this.aviso[0].comentario;
+          this.correo = this.aviso[0].correo;
           document.getElementById("app").style.cursor = "auto";
         })
         .catch((e) => {
@@ -534,8 +540,8 @@ export default {
       this.subtotal = 0;
       this.total = 0;
       this.detallealbaran.forEach((element) => {
-        element.precio = element.precio.replace(",", ".");
-        element.cantidad = element.cantidad.replace(",", ".");
+        element.precio = element.precio.toString().replace(",", ".");
+        element.cantidad = element.cantidad.toString().replace(",", ".");
         this.subtotal += element.precio * element.cantidad;
       });
       this.subtotal = Number(this.subtotal.toFixed(2));

@@ -307,7 +307,8 @@ Route::put('/referencias/{id}', 'ReferenciaController@update')->name('updaterefe
 //obtener Configuracion
 Route::get('/config', 'ConfiguracionController@index')->name('indexconfig');
 //modificar Configuracion
-Route::put('/config', 'ConfiguracionController@edit')->name('editconfig');
+Route::post('/config', 'ConfiguracionController@edit')->name('editconfig');
 // añadir literales
 Route::post('/literales', 'ConfiguracionController@literales')->name('literales');
 
+ 
