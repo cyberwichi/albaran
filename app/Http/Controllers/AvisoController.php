@@ -206,7 +206,7 @@ class AvisoController extends Controller
                     $detalle->articulo_nombre = $linea['articulo_nombre'];
                     $detalle->cantidad = $linea['cantidad'];
                     $detalle->precio = $linea['precio'];
-                    $detalle->save();
+                    $detalle->save(); 
                 };
             }
         }

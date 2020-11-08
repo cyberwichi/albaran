@@ -38,44 +38,45 @@ class PdfController extends Controller
             $empleado = Empleado::find($aviso->empleado_id);
             $cliente = tbContacto::find($aviso->contacto_id);
         } else {
-            $empleado='';
-            
+            $empleado = '';
+
             $cliente = '';
         }
         $config = Configuracion::first();
         if ($empleado) {
             $correo[3] = $empleado->email;
         };
-        $mail_username = $config->email; //Correo electronico saliente ejemplo: tucorreo@gmail.com
-        $mail_userpassword = $config->password; //Tu contraseña de gmail
-        if ($cliente){
+        $mail_username = env('MAIL_DIRECCION'); //Correo electronico saliente ejemplo: tucorreo@gmail.com
+        $mail_userpassword = env('MAIL_PASSWORD'); //Tu contraseña de gmail
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
+        $mail->Host = env('MAIL_HOST');             // Especificar el servidor de correo a utilizar 
+        $mail->Port = env('MAIL_PORT');
+        $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+        $mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+        $mail->Password = $mail_userpassword;         // Tu contraseña de gmail
+        $mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada          
+        $mail_setFromEmail = $mail_username;
+        $mail_setFromName = $mail_username;
+        $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
+        $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
+
+        if ($aviso->correo) {
+            $mail_addAddress = $aviso->correo; //correo electronico que recibira el mensaje 
+        } elseif ($cliente) {
             $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
-        } else{
-            $mail_addAddress=$config->correo_admin;
+        } else {
+            $mail_addAddress = $config->correo_admin;
         }
-        
+
         $template = $config->asunto . ' 
              <br>
              <p> Parte numero <strong> ' . $id . ' </strong> </p>
             <p> Gracias por su confianza</p>
             <br> ' . $config->proteccion;
         /*Inicio captura de datos enviados por $_POST para enviar el correo */
-        $mail_setFromEmail = $mail_username;
-        $mail_setFromName = $mail_username;
-        $txt_message = $mail_username;
         $mail_subject = 'Corrreo de envio de parte de trabajo numero ' . $id;
         try {
-            $mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->SMTPDebug = 2;                         // Establecer el correo electrónico para utilizar SMTP
-            $mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
-            $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-            $mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-            $mail->Password = $mail_userpassword;         // Tu contraseña de gmail
-            $mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
-            $mail->Port = 587;                          // Puerto TCP  para conectarse 
-            $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
-            $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
             $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
             $mail->addCC($config->correo_admin);
             $mail->addCC($config->correo_tecnicos);
