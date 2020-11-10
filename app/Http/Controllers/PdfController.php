@@ -63,9 +63,12 @@ class PdfController extends Controller
         $mail->addReplyTo($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
 
         if ($aviso->correo) {
-            $mail_addAddress = $aviso->correo; //correo electronico que recibira el mensaje 
+            $mail_addAddress = explode(";", $aviso->correo); //correo electronico que recibira el mensaje
+           
+          
         } elseif ($cliente) {
-            $mail_addAddress = $cliente->Email; //correo electronico que recibira el mensaje
+            $mail_addAddress = explode(";", $cliente->Email); //correo electronico que recibira el mensaje
+           
         } else {
             $mail_addAddress = $config->correo_admin;
         }
@@ -78,7 +81,9 @@ class PdfController extends Controller
         /*Inicio captura de datos enviados por $_POST para enviar el correo */
         $mail_subject = 'Corrreo de envio de parte de trabajo numero ' . $id;
         try {
-            $mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
+            foreach ($mail_addAddress as $iten) {
+                $mail->addAddress($iten);   // Agregar quien recibe el e-mail enviado
+            }
             $mail->addCC($config->correo_admin);
             $mail->addCC($config->correo_tecnicos);
             if ($empleado) {
@@ -101,7 +106,7 @@ class PdfController extends Controller
             }
         } catch (Exception $e) {
             echo $e->getMessage();
-            
+            logger($e->getMessage());
         };
     }
 }
