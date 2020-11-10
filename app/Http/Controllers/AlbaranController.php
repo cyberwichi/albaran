@@ -188,7 +188,8 @@ class AlbaranController extends Controller
         $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
         $mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
         $mail->Password = $mail_userpassword;         // Tu contraseña de gmail
-        $mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada          
+        $mail->SMTPSecure = env('MAIL_ENCRYPTION');    
+        $mail->SMTPAutoTLS = false;              // Habilitar encriptacion, `ssl` es aceptada              
         $mail_setFromEmail = $mail_username;
         $mail_setFromName = $mail_username;
         $mail->setFrom($mail_setFromEmail, $mail_setFromName); //Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
@@ -229,6 +230,7 @@ class AlbaranController extends Controller
                 echo '<p style="color:red">No se pudo enviar el mensaje..';
                 echo 'Error de correo: ' . $mail->ErrorInfo;
                 echo "</p>";
+                
             } else {
                 return $id;
             }
