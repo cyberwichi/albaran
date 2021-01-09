@@ -34,7 +34,7 @@ class AlbaranController extends Controller
         $avisos = Aviso::where('contacto_id', $id)->get();
         $albaranes = [];
         foreach ($avisos as $key => $aviso) {
-            $albaranes[$key] = Albaran::where('aviso_id', $aviso->id)->orderBy('id', 'desc')->with('detallealbaran')->with('albaranmaquina')->get();
+            $albaranes[$key] = Albaran::where('aviso_id', $aviso->id)->with("aviso")->orderBy('id', 'desc')->with('detallealbaran')->with('albaranmaquina')->get();
         }
         return json_encode($albaranes);
     }
