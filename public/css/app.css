@@ -10998,3 +10998,11 @@ button {
   border-bottom-left-radius: 0.25rem;
 }
 
+.modal-mask {
+  display: unset !important;
+  box-shadow: 100px 100px 50px black !important;
+  width: 90% !important;
+  height: 95% !important;
+  margin: auto !important;
+}
+

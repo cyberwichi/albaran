@@ -6,29 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Parte de Trabajo</title>
     <style>
-        body{
-            margin: 0;
-            padding: 0; 
-            font-size: 12px;
-            box-sizing: border-box;
-            text-transform: uppercase;                   
+        @page {
+                margin: 330px 25px;
+            }
+        body{            
+            font-size: 12px;            
+            text-transform: uppercase;  
+            box-sizing:  border-box;              
         }
-        .fondo{
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200%;
-            height: 100%;
-            z-index: -1;
-            background-image: url('/img/logo.jpeg');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            opacity: 0.1;
-
-        }
+       
         tr{
             max-width: 100%;
         }
@@ -55,8 +41,6 @@
         }
         .cabecera {
         width: 100%;
-        height: 200px;
-        margin-bottom: 5px;
         }
         .center{
         text-align: center; 
@@ -101,17 +85,31 @@
         #tercero {
             text-decoration: line-through;
         }
-        .head{
-            position:fixed;
-            top: 0;
+        .pageauto{         
+          page-break-inside: avoid;
         }
-        .foot{
-            position:absolute;
-            bottom: 2mm;
+        main{           
+            
+           
         }
-        .cuerpo{
-            margin-top:75mm;         
+
+        header{
+            position: fixed;
+                top: -330px;
+                left: 0px;
+                right: 0px;
+                height: 250px;
         }
+        footer{
+            position: fixed; 
+                bottom: -335px; 
+                left: 0px; 
+                right: 0px;
+                height: 250px;
+                
+        }
+        footer .page:after { content: counter(page, upper-roman); }
+
         .articulo{
             height: 5mm!important;
             overflow: hidden;
@@ -123,14 +121,11 @@
         {
             width: 35mm;
         }
+    
 </head>
 <body>
-<div class="fondo"></div>
-
-    <div class="contenido">
-        <div class="head">
-            <img class="cabecera" src="img/cabecera.jpeg" alt="" />
-        
+    <header>        
+            <img class="cabecera" src="img/cabecera.jpeg" alt="" /> 
             <table class="tabla1 firmas">
                 <tbody>
                     <td class="itemcabecera">
@@ -148,8 +143,10 @@
         
                             <div>
                                 Fecha Aviso:
+                                @if ($albaran[0]->aviso)
                                 {{$albaran[0]->aviso->created_at }}
-                            </div>
+                                @endif
+                            </div> 
                             <div>
                                 Fecha del Parte:
                                 {{$albaran[0]->created_at}}
@@ -161,77 +158,20 @@
                     </td>
                     <td class="itemcabecera">
                         <!- Cliente-!>
-                            <div>
-                                <div>Cliente: {{ $cliente->Nombre }}</div>
-                                <div>Direccion: {{ $cliente->Direccion }}</div>
-                                <div>Telefono: {{ $cliente->Telefono }}</div>
-                                <div>Nif: {{ $cliente->Nif }}</div>
-                                <div>Email: {{ $cliente->Email }}</div>
+                            <div>                            
+                                <div>Cliente: {{ $cliente['Nombre'] }}</div>
+                                <div>Direccion: {{ $cliente['Direccion'] }}</div>
+                                <div>Telefono: {{ $cliente['Telefono'] }}</div>
+                                <div>Nif: {{ $cliente['Nif'] }}</div>
+                               
                             </div>
         
                     </td>
                 </tbody>
-            </table>
-        </div>
-        <div class="cuerpo">
-            <!-- maquinas -->
-            <div class="tabla1 firmas">
-                <table class="tabla1 center">
-                    <thead>
-                        <tr>
-                            <th class="itemcabecera" scope="col">Maquina</th>
-                            <th class="itemcabecera" scope="col">Numero de Serie</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($albaran[0]->albaranmaquina as $maq)
-                        <tr class="center">
-                            <td class="firmas itemcabecera">{{ $maquina[$maq->maquina_id]->nombre }}</td>
-                            <td class="firmas itemcabecera">
-                                {{ $maq->referencia }}
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <!-- articulos entregados -->
-            <div class="firmas">
-                <table class="tabla1">
-                    <thead class="text-center">
-                        <tr class="center">
-                            <th scope="col">Referencia</th>
-                            <th scope="col"></th>
-                            <th scope="col">Articulos</th>
-                            <th scope="col"></th>
-                            <th scope="col">Entregados</th>
-                            <th scope="col"></th>
-                            <th scope="col">Cantidad</th>
-                           
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $subtotal =0 ?>
-                        @foreach($albaran[0]->detalleAlbaran as $linea2 )
-                        <tr>
-                            @if (isset( $referencias[$linea2->articulo_id]))
-                            <td class="firmas right">{{ $referencias[$linea2->articulo_id]->referencia}}</td>
-                            @else
-                            <td class="firmas right"> sin referencia</td>
-                            @endif
-                            <td colspan="5" class="firmas center articulo">{{ substr($linea2->articulo_nombre , 0, 40) }}</td>
-                            <td class="firmas right-2">{{ $linea2->cantidad }}</td>
-                           
-                            
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        
-        </div>
-        <div class="foot">
-        
+        </table>
+    </header>
+     <footer>
+            
         
             <!-- observaciones -->
             <table class="tabla1 firmas">
@@ -239,10 +179,12 @@
                 <tr>
                     <td class="finalizado firmas">
                         <div>Trabajo Finalizado :
+                        @if($albaran[0]->aviso)
                             @if ($albaran[0]->aviso->terminada)
                             <strong>Si</strong>
                             @else
                             <strong>No</strong>
+                            @endif
                             @endif
                         </div>
                     </td>
@@ -279,7 +221,64 @@
                 C.I.F. B-72177827 - Telefono 956 59 125 -Pol. Ind. Puente Hierro, Crta. de la Carraca 74 - 11100 San Fernando
                 (Cádiz) - gestion.aif@gmail.com - Movil: 685 696 156
             </div>
-        </div>    
-    </div>    
-</body>
+        </footer>  
+    <main class="">    
+        
+        
+                  <!-- maquinas -->
+        <div class="tabla1 firmas">               
+                <table class="tabla1 center">
+                    <thead>
+                        <tr>
+                            <th class="itemcabecera" scope="col">Maquina</th>
+                            <th class="itemcabecera" scope="col">Numero de Serie</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($albaran[0]->albaranmaquina as $maq)
+                        <tr class="center">
+                            <td class="firmas itemcabecera">{{ $maquina[$maq->maquina_id]->nombre }}</td>
+                            <td class="firmas itemcabecera">
+                                {{ $maq->referencia }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+        </div>
+        
+            <table class="tabla1  firmas" style="margin-top:5px">
+                    <thead class="text-center">
+                        <tr class="center">
+                            <th scope="col">Referencia</th>
+                            <th scope="col"></th>
+                            <th scope="col">Articulos</th>
+                            <th scope="col"></th>
+                            <th scope="col">Entregados</th>
+                            <th scope="col"></th>
+                            <th scope="col">Cantidad</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $subtotal =0 ?>
+                        @foreach($albaran[0]->detalleAlbaran as $linea2 )
+                        <tr>
+                            @if (isset( $referencias[$linea2->articulo_id]))
+                            <td class="firmas right">{{ $referencias[$linea2->articulo_id]->referencia}}</td>
+                            @else
+                            <td class="firmas right"> sin referencia</td>
+                            @endif
+                            <td colspan="5" class="firmas center articulo">{{ substr($linea2->articulo_nombre , 0, 40) }}</td>
+                            <td class="firmas right-2">{{ $linea2->cantidad }}</td>
+                            	
+                        </tr>
+                        @endforeach
+                    </tbody>
+            </table>  
+    
+    
+    </main>
+
+   </body>
 </html>

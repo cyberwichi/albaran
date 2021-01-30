@@ -45,7 +45,7 @@ class AlbaranController extends Controller
     }
     public function new(Request $request)
     {
-        logger($request);
+        
         if ($request->aviso_id == 0) {
 
             $albaran = new  Albaran();
@@ -163,7 +163,7 @@ class AlbaranController extends Controller
                     $aux = Referencia::where('articulo_id', $det->articulo_id)->latest()->first();
                     $referencias[$det->articulo_id] = $aux;
                 }
-            }
+            } 
 
             if ($aviso->valorar) {
 

@@ -58,13 +58,7 @@
 
         <button
             v-on:click="
-                maquina.id = idForm;
-                maquina.nombre = querySearch;
-                maquina.referencia=referenciaForm;
-                $emit('newmaquina', maquina);
-                querySearch = '';
-                comentariosForm = '';
-                referenciaForm='';
+                emitir()
             "
         >
             Añadir Maquina
@@ -96,6 +90,16 @@ export default {
         });
     },
     methods: {
+        emitir(){
+            this.maquina.id = this.idForm;
+                this.maquina.nombre = this.querySearch;
+                this.maquina.referencia=this.referenciaForm; 
+                this.$emit('newmaquina', this.maquina);
+                this.querySearch = '';
+                this.comentariosForm = '';
+                this.referenciaForm='';
+
+        },
         addActive() {
             let vm = this;
             if (!vm.maquinas) return false;

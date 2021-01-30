@@ -1,16 +1,15 @@
 <template>
   <div>
     <div class="card-header">
-      <form class="sombra mb-3" v-on:submit.prevent="buscaaviso(numeroaviso)">
+      <form class="sombra mb-3" v-on:submit.prevent="buscaDetalles(numeroaviso2)">
         <div class="form-group p-3">
           <label for="numeroaviso">Numero de Aviso:</label>
           <input
             class="form-control col-12"
             type="text"
             name="numeroaviso"
-            v-model="numeroaviso"
+            v-model="numeroaviso2"
             autocomplete="off"
-            v-on:change="buscaaviso(numeroaviso)"
           />
           <button class="btn btn-flat" type="submit">
             <img class src="/img/acceder.png" width="45px" alt />
@@ -41,7 +40,7 @@
       <!-- cliente -->
 
       <h5 class="card col-12 display-5">
-        <div>Aviso: {{ numeroaviso }}</div>
+        <div>Aviso: {{ numeroaviso2 }}</div>
         <div>Cliente: {{ cliente.Nombre }}</div>
         <div>Direccion: {{ cliente.Direccion }}</div>
         <div>Telefono: {{ cliente.Telefono }}</div>
@@ -74,10 +73,10 @@
               <th scope="col">Numero Serie</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody >
             <tr v-for="(maq, index) in maquinas" :key="index">
-              <th scope="row">{{ maq.nombre }}</th>
-              <td>
+              <td v-if="maq" scope="row">{{ maq.nombre }}</td>
+              <td v-if="maq" scope="row">
                 {{ maq.referencia }}
               </td>
             </tr>
@@ -362,10 +361,25 @@ export default {
   props: ["numeroaviso"],
   data: function () {
     return {
+      numeroaviso2:'',
       aviso: {},
       correo: "",
-      detalles: [],
-      detallealbaran: [],
+      detalles: [
+        {
+         referencia:"",
+         articulo_nombre:"",
+         cantidad:"",
+         precio:""
+        }
+      ],
+      detallealbaran: [
+        {
+         referencia:"",
+         articulo_nombre:"",
+         cantidad:"",
+         precio:""
+        }
+      ],
       cliente: {},
       iva: 0,
       subtotal: 0,
@@ -399,11 +413,19 @@ export default {
       },
     };
   },
-  watch: {},
-  mounted() {
-    this.firmaCliente(), this.firmaEmpleado();
-    this.buscaaviso(this.numeroaviso);
+  watch: {
+  /*  numeroaviso  : function(val) {
+      
+      this.buscaDetalles(val);
+    } */
   },
+  mounted() {
+      if (this.numeroaviso){
+        this.buscaDetalles(this.numeroaviso);
+        this.numeroaviso2=this.numeroaviso;
+      }
+       this.firmaCliente(), this.firmaEmpleado();
+    },
 
   methods: {
     handleOk(bvModalEvt) {
@@ -430,11 +452,11 @@ export default {
       return valid;
     },
     añadirArticulo(datos) {
-      console.log(datos);
+    
       datos.articuloCantidad = datos.articuloCantidad.replace(",", ".");
       datos.articuloPrecio = datos.articuloPrecio.replace(",", ".");
       var detallealb = {
-        avisoid: this.numeroaviso,
+        avisoid: this.numeroaviso2,
         articulo_id: datos.articuloId,
         articulo_nombre: datos.articuloNombre,
         cantidad: datos.articuloCantidad,
@@ -455,6 +477,7 @@ export default {
       this.dismissCountDown = this.dismissSecs;
     },
     anadirmaquina(maq) {
+  
       let maquina = {
         id: maq.id,
         referencia: maq.referencia,
@@ -479,23 +502,21 @@ export default {
       this.terminado = false;
       this.quitarImagen(1);
       this.quitarImagen(0);
-      this.numeroaviso = "";
+      this.numeroaviso2 = "";
       this.maquinas = [];
       this.maquina = {};
       this.trabajos = "";
       this.correo = "";
     },
     buscaaviso(numeroaviso) {
-      this.aviso = "";
-      this.detalles = "";
-      this.cliente = "";
+      this.aviso = [];
+      this.detalles = [];
       this.comenta = "";
       document.getElementById("app").style.cursor = "progress";
       axios
         .get("/api/avisos/" + numeroaviso)
         .then((response) => {
-          this.aviso = response.data;
-          this.buscaDetalles(numeroaviso);
+          this.aviso = response.data;          
           this.buscaCliente(this.aviso[0].contacto_id);
           this.comenta = this.aviso[0].comentario;
           this.correo = this.aviso[0].correo;
@@ -512,19 +533,27 @@ export default {
       this.detalles = [];
       axios.get("/api/detalles/" + id).then((response) => {
         let detalles2 = response.data;
-
+        this.buscaaviso(id);
         detalles2.forEach((element, index) => {
           axios
             .get("/api/referenciaid/" + element.articulo_id)
             .then((response) => {
+              var ref;
+              if (typeof response.data.referencia !== 'undefined') {
+                ref= response.data.referencia;
+              } else{
+                ref="---";
+              }
+
               var detallealb = {
                 avisoid: id,
                 articulo_id: element.articulo_id,
                 articulo_nombre: element.articulo_nombre,
                 cantidad: element.cantidad,
                 precio: element.precio,
-                referencia: response.data.referencia,
+                referencia: ref
               };
+             
 
               this.detallealbaran[index] = detallealb;
               this.detalles[index] = detallealb;
@@ -613,7 +642,7 @@ export default {
     guardaAlbaran() {
       document.getElementById("app").style.cursor = "progress";
       var registroAlbaran = {
-        aviso_id: this.numeroaviso,
+        aviso_id: this.numeroaviso2,
         observaciones: this.observaciones,
         firma_cliente: this.firmacli,
         firma_empleado: this.firmaemp,
@@ -624,7 +653,7 @@ export default {
 
       var numero = 0;
       if (this.terminado) {
-        axios.get("/api/finaliza/" + this.numeroaviso).then(() => {
+        axios.get("/api/finaliza/" + this.numeroaviso2).then(() => {
           axios.post("/api/albaran", registroAlbaran).then((response) => {
             numero = response.data;
             document.getElementById("app").style.cursor = "auto";
