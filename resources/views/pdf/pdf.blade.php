@@ -121,9 +121,26 @@
         {
             width: 35mm;
         }
+        .fondo{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%;
+            height: 100%;
+            z-index: -1;
+            background-image: url('/img/logo.jpeg');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            opacity: 0.1;
+
+        }
     
 </head>
 <body>
+
     <header>        
             <img class="cabecera" src="img/cabecera.jpeg" alt="" /> 
             <table class="tabla1 firmas">
@@ -169,6 +186,7 @@
                     </td>
                 </tbody>
         </table>
+        <div class="fondo"></div>
     </header>
      <footer>
             
