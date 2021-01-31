@@ -80,7 +80,7 @@ class AlbaranController extends Controller
             $maquina = [];
             $referencias = [];
             $cliente = $request->aviso['tb_contacto'];
-            logger($cliente);
+           
             if ($albaran[0]->albaranmaquina !== []) {
                 foreach ($albaran[0]->albaranmaquina as $maq) {
                     $maquina[$maq->maquina_id] = Maquina::find($maq->maquina_id);

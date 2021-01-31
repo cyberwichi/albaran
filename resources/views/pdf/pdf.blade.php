@@ -105,7 +105,7 @@
                 bottom: -335px; 
                 left: 0px; 
                 right: 0px;
-                height: 250px;
+                height: 150px;
                 
         }
         footer .page:after { content: counter(page, upper-roman); }
@@ -189,41 +189,6 @@
         <div class="fondo"></div>
     </header>
      <footer>
-            
-        
-            <!-- observaciones -->
-            <table class="tabla1 firmas">
-                <tbody>
-                <tr>
-                    <td class="finalizado firmas">
-                        <div>Trabajo Finalizado :
-                        @if($albaran[0]->aviso)
-                            @if ($albaran[0]->aviso->terminada)
-                            <strong>Si</strong>
-                            @else
-                            <strong>No</strong>
-                            @endif
-                            @endif
-                        </div>
-                    </td>
-                    <td class="firmas">
-                        <div class="center">
-                            <strong>Observaciones / Material Pendiente</strong>
-                        </div>
-                        <p>{{ $albaran[0]->observaciones }}</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="firmas">
-                        <div class="center">
-                            <strong>Trabajos Realizados</strong>
-                        </div>
-                        <p>{{ $albaran[0]->trabajos }}</p>
-                    </td>
-                </tr>    
-                </tbody>
-            </table>
-        
             <!-- firmas -->
             <div class="firmas">
                 <div class="linfirma">
@@ -325,6 +290,39 @@
 	                    </td>
                 	</tr>
             	@endif
+            </table>
+
+                        <!-- observaciones -->
+            <table class="tabla1 firmas">
+                <tbody>
+                <tr>
+                    <td class="finalizado firmas">
+                        <div>Trabajo Finalizado :
+                        @if($albaran[0]->aviso)
+                            @if ($albaran[0]->aviso->terminada)
+                            <strong>Si</strong>
+                            @else
+                            <strong>No</strong>
+                            @endif
+                            @endif
+                        </div>
+                    </td>
+                    <td class="firmas">
+                        <div class="center">
+                            <strong>Observaciones / Material Pendiente</strong>
+                        </div>
+                        <p>{{ $albaran[0]->observaciones }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="firmas">
+                        <div class="center">
+                            <strong>Trabajos Realizados</strong>
+                        </div>
+                        <p>{{ $albaran[0]->trabajos }}</p>
+                    </td>
+                </tr>    
+                </tbody>
             </table>
     
     

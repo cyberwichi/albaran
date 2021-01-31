@@ -7,7 +7,7 @@
     <title>Parte de Trabajo</title>
     <style>
         @page {
-                margin: 330px 25px;
+                margin: 330px 25px 150px 25px;
             }
         body{            
             font-size: 12px;            
@@ -85,7 +85,7 @@
         #tercero {
             text-decoration: line-through;
         }
-        .pageauto{         
+        td , tr{         
           page-break-inside: avoid;
         }
         main{           
@@ -102,10 +102,10 @@
         }
         footer{
             position: fixed; 
-                bottom: -335px; 
+                bottom: -150px; 
                 left: 0px; 
                 right: 0px;
-                height: 250px;
+                height: 150px;
                 
         }
         footer .page:after { content: counter(page, upper-roman); }
@@ -191,38 +191,7 @@
      <footer>
             
         
-            <!-- observaciones -->
-            <table class="tabla1 firmas">
-                <tbody>
-                <tr>
-                    <td class="finalizado firmas">
-                        <div>Trabajo Finalizado :
-                        @if($albaran[0]->aviso)
-                            @if ($albaran[0]->aviso->terminada)
-                            <strong>Si</strong>
-                            @else
-                            <strong>No</strong>
-                            @endif
-                            @endif
-                        </div>
-                    </td>
-                    <td class="firmas">
-                        <div class="center">
-                            <strong>Observaciones / Material Pendiente</strong>
-                        </div>
-                        <p>{{ $albaran[0]->observaciones }}</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="firmas">
-                        <div class="center">
-                            <strong>Trabajos Realizados</strong>
-                        </div>
-                        <p>{{ $albaran[0]->trabajos }}</p>
-                    </td>
-                </tr>    
-                </tbody>
-            </table>
+
         
             <!-- firmas -->
             <div class="firmas">
@@ -295,6 +264,53 @@
                         @endforeach
                     </tbody>
             </table>  
+                        <!-- observaciones -->
+            <table class="tabla1 firmas">
+            <thead class="text-center">
+                        <tr class="center">
+                            <th scope="col">Concepto</th>
+                            <th scope="col"></th>                          
+                          
+                        </tr>
+                    </thead>
+                <tbody>
+                <tr>
+                    <td class="finalizado firmas">
+                        <div>Trabajo Finalizado :                        
+                        </div>
+                    </td>
+                    <td>@if($albaran[0]->aviso)
+                            @if ($albaran[0]->aviso->terminada)
+                            <strong>Si</strong>
+                            @else
+                            <strong>No</strong>
+                            @endif
+                            @endif
+                            </td>
+                </tr><tr>
+                    <td class="firmas">
+                        <div class="center">
+                            <strong>Observaciones / Material Pendiente</strong>
+                        </div>
+                    </td>
+                    <td class="firmas">
+                        
+                        <p>{{!! $albaran[0]->observaciones !!}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td  class="firmas">
+                        <div class="center">
+                            <strong>Trabajos Realizados</strong>
+                        </div>
+                    </td>
+                    <td  class="firmas">
+                        
+                        <p>{{!! $albaran[0]->trabajos !!}}</p>
+                    </td>
+                </tr>    
+                </tbody>
+            </table>
     
     
     </main>
