@@ -7,10 +7,10 @@
     <title>Parte de Trabajo</title>
     <style>
         @page {
-                margin: 330px 25px 150px 25px;
+                margin: 300px 25px 350px 25px;
             }
         body{            
-            font-size: 12px;            
+            font-size: 10px;            
             text-transform: uppercase;  
             box-sizing:  border-box;              
         }
@@ -19,7 +19,7 @@
             max-width: 100%;
         }
         td{
-            padding: 5px!important;
+            padding: 0 1px!important;
         }
         .itemcabecera{
             width: 50%;
@@ -66,7 +66,7 @@
         }
         .firmas {
         border: 1px solid #000;
-        margin-bottom: 1px;     
+        /* margin-bottom: 1px;      */
         }
         
         h1 {
@@ -85,27 +85,23 @@
         #tercero {
             text-decoration: line-through;
         }
-        td , tr{         
+        .pageauto{         
           page-break-inside: avoid;
         }
-        main{           
-            
-           
-        }
-
         header{
             position: fixed;
-                top: -330px;
+                top: -300px;
                 left: 0px;
                 right: 0px;
-                height: 250px;
+                height: 220px;
         }
         footer{
             position: fixed; 
-                bottom: -150px; 
+                bottom: -240px; 
                 left: 0px; 
                 right: 0px;
-                height: 150px;
+                height: 250px;
+                font-size: 8px;
                 
         }
         footer .page:after { content: counter(page, upper-roman); }
@@ -180,21 +176,57 @@
                                 <div>Direccion: {{ $cliente['Direccion'] }}</div>
                                 <div>Telefono: {{ $cliente['Telefono'] }}</div>
                                 <div>Nif: {{ $cliente['Nif'] }}</div>
+                                 <div>Trabajo Finalizado :
+                        @if($albaran[0]->aviso)
+                            @if ($albaran[0]->aviso->terminada)
+                            <strong>Si</strong>
+                            @else
+                            <strong>No</strong>
+                            @endif
+                            @endif
+                        
+                        </div>
                                
                             </div>
         
                     </td>
                 </tbody>
         </table>
-        <div class="fondo"></div> 
+        <div class="fondo"></div>
     </header>
      <footer>
-            
-        
-
-        
+         <!-- observaciones -->
+            <table class="tabla1 firmas">
+            <thead class="text-center">
+                        <tr class="center">
+                           
+                            <th scope="col">  <strong>Observaciones / Material Pendiente</strong></th>                          
+                          
+                        </tr>
+                    </thead>
+                <tbody>
+                <tr>
+                   
+                    <td  class="firmas">
+                        
+                        <p style="overflow:hidden;height:30px">{!! $albaran[0]->observaciones !!}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td  class="firmas">
+                        <div class="center">
+                            <strong>Trabajos Realizados</strong>
+                        </div>
+                    </td>
+                    </tr><tr>
+                    <td  class="firmas">                        
+                        <p style="overflow:hidden;height:80px">{!! $albaran[0]->trabajos !!}</p>
+                    </td>
+                </tr>    
+                </tbody>
+            </table>
             <!-- firmas -->
-            <div class="firmas">
+            <div class="firmas" style="height:120px">
                 <div class="linfirma">
                     <div class="imfirma">
                         Firma Cliente
@@ -210,9 +242,6 @@
             </div>
         </footer>  
     <main class="">   
-    
-        
-        
                   <!-- maquinas -->
         <div class="tabla1 firmas">               
                 <table class="tabla1 center">
@@ -245,7 +274,7 @@
                             <th scope="col">Entregados</th>
                             <th scope="col"></th>
                             <th scope="col">Cantidad</th>
-                          
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -263,57 +292,8 @@
                         </tr>
                         @endforeach
                     </tbody>
-            </table>  
-                        <!-- observaciones -->
-            <table class="tabla1 firmas">
-            <thead class="text-center">
-                        <tr class="center">
-                            <th scope="col">Concepto</th>
-                            <th scope="col"></th>                          
-                          
-                        </tr>
-                    </thead>
-                <tbody>
-                <tr>
-                    <td class="finalizado firmas">
-                        <div>Trabajo Finalizado :                        
-                        </div>
-                    </td>
-                    <td>@if($albaran[0]->aviso)
-                            @if ($albaran[0]->aviso->terminada)
-                            <strong>Si</strong>
-                            @else
-                            <strong>No</strong>
-                            @endif
-                            @endif
-                            </td>
-                </tr><tr>
-                    <td class="firmas">
-                        <div class="center">
-                            <strong>Observaciones / Material Pendiente</strong>
-                        </div>
-                    </td>
-                    <td class="firmas">
-                        
-                        <p>{{!! $albaran[0]->observaciones !!}}</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td  class="firmas">
-                        <div class="center">
-                            <strong>Trabajos Realizados</strong>
-                        </div>
-                    </td>
-                    <td  class="firmas">
-                        
-                        <p>{{!! $albaran[0]->trabajos !!}}</p>
-                    </td>
-                </tr>    
-                </tbody>
             </table>
-    
-    
+         
     </main>
-
    </body>
 </html>
